@@ -1,20 +1,77 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider = "zod-prisma-types"
+  output   = "./zod"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("POSTGRES_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+// Model for the events hosted by CCRU.
+model Event {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  date        String
+  name        String
+  description String?
+  location    String?
+  timeStart   String?
+  timeEnd     String?
+  createdAt   DateTime    @default(now())
+  createdBy   String
+  shifts      shiftType[]
 
-    @@index([name])
+  @@index([date])
+}
+
+// Model for the templates of events hosted by CCRU.
+model EventTemplate {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  location    String?
+  timeStart   String?
+  timeEnd     String?
+  shifts      shiftType[]
+
+  @@index([name])
+}
+
+type shiftType {
+  positionId String
+  userId     String?
+}
+
+// Model for the roles of users (e.g., standard, volunteer, officer, and admin).
+model UserRole {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+}
+
+// Model for the types of users (e.g., medical student, undergraduate, MD/DO, etc.).
+model UserType {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+}
+
+// Model for the positions of event shifts (e.g., triage, interviewer, etc.).
+model Position {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  label          String?
+  name           String
+  allowedRoleIds String[]
+  officerOnly    Boolean?
+}
+
+// Model for the officers of CCRU (e.g., manager).
+model Officer {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  label       String
+  description String?
 }

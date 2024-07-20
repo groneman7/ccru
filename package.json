@@ -9,6 +9,7 @@
     "db:migrate": "prisma migrate deploy",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
+    "db:format": "prisma format",
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
@@ -27,7 +28,8 @@
     "posthog-js": "^1.148.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "zod": "^3.23.3"
+    "zod": "^3.23.8",
+    "zod-prisma-types": "^3.1.8"
   },
   "devDependencies": {
     "@types/eslint": "^8.56.10",
