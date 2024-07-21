@@ -15,12 +15,12 @@ datasource db {
 // Model for the events hosted by CCRU.
 model Event {
   id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  date        String
+  date        DateTime
   name        String
   description String?
   location    String?
-  timeStart   String?
-  timeEnd     String?
+  timeStart   DateTime?
+  timeEnd     DateTime?
   createdAt   DateTime    @default(now())
   createdBy   String
   shifts      shiftType[]
@@ -34,8 +34,8 @@ model EventTemplate {
   name        String
   description String?
   location    String?
-  timeStart   String?
-  timeEnd     String?
+  timeStart   DateTime?
+  timeEnd     DateTime?
   shifts      shiftType[]
 
   @@index([name])
@@ -62,11 +62,12 @@ model UserType {
 
 // Model for the positions of event shifts (e.g., triage, interviewer, etc.).
 model Position {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  label          String?
-  name           String
-  allowedRoleIds String[]
-  officerOnly    Boolean?
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  label            String?
+  description      String?
+  allowedUserTypes String[]
+  officerOnly      Boolean?
 }
 
 // Model for the officers of CCRU (e.g., manager).
