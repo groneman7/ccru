@@ -5,9 +5,9 @@ declare global {
   
   interface UserPrivateMetadata {
     isConfigured: boolean;
-    role: number;
-    type: number;
-    officer?: number;
+    roleId: string;
+    typeId: string;
+    officerTypeId?: string;
     permissions?: {
       events?: {
         'create-new'?: boolean;
