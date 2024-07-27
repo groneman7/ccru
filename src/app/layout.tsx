@@ -4,8 +4,10 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import { CSPostHogProvider } from "~/providers";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider } from 'antd'
 import { type Metadata } from "next";
 import Navbar from "~/app/_components/navbar";
+import { defaultTheme } from '~/styles/theme'
 
 export const metadata: Metadata = {
   title: "Compassionate Care Reaching yoU",
@@ -37,10 +39,12 @@ export default async function RootLayout({
       <ClerkProvider>
         <CSPostHogProvider>
           <AntdRegistry>
-            <body>
-              <Navbar />
-              <div>{children}</div>
-            </body>
+            <ConfigProvider theme={defaultTheme}>
+              <body className="flex flex-col h-dvh">
+                <Navbar />
+                <div className="flex flex-1">{children}</div>
+              </body>
+            </ConfigProvider>
           </AntdRegistry>
         </CSPostHogProvider>
       </ClerkProvider>
