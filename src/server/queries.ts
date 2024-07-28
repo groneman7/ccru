@@ -2,14 +2,14 @@
 import dayjs from "dayjs";
 import { db } from "./db";
 
-export async function getUserTypes() {
+export async function getUserRolesAndTypes() {
   try {
-    const userTypes = await db.userType.findMany()
     const userRoles = await db.userRole.findMany()
+    const userTypes = await db.userType.findMany()
     return {
       status: 201,
-      userTypes,
-      userRoles
+      userRoles,
+      userTypes
     }
   } catch (ex) {
     return {

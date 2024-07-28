@@ -1,12 +1,12 @@
 import { clerkClient } from "@clerk/nextjs/server"
-import { getUserTypes } from '~/server/queries'
+import { getUserRolesAndTypes } from '~/server/queries'
 import { UsersTable } from './_components/UsersTable';
 import type { UserData } from './_components/UsersTable'
 
 export default async function UsersAdminPage() {
   const clerk = clerkClient()
   const { data: userList } = await clerk.users.getUserList()
-  const { userTypes, userRoles } = await getUserTypes()
+  const { userTypes, userRoles } = await getUserRolesAndTypes()
 
   const mappedUserList: UserData[] = userList?.map((user) => {
     const emailAddress = user.primaryEmailAddress?.emailAddress
@@ -23,9 +23,11 @@ export default async function UsersAdminPage() {
     }
   })
   
+  const sortedUserList: UserData[] = mappedUserList.sort((a, b) => a.lastName.localeCompare(b.lastName))
+  
   return (
     <div className='bg-white flex-1 p-4 rounded shadow-md'>
-      <UsersTable users={mappedUserList} />
+      <UsersTable users={sortedUserList} />
     </div>
   )
 }
