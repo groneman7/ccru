@@ -13,7 +13,7 @@ export const defaultTheme: ThemeConfig = {
         colorText: colorTextDefault,
         colorTextDisabled: colors.slate[400],
         colorWarning: colors.yellow[500],
-        fontFamily: 'Lato',
+        fontFamily: 'inherit',
         fontSize: 14,
         lineWidthFocus: 0,
         motionDurationFast: '75ms',

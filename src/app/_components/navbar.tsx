@@ -15,9 +15,9 @@ export default async function Navbar() {
   const user = await currentUser()
 
   return (
-    <nav className="flex items-center gap-4 p-4 border-b">
+    <nav className="flex items-center gap-4 border-b p-4">
       <div className="flex basis-1/4 items-center justify-start">
-        <h1 className="font-bold text-xl">Compassionate Care Reaching yoU</h1>
+        <h1 className="text-xl font-bold">Compassionate Care Reaching yoU</h1>
       </div>
       <div className="flex flex-1 items-center justify-center gap-4">
         <Link href="/events">
@@ -38,8 +38,10 @@ export default async function Navbar() {
         </SignedOut>
         <SignedIn>
           <div className="flex items-center gap-4">
-            {user?.privateMetadata?.role === "admin" ? <AdminButton /> : null}
-            <UserButton/>
+            {user?.privateMetadata?.roleId === "669c092236951612dac7c52a" ? (
+              <AdminButton />
+            ) : null}
+            <UserButton />
           </div>
         </SignedIn>
       </div>
