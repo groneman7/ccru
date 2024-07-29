@@ -23,7 +23,7 @@ export default async function UsersAdminPage() {
     }
   })
   
-  const sortedUserList: UserData[] = mappedUserList.sort((a, b) => a.lastName.localeCompare(b.lastName))
+  const sortedUserList: UserData[] = mappedUserList.sort((a, b) => a.lastName!.localeCompare(b.lastName!))
   
   return (
     <div className='bg-white flex-1 p-4 rounded shadow-md'>

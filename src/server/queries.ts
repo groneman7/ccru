@@ -7,7 +7,7 @@ export async function getUserRolesAndTypes() {
     const userRoles = await db.userRole.findMany()
     const userTypes = await db.userType.findMany()
     return {
-      status: 201,
+      status: 200,
       userRoles,
       userTypes
     }
@@ -23,7 +23,7 @@ export async function getPositions() {
   try {
     const positions = await db.position.findMany();
     return {
-      status: 201,
+      status: 200,
       data: [...positions]
     }
   } catch (ex) {
@@ -39,7 +39,7 @@ export async function getEvents(startDate?: string, endDate?: string) {
     if (!startDate) {
       const allEvents = await db.event.findMany();
       return {
-        status: 201,
+        status: 200,
         data: [...allEvents]
       }
     } else if (startDate && !endDate) {
@@ -50,7 +50,7 @@ export async function getEvents(startDate?: string, endDate?: string) {
         },
       });
       return {
-        status: 201,
+        status: 200,
         data: [...eventsOnDate],
       };
     } else if (startDate && endDate) {
@@ -63,7 +63,7 @@ export async function getEvents(startDate?: string, endDate?: string) {
         }
       })
       return {
-        status: 201,
+        status: 200,
         data: [...eventsInRagne],
       };
     } else {

@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.default-admin-page {
+  @apply flex max-w-screen-lg flex-1 gap-8 rounded bg-white p-8 shadow-md;
+}
