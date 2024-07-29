@@ -76,3 +76,48 @@ model Officer {
   label       String
   description String?
 }
+
+// Model for the assets of CCRU.
+model Asset {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  brand        String?
+  category     String? // Link to id of AssetCategory
+  location     String?
+  quantity     Int
+  quantityUnit String? // Link to id of QuantityUnit
+  packageSize  Int?
+  packageSizeUnit String? // Link to id of QuantityUnit
+  upc          String?
+  ndc          String?
+  expiration   DateTime?
+  lot          String?
+  comments     String?
+}
+
+// Model for the categories of assets (e.g., medications, office supplies, medical equipment, etc.).
+// Note: Ideally, when a user selects a category, there would be a list of recommended tags for that category.
+model AssetCategory {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+}
+
+// Model for the units of measurement of assets.
+model QuantityUnit {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+}
+
+// Model for the tags of assets. These are used to further categorize assets (e.g., Rx Only, OTC, etc.).
+model AssetTag {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  label String?
+}
+
+// Model for the brands of assets (e.g., Walgreens, Pfizer, etc.).
+model AssetBrand {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+}

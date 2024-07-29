@@ -22,6 +22,16 @@ export const PositionScalarFieldEnumSchema = z.enum(['id','name','label','descri
 
 export const OfficerScalarFieldEnumSchema = z.enum(['id','label','description']);
 
+export const AssetScalarFieldEnumSchema = z.enum(['id','name','brand','category','location','quantity','quantityUnit','packageSize','packageSizeUnit','upc','ndc','expiration','lot','comments']);
+
+export const AssetCategoryScalarFieldEnumSchema = z.enum(['id','name','description']);
+
+export const QuantityUnitScalarFieldEnumSchema = z.enum(['id','name']);
+
+export const AssetTagScalarFieldEnumSchema = z.enum(['id','name','label']);
+
+export const AssetBrandScalarFieldEnumSchema = z.enum(['id','name']);
+
 export const SortOrderSchema = z.enum(['asc','desc']);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
@@ -112,6 +122,75 @@ export const OfficerSchema = z.object({
 })
 
 export type Officer = z.infer<typeof OfficerSchema>
+
+/////////////////////////////////////////
+// ASSET SCHEMA
+/////////////////////////////////////////
+
+export const AssetSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  brand: z.string().nullable(),
+  category: z.string().nullable(),
+  location: z.string().nullable(),
+  quantity: z.number().int(),
+  quantityUnit: z.string().nullable(),
+  packageSize: z.number().int().nullable(),
+  packageSizeUnit: z.string().nullable(),
+  upc: z.string().nullable(),
+  ndc: z.string().nullable(),
+  expiration: z.coerce.date().nullable(),
+  lot: z.string().nullable(),
+  comments: z.string().nullable(),
+})
+
+export type Asset = z.infer<typeof AssetSchema>
+
+/////////////////////////////////////////
+// ASSET CATEGORY SCHEMA
+/////////////////////////////////////////
+
+export const AssetCategorySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+})
+
+export type AssetCategory = z.infer<typeof AssetCategorySchema>
+
+/////////////////////////////////////////
+// QUANTITY UNIT SCHEMA
+/////////////////////////////////////////
+
+export const QuantityUnitSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+})
+
+export type QuantityUnit = z.infer<typeof QuantityUnitSchema>
+
+/////////////////////////////////////////
+// ASSET TAG SCHEMA
+/////////////////////////////////////////
+
+export const AssetTagSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  label: z.string().nullable(),
+})
+
+export type AssetTag = z.infer<typeof AssetTagSchema>
+
+/////////////////////////////////////////
+// ASSET BRAND SCHEMA
+/////////////////////////////////////////
+
+export const AssetBrandSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+})
+
+export type AssetBrand = z.infer<typeof AssetBrandSchema>
 
 /////////////////////////////////////////
 // MONGODB TYPES
@@ -233,6 +312,80 @@ export const OfficerSelectSchema: z.ZodType<Prisma.OfficerSelect> = z.object({
   id: z.boolean().optional(),
   label: z.boolean().optional(),
   description: z.boolean().optional(),
+}).strict()
+
+// ASSET
+//------------------------------------------------------
+
+export const AssetArgsSchema: z.ZodType<Prisma.AssetDefaultArgs> = z.object({
+  select: z.lazy(() => AssetSelectSchema).optional(),
+}).strict();
+
+export const AssetSelectSchema: z.ZodType<Prisma.AssetSelect> = z.object({
+  id: z.boolean().optional(),
+  name: z.boolean().optional(),
+  brand: z.boolean().optional(),
+  category: z.boolean().optional(),
+  location: z.boolean().optional(),
+  quantity: z.boolean().optional(),
+  quantityUnit: z.boolean().optional(),
+  packageSize: z.boolean().optional(),
+  packageSizeUnit: z.boolean().optional(),
+  upc: z.boolean().optional(),
+  ndc: z.boolean().optional(),
+  expiration: z.boolean().optional(),
+  lot: z.boolean().optional(),
+  comments: z.boolean().optional(),
+}).strict()
+
+// ASSET CATEGORY
+//------------------------------------------------------
+
+export const AssetCategoryArgsSchema: z.ZodType<Prisma.AssetCategoryDefaultArgs> = z.object({
+  select: z.lazy(() => AssetCategorySelectSchema).optional(),
+}).strict();
+
+export const AssetCategorySelectSchema: z.ZodType<Prisma.AssetCategorySelect> = z.object({
+  id: z.boolean().optional(),
+  name: z.boolean().optional(),
+  description: z.boolean().optional(),
+}).strict()
+
+// QUANTITY UNIT
+//------------------------------------------------------
+
+export const QuantityUnitArgsSchema: z.ZodType<Prisma.QuantityUnitDefaultArgs> = z.object({
+  select: z.lazy(() => QuantityUnitSelectSchema).optional(),
+}).strict();
+
+export const QuantityUnitSelectSchema: z.ZodType<Prisma.QuantityUnitSelect> = z.object({
+  id: z.boolean().optional(),
+  name: z.boolean().optional(),
+}).strict()
+
+// ASSET TAG
+//------------------------------------------------------
+
+export const AssetTagArgsSchema: z.ZodType<Prisma.AssetTagDefaultArgs> = z.object({
+  select: z.lazy(() => AssetTagSelectSchema).optional(),
+}).strict();
+
+export const AssetTagSelectSchema: z.ZodType<Prisma.AssetTagSelect> = z.object({
+  id: z.boolean().optional(),
+  name: z.boolean().optional(),
+  label: z.boolean().optional(),
+}).strict()
+
+// ASSET BRAND
+//------------------------------------------------------
+
+export const AssetBrandArgsSchema: z.ZodType<Prisma.AssetBrandDefaultArgs> = z.object({
+  select: z.lazy(() => AssetBrandSelectSchema).optional(),
+}).strict();
+
+export const AssetBrandSelectSchema: z.ZodType<Prisma.AssetBrandSelect> = z.object({
+  id: z.boolean().optional(),
+  name: z.boolean().optional(),
 }).strict()
 
 // SHIFT TYPE
@@ -588,6 +741,278 @@ export const OfficerScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Offic
   description: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
+export const AssetWhereInputSchema: z.ZodType<Prisma.AssetWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => AssetWhereInputSchema),z.lazy(() => AssetWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetWhereInputSchema),z.lazy(() => AssetWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  brand: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  category: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  location: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  quantity: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  quantityUnit: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  packageSize: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  packageSizeUnit: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  upc: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  ndc: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  expiration: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  lot: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  comments: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
+export const AssetOrderByWithRelationInputSchema: z.ZodType<Prisma.AssetOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  brand: z.lazy(() => SortOrderSchema).optional(),
+  category: z.lazy(() => SortOrderSchema).optional(),
+  location: z.lazy(() => SortOrderSchema).optional(),
+  quantity: z.lazy(() => SortOrderSchema).optional(),
+  quantityUnit: z.lazy(() => SortOrderSchema).optional(),
+  packageSize: z.lazy(() => SortOrderSchema).optional(),
+  packageSizeUnit: z.lazy(() => SortOrderSchema).optional(),
+  upc: z.lazy(() => SortOrderSchema).optional(),
+  ndc: z.lazy(() => SortOrderSchema).optional(),
+  expiration: z.lazy(() => SortOrderSchema).optional(),
+  lot: z.lazy(() => SortOrderSchema).optional(),
+  comments: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetWhereUniqueInputSchema: z.ZodType<Prisma.AssetWhereUniqueInput> = z.object({
+  id: z.string()
+})
+.and(z.object({
+  id: z.string().optional(),
+  AND: z.union([ z.lazy(() => AssetWhereInputSchema),z.lazy(() => AssetWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetWhereInputSchema),z.lazy(() => AssetWhereInputSchema).array() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  brand: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  category: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  location: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  quantity: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
+  quantityUnit: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  packageSize: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
+  packageSizeUnit: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  upc: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  ndc: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  expiration: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  lot: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  comments: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+}).strict());
+
+export const AssetOrderByWithAggregationInputSchema: z.ZodType<Prisma.AssetOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  brand: z.lazy(() => SortOrderSchema).optional(),
+  category: z.lazy(() => SortOrderSchema).optional(),
+  location: z.lazy(() => SortOrderSchema).optional(),
+  quantity: z.lazy(() => SortOrderSchema).optional(),
+  quantityUnit: z.lazy(() => SortOrderSchema).optional(),
+  packageSize: z.lazy(() => SortOrderSchema).optional(),
+  packageSizeUnit: z.lazy(() => SortOrderSchema).optional(),
+  upc: z.lazy(() => SortOrderSchema).optional(),
+  ndc: z.lazy(() => SortOrderSchema).optional(),
+  expiration: z.lazy(() => SortOrderSchema).optional(),
+  lot: z.lazy(() => SortOrderSchema).optional(),
+  comments: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => AssetCountOrderByAggregateInputSchema).optional(),
+  _avg: z.lazy(() => AssetAvgOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => AssetMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => AssetMinOrderByAggregateInputSchema).optional(),
+  _sum: z.lazy(() => AssetSumOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const AssetScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.AssetScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => AssetScalarWhereWithAggregatesInputSchema),z.lazy(() => AssetScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetScalarWhereWithAggregatesInputSchema),z.lazy(() => AssetScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  brand: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  category: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  location: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  quantity: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  quantityUnit: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  packageSize: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
+  packageSizeUnit: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  upc: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  ndc: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  expiration: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
+  lot: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  comments: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
+export const AssetCategoryWhereInputSchema: z.ZodType<Prisma.AssetCategoryWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => AssetCategoryWhereInputSchema),z.lazy(() => AssetCategoryWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetCategoryWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetCategoryWhereInputSchema),z.lazy(() => AssetCategoryWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
+export const AssetCategoryOrderByWithRelationInputSchema: z.ZodType<Prisma.AssetCategoryOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetCategoryWhereUniqueInputSchema: z.ZodType<Prisma.AssetCategoryWhereUniqueInput> = z.object({
+  id: z.string()
+})
+.and(z.object({
+  id: z.string().optional(),
+  AND: z.union([ z.lazy(() => AssetCategoryWhereInputSchema),z.lazy(() => AssetCategoryWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetCategoryWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetCategoryWhereInputSchema),z.lazy(() => AssetCategoryWhereInputSchema).array() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+}).strict());
+
+export const AssetCategoryOrderByWithAggregationInputSchema: z.ZodType<Prisma.AssetCategoryOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => AssetCategoryCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => AssetCategoryMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => AssetCategoryMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const AssetCategoryScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.AssetCategoryScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => AssetCategoryScalarWhereWithAggregatesInputSchema),z.lazy(() => AssetCategoryScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetCategoryScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetCategoryScalarWhereWithAggregatesInputSchema),z.lazy(() => AssetCategoryScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  description: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
+export const QuantityUnitWhereInputSchema: z.ZodType<Prisma.QuantityUnitWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => QuantityUnitWhereInputSchema),z.lazy(() => QuantityUnitWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => QuantityUnitWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => QuantityUnitWhereInputSchema),z.lazy(() => QuantityUnitWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+}).strict();
+
+export const QuantityUnitOrderByWithRelationInputSchema: z.ZodType<Prisma.QuantityUnitOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const QuantityUnitWhereUniqueInputSchema: z.ZodType<Prisma.QuantityUnitWhereUniqueInput> = z.object({
+  id: z.string()
+})
+.and(z.object({
+  id: z.string().optional(),
+  AND: z.union([ z.lazy(() => QuantityUnitWhereInputSchema),z.lazy(() => QuantityUnitWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => QuantityUnitWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => QuantityUnitWhereInputSchema),z.lazy(() => QuantityUnitWhereInputSchema).array() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+}).strict());
+
+export const QuantityUnitOrderByWithAggregationInputSchema: z.ZodType<Prisma.QuantityUnitOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => QuantityUnitCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => QuantityUnitMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => QuantityUnitMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const QuantityUnitScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.QuantityUnitScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => QuantityUnitScalarWhereWithAggregatesInputSchema),z.lazy(() => QuantityUnitScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => QuantityUnitScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => QuantityUnitScalarWhereWithAggregatesInputSchema),z.lazy(() => QuantityUnitScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+}).strict();
+
+export const AssetTagWhereInputSchema: z.ZodType<Prisma.AssetTagWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => AssetTagWhereInputSchema),z.lazy(() => AssetTagWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetTagWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetTagWhereInputSchema),z.lazy(() => AssetTagWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  label: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
+export const AssetTagOrderByWithRelationInputSchema: z.ZodType<Prisma.AssetTagOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  label: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetTagWhereUniqueInputSchema: z.ZodType<Prisma.AssetTagWhereUniqueInput> = z.object({
+  id: z.string()
+})
+.and(z.object({
+  id: z.string().optional(),
+  AND: z.union([ z.lazy(() => AssetTagWhereInputSchema),z.lazy(() => AssetTagWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetTagWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetTagWhereInputSchema),z.lazy(() => AssetTagWhereInputSchema).array() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  label: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+}).strict());
+
+export const AssetTagOrderByWithAggregationInputSchema: z.ZodType<Prisma.AssetTagOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  label: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => AssetTagCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => AssetTagMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => AssetTagMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const AssetTagScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.AssetTagScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => AssetTagScalarWhereWithAggregatesInputSchema),z.lazy(() => AssetTagScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetTagScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetTagScalarWhereWithAggregatesInputSchema),z.lazy(() => AssetTagScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  label: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
+export const AssetBrandWhereInputSchema: z.ZodType<Prisma.AssetBrandWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => AssetBrandWhereInputSchema),z.lazy(() => AssetBrandWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetBrandWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetBrandWhereInputSchema),z.lazy(() => AssetBrandWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+}).strict();
+
+export const AssetBrandOrderByWithRelationInputSchema: z.ZodType<Prisma.AssetBrandOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetBrandWhereUniqueInputSchema: z.ZodType<Prisma.AssetBrandWhereUniqueInput> = z.object({
+  id: z.string()
+})
+.and(z.object({
+  id: z.string().optional(),
+  AND: z.union([ z.lazy(() => AssetBrandWhereInputSchema),z.lazy(() => AssetBrandWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetBrandWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetBrandWhereInputSchema),z.lazy(() => AssetBrandWhereInputSchema).array() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+}).strict());
+
+export const AssetBrandOrderByWithAggregationInputSchema: z.ZodType<Prisma.AssetBrandOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => AssetBrandCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => AssetBrandMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => AssetBrandMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const AssetBrandScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.AssetBrandScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => AssetBrandScalarWhereWithAggregatesInputSchema),z.lazy(() => AssetBrandScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => AssetBrandScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => AssetBrandScalarWhereWithAggregatesInputSchema),z.lazy(() => AssetBrandScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+}).strict();
+
 export const EventCreateInputSchema: z.ZodType<Prisma.EventCreateInput> = z.object({
   id: z.string().optional(),
   date: z.coerce.date(),
@@ -914,6 +1339,259 @@ export const OfficerUncheckedUpdateManyInputSchema: z.ZodType<Prisma.OfficerUnch
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
+export const AssetCreateInputSchema: z.ZodType<Prisma.AssetCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  brand: z.string().optional().nullable(),
+  category: z.string().optional().nullable(),
+  location: z.string().optional().nullable(),
+  quantity: z.number().int(),
+  quantityUnit: z.string().optional().nullable(),
+  packageSize: z.number().int().optional().nullable(),
+  packageSizeUnit: z.string().optional().nullable(),
+  upc: z.string().optional().nullable(),
+  ndc: z.string().optional().nullable(),
+  expiration: z.coerce.date().optional().nullable(),
+  lot: z.string().optional().nullable(),
+  comments: z.string().optional().nullable()
+}).strict();
+
+export const AssetUncheckedCreateInputSchema: z.ZodType<Prisma.AssetUncheckedCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  brand: z.string().optional().nullable(),
+  category: z.string().optional().nullable(),
+  location: z.string().optional().nullable(),
+  quantity: z.number().int(),
+  quantityUnit: z.string().optional().nullable(),
+  packageSize: z.number().int().optional().nullable(),
+  packageSizeUnit: z.string().optional().nullable(),
+  upc: z.string().optional().nullable(),
+  ndc: z.string().optional().nullable(),
+  expiration: z.coerce.date().optional().nullable(),
+  lot: z.string().optional().nullable(),
+  comments: z.string().optional().nullable()
+}).strict();
+
+export const AssetUpdateInputSchema: z.ZodType<Prisma.AssetUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  brand: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  quantity: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  quantityUnit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  packageSize: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  packageSizeUnit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  upc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ndc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  expiration: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  lot: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const AssetUncheckedUpdateInputSchema: z.ZodType<Prisma.AssetUncheckedUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  brand: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  quantity: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  quantityUnit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  packageSize: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  packageSizeUnit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  upc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ndc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  expiration: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  lot: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const AssetCreateManyInputSchema: z.ZodType<Prisma.AssetCreateManyInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  brand: z.string().optional().nullable(),
+  category: z.string().optional().nullable(),
+  location: z.string().optional().nullable(),
+  quantity: z.number().int(),
+  quantityUnit: z.string().optional().nullable(),
+  packageSize: z.number().int().optional().nullable(),
+  packageSizeUnit: z.string().optional().nullable(),
+  upc: z.string().optional().nullable(),
+  ndc: z.string().optional().nullable(),
+  expiration: z.coerce.date().optional().nullable(),
+  lot: z.string().optional().nullable(),
+  comments: z.string().optional().nullable()
+}).strict();
+
+export const AssetUpdateManyMutationInputSchema: z.ZodType<Prisma.AssetUpdateManyMutationInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  brand: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  quantity: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  quantityUnit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  packageSize: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  packageSizeUnit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  upc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ndc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  expiration: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  lot: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const AssetUncheckedUpdateManyInputSchema: z.ZodType<Prisma.AssetUncheckedUpdateManyInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  brand: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  quantity: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  quantityUnit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  packageSize: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  packageSizeUnit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  upc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ndc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  expiration: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  lot: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const AssetCategoryCreateInputSchema: z.ZodType<Prisma.AssetCategoryCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  description: z.string().optional().nullable()
+}).strict();
+
+export const AssetCategoryUncheckedCreateInputSchema: z.ZodType<Prisma.AssetCategoryUncheckedCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  description: z.string().optional().nullable()
+}).strict();
+
+export const AssetCategoryUpdateInputSchema: z.ZodType<Prisma.AssetCategoryUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const AssetCategoryUncheckedUpdateInputSchema: z.ZodType<Prisma.AssetCategoryUncheckedUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const AssetCategoryCreateManyInputSchema: z.ZodType<Prisma.AssetCategoryCreateManyInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  description: z.string().optional().nullable()
+}).strict();
+
+export const AssetCategoryUpdateManyMutationInputSchema: z.ZodType<Prisma.AssetCategoryUpdateManyMutationInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const AssetCategoryUncheckedUpdateManyInputSchema: z.ZodType<Prisma.AssetCategoryUncheckedUpdateManyInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const QuantityUnitCreateInputSchema: z.ZodType<Prisma.QuantityUnitCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string()
+}).strict();
+
+export const QuantityUnitUncheckedCreateInputSchema: z.ZodType<Prisma.QuantityUnitUncheckedCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string()
+}).strict();
+
+export const QuantityUnitUpdateInputSchema: z.ZodType<Prisma.QuantityUnitUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const QuantityUnitUncheckedUpdateInputSchema: z.ZodType<Prisma.QuantityUnitUncheckedUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const QuantityUnitCreateManyInputSchema: z.ZodType<Prisma.QuantityUnitCreateManyInput> = z.object({
+  id: z.string().optional(),
+  name: z.string()
+}).strict();
+
+export const QuantityUnitUpdateManyMutationInputSchema: z.ZodType<Prisma.QuantityUnitUpdateManyMutationInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const QuantityUnitUncheckedUpdateManyInputSchema: z.ZodType<Prisma.QuantityUnitUncheckedUpdateManyInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const AssetTagCreateInputSchema: z.ZodType<Prisma.AssetTagCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  label: z.string().optional().nullable()
+}).strict();
+
+export const AssetTagUncheckedCreateInputSchema: z.ZodType<Prisma.AssetTagUncheckedCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  label: z.string().optional().nullable()
+}).strict();
+
+export const AssetTagUpdateInputSchema: z.ZodType<Prisma.AssetTagUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  label: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const AssetTagUncheckedUpdateInputSchema: z.ZodType<Prisma.AssetTagUncheckedUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  label: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const AssetTagCreateManyInputSchema: z.ZodType<Prisma.AssetTagCreateManyInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  label: z.string().optional().nullable()
+}).strict();
+
+export const AssetTagUpdateManyMutationInputSchema: z.ZodType<Prisma.AssetTagUpdateManyMutationInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  label: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const AssetTagUncheckedUpdateManyInputSchema: z.ZodType<Prisma.AssetTagUncheckedUpdateManyInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  label: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const AssetBrandCreateInputSchema: z.ZodType<Prisma.AssetBrandCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string()
+}).strict();
+
+export const AssetBrandUncheckedCreateInputSchema: z.ZodType<Prisma.AssetBrandUncheckedCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string()
+}).strict();
+
+export const AssetBrandUpdateInputSchema: z.ZodType<Prisma.AssetBrandUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const AssetBrandUncheckedUpdateInputSchema: z.ZodType<Prisma.AssetBrandUncheckedUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const AssetBrandCreateManyInputSchema: z.ZodType<Prisma.AssetBrandCreateManyInput> = z.object({
+  id: z.string().optional(),
+  name: z.string()
+}).strict();
+
+export const AssetBrandUpdateManyMutationInputSchema: z.ZodType<Prisma.AssetBrandUpdateManyMutationInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const AssetBrandUncheckedUpdateManyInputSchema: z.ZodType<Prisma.AssetBrandUncheckedUpdateManyInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
 export const StringFilterSchema: z.ZodType<Prisma.StringFilter> = z.object({
   equals: z.string().optional(),
   in: z.string().array().optional(),
@@ -1217,6 +1895,189 @@ export const OfficerMinOrderByAggregateInputSchema: z.ZodType<Prisma.OfficerMinO
   description: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
+export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
+}).strict();
+
+export const IntNullableFilterSchema: z.ZodType<Prisma.IntNullableFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableFilterSchema) ]).optional().nullable(),
+  isSet: z.boolean().optional()
+}).strict();
+
+export const AssetCountOrderByAggregateInputSchema: z.ZodType<Prisma.AssetCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  brand: z.lazy(() => SortOrderSchema).optional(),
+  category: z.lazy(() => SortOrderSchema).optional(),
+  location: z.lazy(() => SortOrderSchema).optional(),
+  quantity: z.lazy(() => SortOrderSchema).optional(),
+  quantityUnit: z.lazy(() => SortOrderSchema).optional(),
+  packageSize: z.lazy(() => SortOrderSchema).optional(),
+  packageSizeUnit: z.lazy(() => SortOrderSchema).optional(),
+  upc: z.lazy(() => SortOrderSchema).optional(),
+  ndc: z.lazy(() => SortOrderSchema).optional(),
+  expiration: z.lazy(() => SortOrderSchema).optional(),
+  lot: z.lazy(() => SortOrderSchema).optional(),
+  comments: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetAvgOrderByAggregateInputSchema: z.ZodType<Prisma.AssetAvgOrderByAggregateInput> = z.object({
+  quantity: z.lazy(() => SortOrderSchema).optional(),
+  packageSize: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetMaxOrderByAggregateInputSchema: z.ZodType<Prisma.AssetMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  brand: z.lazy(() => SortOrderSchema).optional(),
+  category: z.lazy(() => SortOrderSchema).optional(),
+  location: z.lazy(() => SortOrderSchema).optional(),
+  quantity: z.lazy(() => SortOrderSchema).optional(),
+  quantityUnit: z.lazy(() => SortOrderSchema).optional(),
+  packageSize: z.lazy(() => SortOrderSchema).optional(),
+  packageSizeUnit: z.lazy(() => SortOrderSchema).optional(),
+  upc: z.lazy(() => SortOrderSchema).optional(),
+  ndc: z.lazy(() => SortOrderSchema).optional(),
+  expiration: z.lazy(() => SortOrderSchema).optional(),
+  lot: z.lazy(() => SortOrderSchema).optional(),
+  comments: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetMinOrderByAggregateInputSchema: z.ZodType<Prisma.AssetMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  brand: z.lazy(() => SortOrderSchema).optional(),
+  category: z.lazy(() => SortOrderSchema).optional(),
+  location: z.lazy(() => SortOrderSchema).optional(),
+  quantity: z.lazy(() => SortOrderSchema).optional(),
+  quantityUnit: z.lazy(() => SortOrderSchema).optional(),
+  packageSize: z.lazy(() => SortOrderSchema).optional(),
+  packageSizeUnit: z.lazy(() => SortOrderSchema).optional(),
+  upc: z.lazy(() => SortOrderSchema).optional(),
+  ndc: z.lazy(() => SortOrderSchema).optional(),
+  expiration: z.lazy(() => SortOrderSchema).optional(),
+  lot: z.lazy(() => SortOrderSchema).optional(),
+  comments: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetSumOrderByAggregateInputSchema: z.ZodType<Prisma.AssetSumOrderByAggregateInput> = z.object({
+  quantity: z.lazy(() => SortOrderSchema).optional(),
+  packageSize: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntFilterSchema).optional()
+}).strict();
+
+export const IntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.IntNullableWithAggregatesFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  isSet: z.boolean().optional()
+}).strict();
+
+export const AssetCategoryCountOrderByAggregateInputSchema: z.ZodType<Prisma.AssetCategoryCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetCategoryMaxOrderByAggregateInputSchema: z.ZodType<Prisma.AssetCategoryMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetCategoryMinOrderByAggregateInputSchema: z.ZodType<Prisma.AssetCategoryMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const QuantityUnitCountOrderByAggregateInputSchema: z.ZodType<Prisma.QuantityUnitCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const QuantityUnitMaxOrderByAggregateInputSchema: z.ZodType<Prisma.QuantityUnitMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const QuantityUnitMinOrderByAggregateInputSchema: z.ZodType<Prisma.QuantityUnitMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetTagCountOrderByAggregateInputSchema: z.ZodType<Prisma.AssetTagCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  label: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetTagMaxOrderByAggregateInputSchema: z.ZodType<Prisma.AssetTagMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  label: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetTagMinOrderByAggregateInputSchema: z.ZodType<Prisma.AssetTagMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  label: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetBrandCountOrderByAggregateInputSchema: z.ZodType<Prisma.AssetBrandCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetBrandMaxOrderByAggregateInputSchema: z.ZodType<Prisma.AssetBrandMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const AssetBrandMinOrderByAggregateInputSchema: z.ZodType<Prisma.AssetBrandMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
 export const shiftTypeListCreateEnvelopeInputSchema: z.ZodType<Prisma.shiftTypeListCreateEnvelopeInput> = z.object({
   set: z.union([ z.lazy(() => shiftTypeCreateInputSchema),z.lazy(() => shiftTypeCreateInputSchema).array() ]).optional(),
 }).strict();
@@ -1262,6 +2123,23 @@ export const PositionUpdateallowedUserTypesInputSchema: z.ZodType<Prisma.Positio
 
 export const NullableBoolFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableBoolFieldUpdateOperationsInput> = z.object({
   set: z.boolean().optional().nullable(),
+  unset: z.boolean().optional()
+}).strict();
+
+export const IntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.IntFieldUpdateOperationsInput> = z.object({
+  set: z.number().optional(),
+  increment: z.number().optional(),
+  decrement: z.number().optional(),
+  multiply: z.number().optional(),
+  divide: z.number().optional()
+}).strict();
+
+export const NullableIntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableIntFieldUpdateOperationsInput> = z.object({
+  set: z.number().optional().nullable(),
+  increment: z.number().optional(),
+  decrement: z.number().optional(),
+  multiply: z.number().optional(),
+  divide: z.number().optional(),
   unset: z.boolean().optional()
 }).strict();
 
@@ -1424,6 +2302,62 @@ export const NestedBoolNullableWithAggregatesFilterSchema: z.ZodType<Prisma.Nest
   _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _min: z.lazy(() => NestedBoolNullableFilterSchema).optional(),
   _max: z.lazy(() => NestedBoolNullableFilterSchema).optional(),
+  isSet: z.boolean().optional()
+}).strict();
+
+export const NestedIntWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntWithAggregatesFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntFilterSchema).optional()
+}).strict();
+
+export const NestedFloatFilterSchema: z.ZodType<Prisma.NestedFloatFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedFloatFilterSchema) ]).optional(),
+}).strict();
+
+export const NestedIntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntNullableWithAggregatesFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  isSet: z.boolean().optional()
+}).strict();
+
+export const NestedFloatNullableFilterSchema: z.ZodType<Prisma.NestedFloatNullableFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedFloatNullableFilterSchema) ]).optional().nullable(),
   isSet: z.boolean().optional()
 }).strict();
 
@@ -1797,6 +2731,291 @@ export const OfficerFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.OfficerFindUni
   where: OfficerWhereUniqueInputSchema,
 }).strict() ;
 
+export const AssetFindFirstArgsSchema: z.ZodType<Prisma.AssetFindFirstArgs> = z.object({
+  select: AssetSelectSchema.optional(),
+  where: AssetWhereInputSchema.optional(),
+  orderBy: z.union([ AssetOrderByWithRelationInputSchema.array(),AssetOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetScalarFieldEnumSchema,AssetScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetFindFirstOrThrowArgsSchema: z.ZodType<Prisma.AssetFindFirstOrThrowArgs> = z.object({
+  select: AssetSelectSchema.optional(),
+  where: AssetWhereInputSchema.optional(),
+  orderBy: z.union([ AssetOrderByWithRelationInputSchema.array(),AssetOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetScalarFieldEnumSchema,AssetScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetFindManyArgsSchema: z.ZodType<Prisma.AssetFindManyArgs> = z.object({
+  select: AssetSelectSchema.optional(),
+  where: AssetWhereInputSchema.optional(),
+  orderBy: z.union([ AssetOrderByWithRelationInputSchema.array(),AssetOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetScalarFieldEnumSchema,AssetScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetAggregateArgsSchema: z.ZodType<Prisma.AssetAggregateArgs> = z.object({
+  where: AssetWhereInputSchema.optional(),
+  orderBy: z.union([ AssetOrderByWithRelationInputSchema.array(),AssetOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const AssetGroupByArgsSchema: z.ZodType<Prisma.AssetGroupByArgs> = z.object({
+  where: AssetWhereInputSchema.optional(),
+  orderBy: z.union([ AssetOrderByWithAggregationInputSchema.array(),AssetOrderByWithAggregationInputSchema ]).optional(),
+  by: AssetScalarFieldEnumSchema.array(),
+  having: AssetScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const AssetFindUniqueArgsSchema: z.ZodType<Prisma.AssetFindUniqueArgs> = z.object({
+  select: AssetSelectSchema.optional(),
+  where: AssetWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.AssetFindUniqueOrThrowArgs> = z.object({
+  select: AssetSelectSchema.optional(),
+  where: AssetWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetCategoryFindFirstArgsSchema: z.ZodType<Prisma.AssetCategoryFindFirstArgs> = z.object({
+  select: AssetCategorySelectSchema.optional(),
+  where: AssetCategoryWhereInputSchema.optional(),
+  orderBy: z.union([ AssetCategoryOrderByWithRelationInputSchema.array(),AssetCategoryOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetCategoryWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetCategoryScalarFieldEnumSchema,AssetCategoryScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetCategoryFindFirstOrThrowArgsSchema: z.ZodType<Prisma.AssetCategoryFindFirstOrThrowArgs> = z.object({
+  select: AssetCategorySelectSchema.optional(),
+  where: AssetCategoryWhereInputSchema.optional(),
+  orderBy: z.union([ AssetCategoryOrderByWithRelationInputSchema.array(),AssetCategoryOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetCategoryWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetCategoryScalarFieldEnumSchema,AssetCategoryScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetCategoryFindManyArgsSchema: z.ZodType<Prisma.AssetCategoryFindManyArgs> = z.object({
+  select: AssetCategorySelectSchema.optional(),
+  where: AssetCategoryWhereInputSchema.optional(),
+  orderBy: z.union([ AssetCategoryOrderByWithRelationInputSchema.array(),AssetCategoryOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetCategoryWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetCategoryScalarFieldEnumSchema,AssetCategoryScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetCategoryAggregateArgsSchema: z.ZodType<Prisma.AssetCategoryAggregateArgs> = z.object({
+  where: AssetCategoryWhereInputSchema.optional(),
+  orderBy: z.union([ AssetCategoryOrderByWithRelationInputSchema.array(),AssetCategoryOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetCategoryWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const AssetCategoryGroupByArgsSchema: z.ZodType<Prisma.AssetCategoryGroupByArgs> = z.object({
+  where: AssetCategoryWhereInputSchema.optional(),
+  orderBy: z.union([ AssetCategoryOrderByWithAggregationInputSchema.array(),AssetCategoryOrderByWithAggregationInputSchema ]).optional(),
+  by: AssetCategoryScalarFieldEnumSchema.array(),
+  having: AssetCategoryScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const AssetCategoryFindUniqueArgsSchema: z.ZodType<Prisma.AssetCategoryFindUniqueArgs> = z.object({
+  select: AssetCategorySelectSchema.optional(),
+  where: AssetCategoryWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetCategoryFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.AssetCategoryFindUniqueOrThrowArgs> = z.object({
+  select: AssetCategorySelectSchema.optional(),
+  where: AssetCategoryWhereUniqueInputSchema,
+}).strict() ;
+
+export const QuantityUnitFindFirstArgsSchema: z.ZodType<Prisma.QuantityUnitFindFirstArgs> = z.object({
+  select: QuantityUnitSelectSchema.optional(),
+  where: QuantityUnitWhereInputSchema.optional(),
+  orderBy: z.union([ QuantityUnitOrderByWithRelationInputSchema.array(),QuantityUnitOrderByWithRelationInputSchema ]).optional(),
+  cursor: QuantityUnitWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ QuantityUnitScalarFieldEnumSchema,QuantityUnitScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const QuantityUnitFindFirstOrThrowArgsSchema: z.ZodType<Prisma.QuantityUnitFindFirstOrThrowArgs> = z.object({
+  select: QuantityUnitSelectSchema.optional(),
+  where: QuantityUnitWhereInputSchema.optional(),
+  orderBy: z.union([ QuantityUnitOrderByWithRelationInputSchema.array(),QuantityUnitOrderByWithRelationInputSchema ]).optional(),
+  cursor: QuantityUnitWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ QuantityUnitScalarFieldEnumSchema,QuantityUnitScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const QuantityUnitFindManyArgsSchema: z.ZodType<Prisma.QuantityUnitFindManyArgs> = z.object({
+  select: QuantityUnitSelectSchema.optional(),
+  where: QuantityUnitWhereInputSchema.optional(),
+  orderBy: z.union([ QuantityUnitOrderByWithRelationInputSchema.array(),QuantityUnitOrderByWithRelationInputSchema ]).optional(),
+  cursor: QuantityUnitWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ QuantityUnitScalarFieldEnumSchema,QuantityUnitScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const QuantityUnitAggregateArgsSchema: z.ZodType<Prisma.QuantityUnitAggregateArgs> = z.object({
+  where: QuantityUnitWhereInputSchema.optional(),
+  orderBy: z.union([ QuantityUnitOrderByWithRelationInputSchema.array(),QuantityUnitOrderByWithRelationInputSchema ]).optional(),
+  cursor: QuantityUnitWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const QuantityUnitGroupByArgsSchema: z.ZodType<Prisma.QuantityUnitGroupByArgs> = z.object({
+  where: QuantityUnitWhereInputSchema.optional(),
+  orderBy: z.union([ QuantityUnitOrderByWithAggregationInputSchema.array(),QuantityUnitOrderByWithAggregationInputSchema ]).optional(),
+  by: QuantityUnitScalarFieldEnumSchema.array(),
+  having: QuantityUnitScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const QuantityUnitFindUniqueArgsSchema: z.ZodType<Prisma.QuantityUnitFindUniqueArgs> = z.object({
+  select: QuantityUnitSelectSchema.optional(),
+  where: QuantityUnitWhereUniqueInputSchema,
+}).strict() ;
+
+export const QuantityUnitFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.QuantityUnitFindUniqueOrThrowArgs> = z.object({
+  select: QuantityUnitSelectSchema.optional(),
+  where: QuantityUnitWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetTagFindFirstArgsSchema: z.ZodType<Prisma.AssetTagFindFirstArgs> = z.object({
+  select: AssetTagSelectSchema.optional(),
+  where: AssetTagWhereInputSchema.optional(),
+  orderBy: z.union([ AssetTagOrderByWithRelationInputSchema.array(),AssetTagOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetTagWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetTagScalarFieldEnumSchema,AssetTagScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetTagFindFirstOrThrowArgsSchema: z.ZodType<Prisma.AssetTagFindFirstOrThrowArgs> = z.object({
+  select: AssetTagSelectSchema.optional(),
+  where: AssetTagWhereInputSchema.optional(),
+  orderBy: z.union([ AssetTagOrderByWithRelationInputSchema.array(),AssetTagOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetTagWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetTagScalarFieldEnumSchema,AssetTagScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetTagFindManyArgsSchema: z.ZodType<Prisma.AssetTagFindManyArgs> = z.object({
+  select: AssetTagSelectSchema.optional(),
+  where: AssetTagWhereInputSchema.optional(),
+  orderBy: z.union([ AssetTagOrderByWithRelationInputSchema.array(),AssetTagOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetTagWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetTagScalarFieldEnumSchema,AssetTagScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetTagAggregateArgsSchema: z.ZodType<Prisma.AssetTagAggregateArgs> = z.object({
+  where: AssetTagWhereInputSchema.optional(),
+  orderBy: z.union([ AssetTagOrderByWithRelationInputSchema.array(),AssetTagOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetTagWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const AssetTagGroupByArgsSchema: z.ZodType<Prisma.AssetTagGroupByArgs> = z.object({
+  where: AssetTagWhereInputSchema.optional(),
+  orderBy: z.union([ AssetTagOrderByWithAggregationInputSchema.array(),AssetTagOrderByWithAggregationInputSchema ]).optional(),
+  by: AssetTagScalarFieldEnumSchema.array(),
+  having: AssetTagScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const AssetTagFindUniqueArgsSchema: z.ZodType<Prisma.AssetTagFindUniqueArgs> = z.object({
+  select: AssetTagSelectSchema.optional(),
+  where: AssetTagWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetTagFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.AssetTagFindUniqueOrThrowArgs> = z.object({
+  select: AssetTagSelectSchema.optional(),
+  where: AssetTagWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetBrandFindFirstArgsSchema: z.ZodType<Prisma.AssetBrandFindFirstArgs> = z.object({
+  select: AssetBrandSelectSchema.optional(),
+  where: AssetBrandWhereInputSchema.optional(),
+  orderBy: z.union([ AssetBrandOrderByWithRelationInputSchema.array(),AssetBrandOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetBrandWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetBrandScalarFieldEnumSchema,AssetBrandScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetBrandFindFirstOrThrowArgsSchema: z.ZodType<Prisma.AssetBrandFindFirstOrThrowArgs> = z.object({
+  select: AssetBrandSelectSchema.optional(),
+  where: AssetBrandWhereInputSchema.optional(),
+  orderBy: z.union([ AssetBrandOrderByWithRelationInputSchema.array(),AssetBrandOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetBrandWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetBrandScalarFieldEnumSchema,AssetBrandScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetBrandFindManyArgsSchema: z.ZodType<Prisma.AssetBrandFindManyArgs> = z.object({
+  select: AssetBrandSelectSchema.optional(),
+  where: AssetBrandWhereInputSchema.optional(),
+  orderBy: z.union([ AssetBrandOrderByWithRelationInputSchema.array(),AssetBrandOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetBrandWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ AssetBrandScalarFieldEnumSchema,AssetBrandScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const AssetBrandAggregateArgsSchema: z.ZodType<Prisma.AssetBrandAggregateArgs> = z.object({
+  where: AssetBrandWhereInputSchema.optional(),
+  orderBy: z.union([ AssetBrandOrderByWithRelationInputSchema.array(),AssetBrandOrderByWithRelationInputSchema ]).optional(),
+  cursor: AssetBrandWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const AssetBrandGroupByArgsSchema: z.ZodType<Prisma.AssetBrandGroupByArgs> = z.object({
+  where: AssetBrandWhereInputSchema.optional(),
+  orderBy: z.union([ AssetBrandOrderByWithAggregationInputSchema.array(),AssetBrandOrderByWithAggregationInputSchema ]).optional(),
+  by: AssetBrandScalarFieldEnumSchema.array(),
+  having: AssetBrandScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const AssetBrandFindUniqueArgsSchema: z.ZodType<Prisma.AssetBrandFindUniqueArgs> = z.object({
+  select: AssetBrandSelectSchema.optional(),
+  where: AssetBrandWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetBrandFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.AssetBrandFindUniqueOrThrowArgs> = z.object({
+  select: AssetBrandSelectSchema.optional(),
+  where: AssetBrandWhereUniqueInputSchema,
+}).strict() ;
+
 export const EventCreateArgsSchema: z.ZodType<Prisma.EventCreateArgs> = z.object({
   select: EventSelectSchema.optional(),
   include: EventIncludeSchema.optional(),
@@ -2019,4 +3238,184 @@ export const OfficerUpdateManyArgsSchema: z.ZodType<Prisma.OfficerUpdateManyArgs
 
 export const OfficerDeleteManyArgsSchema: z.ZodType<Prisma.OfficerDeleteManyArgs> = z.object({
   where: OfficerWhereInputSchema.optional(),
+}).strict() ;
+
+export const AssetCreateArgsSchema: z.ZodType<Prisma.AssetCreateArgs> = z.object({
+  select: AssetSelectSchema.optional(),
+  data: z.union([ AssetCreateInputSchema,AssetUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const AssetUpsertArgsSchema: z.ZodType<Prisma.AssetUpsertArgs> = z.object({
+  select: AssetSelectSchema.optional(),
+  where: AssetWhereUniqueInputSchema,
+  create: z.union([ AssetCreateInputSchema,AssetUncheckedCreateInputSchema ]),
+  update: z.union([ AssetUpdateInputSchema,AssetUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const AssetCreateManyArgsSchema: z.ZodType<Prisma.AssetCreateManyArgs> = z.object({
+  data: z.union([ AssetCreateManyInputSchema,AssetCreateManyInputSchema.array() ]),
+}).strict() ;
+
+export const AssetDeleteArgsSchema: z.ZodType<Prisma.AssetDeleteArgs> = z.object({
+  select: AssetSelectSchema.optional(),
+  where: AssetWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetUpdateArgsSchema: z.ZodType<Prisma.AssetUpdateArgs> = z.object({
+  select: AssetSelectSchema.optional(),
+  data: z.union([ AssetUpdateInputSchema,AssetUncheckedUpdateInputSchema ]),
+  where: AssetWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetUpdateManyArgsSchema: z.ZodType<Prisma.AssetUpdateManyArgs> = z.object({
+  data: z.union([ AssetUpdateManyMutationInputSchema,AssetUncheckedUpdateManyInputSchema ]),
+  where: AssetWhereInputSchema.optional(),
+}).strict() ;
+
+export const AssetDeleteManyArgsSchema: z.ZodType<Prisma.AssetDeleteManyArgs> = z.object({
+  where: AssetWhereInputSchema.optional(),
+}).strict() ;
+
+export const AssetCategoryCreateArgsSchema: z.ZodType<Prisma.AssetCategoryCreateArgs> = z.object({
+  select: AssetCategorySelectSchema.optional(),
+  data: z.union([ AssetCategoryCreateInputSchema,AssetCategoryUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const AssetCategoryUpsertArgsSchema: z.ZodType<Prisma.AssetCategoryUpsertArgs> = z.object({
+  select: AssetCategorySelectSchema.optional(),
+  where: AssetCategoryWhereUniqueInputSchema,
+  create: z.union([ AssetCategoryCreateInputSchema,AssetCategoryUncheckedCreateInputSchema ]),
+  update: z.union([ AssetCategoryUpdateInputSchema,AssetCategoryUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const AssetCategoryCreateManyArgsSchema: z.ZodType<Prisma.AssetCategoryCreateManyArgs> = z.object({
+  data: z.union([ AssetCategoryCreateManyInputSchema,AssetCategoryCreateManyInputSchema.array() ]),
+}).strict() ;
+
+export const AssetCategoryDeleteArgsSchema: z.ZodType<Prisma.AssetCategoryDeleteArgs> = z.object({
+  select: AssetCategorySelectSchema.optional(),
+  where: AssetCategoryWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetCategoryUpdateArgsSchema: z.ZodType<Prisma.AssetCategoryUpdateArgs> = z.object({
+  select: AssetCategorySelectSchema.optional(),
+  data: z.union([ AssetCategoryUpdateInputSchema,AssetCategoryUncheckedUpdateInputSchema ]),
+  where: AssetCategoryWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetCategoryUpdateManyArgsSchema: z.ZodType<Prisma.AssetCategoryUpdateManyArgs> = z.object({
+  data: z.union([ AssetCategoryUpdateManyMutationInputSchema,AssetCategoryUncheckedUpdateManyInputSchema ]),
+  where: AssetCategoryWhereInputSchema.optional(),
+}).strict() ;
+
+export const AssetCategoryDeleteManyArgsSchema: z.ZodType<Prisma.AssetCategoryDeleteManyArgs> = z.object({
+  where: AssetCategoryWhereInputSchema.optional(),
+}).strict() ;
+
+export const QuantityUnitCreateArgsSchema: z.ZodType<Prisma.QuantityUnitCreateArgs> = z.object({
+  select: QuantityUnitSelectSchema.optional(),
+  data: z.union([ QuantityUnitCreateInputSchema,QuantityUnitUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const QuantityUnitUpsertArgsSchema: z.ZodType<Prisma.QuantityUnitUpsertArgs> = z.object({
+  select: QuantityUnitSelectSchema.optional(),
+  where: QuantityUnitWhereUniqueInputSchema,
+  create: z.union([ QuantityUnitCreateInputSchema,QuantityUnitUncheckedCreateInputSchema ]),
+  update: z.union([ QuantityUnitUpdateInputSchema,QuantityUnitUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const QuantityUnitCreateManyArgsSchema: z.ZodType<Prisma.QuantityUnitCreateManyArgs> = z.object({
+  data: z.union([ QuantityUnitCreateManyInputSchema,QuantityUnitCreateManyInputSchema.array() ]),
+}).strict() ;
+
+export const QuantityUnitDeleteArgsSchema: z.ZodType<Prisma.QuantityUnitDeleteArgs> = z.object({
+  select: QuantityUnitSelectSchema.optional(),
+  where: QuantityUnitWhereUniqueInputSchema,
+}).strict() ;
+
+export const QuantityUnitUpdateArgsSchema: z.ZodType<Prisma.QuantityUnitUpdateArgs> = z.object({
+  select: QuantityUnitSelectSchema.optional(),
+  data: z.union([ QuantityUnitUpdateInputSchema,QuantityUnitUncheckedUpdateInputSchema ]),
+  where: QuantityUnitWhereUniqueInputSchema,
+}).strict() ;
+
+export const QuantityUnitUpdateManyArgsSchema: z.ZodType<Prisma.QuantityUnitUpdateManyArgs> = z.object({
+  data: z.union([ QuantityUnitUpdateManyMutationInputSchema,QuantityUnitUncheckedUpdateManyInputSchema ]),
+  where: QuantityUnitWhereInputSchema.optional(),
+}).strict() ;
+
+export const QuantityUnitDeleteManyArgsSchema: z.ZodType<Prisma.QuantityUnitDeleteManyArgs> = z.object({
+  where: QuantityUnitWhereInputSchema.optional(),
+}).strict() ;
+
+export const AssetTagCreateArgsSchema: z.ZodType<Prisma.AssetTagCreateArgs> = z.object({
+  select: AssetTagSelectSchema.optional(),
+  data: z.union([ AssetTagCreateInputSchema,AssetTagUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const AssetTagUpsertArgsSchema: z.ZodType<Prisma.AssetTagUpsertArgs> = z.object({
+  select: AssetTagSelectSchema.optional(),
+  where: AssetTagWhereUniqueInputSchema,
+  create: z.union([ AssetTagCreateInputSchema,AssetTagUncheckedCreateInputSchema ]),
+  update: z.union([ AssetTagUpdateInputSchema,AssetTagUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const AssetTagCreateManyArgsSchema: z.ZodType<Prisma.AssetTagCreateManyArgs> = z.object({
+  data: z.union([ AssetTagCreateManyInputSchema,AssetTagCreateManyInputSchema.array() ]),
+}).strict() ;
+
+export const AssetTagDeleteArgsSchema: z.ZodType<Prisma.AssetTagDeleteArgs> = z.object({
+  select: AssetTagSelectSchema.optional(),
+  where: AssetTagWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetTagUpdateArgsSchema: z.ZodType<Prisma.AssetTagUpdateArgs> = z.object({
+  select: AssetTagSelectSchema.optional(),
+  data: z.union([ AssetTagUpdateInputSchema,AssetTagUncheckedUpdateInputSchema ]),
+  where: AssetTagWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetTagUpdateManyArgsSchema: z.ZodType<Prisma.AssetTagUpdateManyArgs> = z.object({
+  data: z.union([ AssetTagUpdateManyMutationInputSchema,AssetTagUncheckedUpdateManyInputSchema ]),
+  where: AssetTagWhereInputSchema.optional(),
+}).strict() ;
+
+export const AssetTagDeleteManyArgsSchema: z.ZodType<Prisma.AssetTagDeleteManyArgs> = z.object({
+  where: AssetTagWhereInputSchema.optional(),
+}).strict() ;
+
+export const AssetBrandCreateArgsSchema: z.ZodType<Prisma.AssetBrandCreateArgs> = z.object({
+  select: AssetBrandSelectSchema.optional(),
+  data: z.union([ AssetBrandCreateInputSchema,AssetBrandUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const AssetBrandUpsertArgsSchema: z.ZodType<Prisma.AssetBrandUpsertArgs> = z.object({
+  select: AssetBrandSelectSchema.optional(),
+  where: AssetBrandWhereUniqueInputSchema,
+  create: z.union([ AssetBrandCreateInputSchema,AssetBrandUncheckedCreateInputSchema ]),
+  update: z.union([ AssetBrandUpdateInputSchema,AssetBrandUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const AssetBrandCreateManyArgsSchema: z.ZodType<Prisma.AssetBrandCreateManyArgs> = z.object({
+  data: z.union([ AssetBrandCreateManyInputSchema,AssetBrandCreateManyInputSchema.array() ]),
+}).strict() ;
+
+export const AssetBrandDeleteArgsSchema: z.ZodType<Prisma.AssetBrandDeleteArgs> = z.object({
+  select: AssetBrandSelectSchema.optional(),
+  where: AssetBrandWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetBrandUpdateArgsSchema: z.ZodType<Prisma.AssetBrandUpdateArgs> = z.object({
+  select: AssetBrandSelectSchema.optional(),
+  data: z.union([ AssetBrandUpdateInputSchema,AssetBrandUncheckedUpdateInputSchema ]),
+  where: AssetBrandWhereUniqueInputSchema,
+}).strict() ;
+
+export const AssetBrandUpdateManyArgsSchema: z.ZodType<Prisma.AssetBrandUpdateManyArgs> = z.object({
+  data: z.union([ AssetBrandUpdateManyMutationInputSchema,AssetBrandUncheckedUpdateManyInputSchema ]),
+  where: AssetBrandWhereInputSchema.optional(),
+}).strict() ;
+
+export const AssetBrandDeleteManyArgsSchema: z.ZodType<Prisma.AssetBrandDeleteManyArgs> = z.object({
+  where: AssetBrandWhereInputSchema.optional(),
 }).strict() ;
