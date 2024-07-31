@@ -1,4 +1,4 @@
-import { AssetsTable } from "./_components/AssetsTable"
+import { AssetsTable } from "./_components/InventoryTable"
 import { getAllAssets } from "~/server/assets"
 
 export default async function AssetsPage() {

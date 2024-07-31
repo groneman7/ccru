@@ -1,5 +1,5 @@
 import { getAssetById } from "~/server/assets"
-import { AssetForm } from "../_components/AssetForm"
+import { AssetForm } from "../_components/InventoryForm"
 
 export default async function AssetPage({ params }: {
   params: {
