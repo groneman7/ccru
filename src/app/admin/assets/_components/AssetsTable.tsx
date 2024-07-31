@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import type { Asset } from '@prisma/client'
-import { Input, Table } from 'antd'
+import { Button, Input, Table } from 'antd'
 import type { InputRef, TableColumnsType } from "antd";
 import dayjs from 'dayjs';
 import { useKeyDown } from '~/utils/hooks'
@@ -56,12 +56,16 @@ export function AssetsTable({ data }: AssetsTableProps) {
 
   return (
     <div className="flex flex-col flex-1 gap-4">
-      <Input
-        ref={inputRef}
-        value={inputValue}
-        onChange={(e) => {
-          handleChange(e.target.value)
-        }}/>
+      <div className="flex flex-1 gap-4 justify-between">
+        <Button href="/admin/assets/new" type="primary">New Item</Button>
+        <Input
+          className="basis-1/3"
+          ref={inputRef}
+          value={inputValue}
+          onChange={(e) => {
+            handleChange(e.target.value)
+          }}/>
+      </div>
       <Table className="flex-1" columns={COLUMNS} dataSource={data} pagination={false} rowKey={(record) => record.id} />
     </div>
   )
