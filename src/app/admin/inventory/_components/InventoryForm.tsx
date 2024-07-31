@@ -1,21 +1,21 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import type { Asset } from '@prisma/client';
+import type { Inventory } from '@prisma/client';
 import { Button, Form, Input, Select } from 'antd';
 import type { SelectProps } from 'antd';
-import { searchBrands } from '~/server/assets'
+import { searchBrands } from '~/server/inventory'
 import { useDebounce } from '~/utils/hooks'
 
 const SEARCH_DELAY = 500;
 
-type AssetFormProps = {
-  asset: Asset | null
-}
+type InventoryFormProps = {
+  item: Inventory | null;
+};
 
-export function AssetForm({ asset }: AssetFormProps) {
-  const [assetForm] = Form.useForm();
+export function InventoryForm({ item }: InventoryFormProps) {
+  const [inventoryForm] = Form.useForm();
 
-  const [barcodeScan, setBarcodeScan] = useState<boolean>(!asset ? true : false)
+  const [barcodeScan, setBarcodeScan] = useState<boolean>(!item ? true : false);
   const [brandSearchValue, setBrandSearchValue] = useState<string>('')
   const [brandSearchLoading, setBrandSearchLoading] = useState<boolean>(false)
   const [brandItems, setBrandItems] = useState<SelectProps['options']>([])
@@ -24,9 +24,9 @@ export function AssetForm({ asset }: AssetFormProps) {
 
   useEffect(() => {
     if (addedOptions && addedOptions.length > 0) {
-      assetForm.setFieldValue('brand', addedOptions[addedOptions.length - 1]!.value)
+      inventoryForm.setFieldValue('brand', addedOptions[addedOptions.length - 1]!.value)
     }
-  }, [addedOptions, assetForm])
+  }, [addedOptions, inventoryForm])
 
   function handleSearch(newValue: string) {
     if (newValue === '') {
@@ -51,8 +51,8 @@ export function AssetForm({ asset }: AssetFormProps) {
 
   useDebounce(async () => {
     if (brandSearchValue !== '') {
-      const { results } = await searchBrands(brandSearchValue)
-      if (results) setBrandItems(results)
+      const { data } = await searchBrands(brandSearchValue)
+      if (data) setBrandItems(data)
       setBrandSearchLoading(false)
     }
   }, SEARCH_DELAY, [brandSearchValue])
@@ -77,9 +77,9 @@ export function AssetForm({ asset }: AssetFormProps) {
       </div>
     </div>
   ) : (
-    <Form className="flex-1" form={assetForm}>
+    <Form className="flex-1" form={inventoryForm}>
       <Form.Item
-        label="Asset"
+        label="Item"
         name="name"
       >
         <Input />

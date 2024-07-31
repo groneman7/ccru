@@ -117,7 +117,7 @@ model InventoryTag {
   label String?
 }
 
-// Model for the brands of assets (e.g., Walgreens, Pfizer, etc.).
+// Model for the brands of inventory (e.g., Walgreens, Pfizer, etc.).
 model InventoryBrand {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String

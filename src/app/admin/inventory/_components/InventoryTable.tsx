@@ -1,16 +1,16 @@
 'use client'
 import { useRef, useState } from 'react'
-import type { Asset } from '@prisma/client'
+import type { Inventory } from '@prisma/client'
 import { Button, Input, Table } from 'antd'
 import type { InputRef, TableColumnsType } from "antd";
 import dayjs from 'dayjs';
 import { useKeyDown } from '~/utils/hooks'
 
-type AssetsTableProps = {
-  data: Asset[]
+type InventoryTableProps = {
+  data: Inventory[]
 }
 
-export function AssetsTable({ data }: AssetsTableProps) {
+export function InventoryTable({ data }: InventoryTableProps) {
   const [inputValue, setInputValue] = useState<string>('')
   const inputRef = useRef <InputRef>(null)
 
@@ -24,7 +24,7 @@ export function AssetsTable({ data }: AssetsTableProps) {
     setInputValue(newValue)
   }
 
-  const COLUMNS: TableColumnsType<Asset> = [
+  const COLUMNS: TableColumnsType<Inventory> = [
     {
       title: "Item",
       dataIndex: "name",
@@ -57,7 +57,7 @@ export function AssetsTable({ data }: AssetsTableProps) {
   return (
     <div className="flex flex-col flex-1 gap-4">
       <div className="flex flex-1 gap-4 justify-between">
-        <Button href="/admin/assets/new" type="primary">New Item</Button>
+        <Button href="/admin/inventory/new" type="primary">New Item</Button>
         <Input
           className="basis-1/3"
           ref={inputRef}

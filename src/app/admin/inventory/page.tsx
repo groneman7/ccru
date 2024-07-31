@@ -1,12 +1,12 @@
-import { AssetsTable } from "./_components/InventoryTable"
-import { getAllAssets } from "~/server/assets"
+import { InventoryTable } from "./_components/InventoryTable"
+import { getAllItems } from "~/server/inventory"
 
-export default async function AssetsPage() {
-  const { assets } = await getAllAssets()
+export default async function InventoryPage() {
+  const { data } = await getAllItems();
 
   return (
     <div className="default-admin-page">
-      <AssetsTable data={assets ?? []}/>
+      <InventoryTable data={data ?? []}/>
     </div>
   )
 }

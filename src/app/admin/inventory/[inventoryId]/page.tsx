@@ -1,16 +1,24 @@
-import { getAssetById } from "~/server/assets"
-import { AssetForm } from "../_components/InventoryForm"
+import { getItemById } from "~/server/inventory";
+import { InventoryForm } from "../_components/InventoryForm"
 
-export default async function AssetPage({ params }: {
+export default async function ItemPage({ params }: {
   params: {
-    assetId: string
+    itemId: string
   }
 }) {
-  const { asset } = params.assetId !== 'new' && await getAssetById(params.assetId)
 
-  return (
+  if (params.itemId === 'new') {
+    return (
+      <div className="default-admin-page">
+        <InventoryForm item={null} />
+      </div>
+    );
+  } else {
+    const response = await getItemById(params?.itemId);
     <div className="default-admin-page">
-      <AssetForm asset={asset ?? null} />
+      {
+        response.status === 200 ? <InventoryForm item={response.data} /> : <div>{response.status}</div>
+      }
     </div>
-  )
+  }
 }
