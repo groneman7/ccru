@@ -6,7 +6,7 @@ export default async function AssetPage({ params }: {
     assetId: string
   }
 }) {
-  const { asset } = await getAssetById(params.assetId)
+  const { asset } = params.assetId !== 'new' && await getAssetById(params.assetId)
 
   return (
     <div className="default-admin-page">
