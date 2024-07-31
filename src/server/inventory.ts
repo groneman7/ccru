@@ -82,7 +82,7 @@ export async function getItemById(id: string): Promise<QueryReturn<Inventory>> {
   }
 }
 
-export async function getAllAssets(): Promise<QueryReturn<Inventory[]>> {
+export async function getAllItems(): Promise<QueryReturn<Inventory[]>> {
   try {
     const items = await db.inventory.findMany();
     if (!items) {
