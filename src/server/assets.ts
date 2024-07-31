@@ -3,6 +3,53 @@
 import { db } from "./db";
 import type { Asset } from '@prisma/client'
 
+export async function searchBrands(query: string) {
+  try {
+    const results = await db.assetBrand.findMany({
+      where: {
+        name: {
+          contains: query,
+          mode: "insensitive"
+        }
+      }
+    })
+    if (!results) {
+      return {
+        status: 404
+      }
+    }
+    return {
+      status: 200,
+      results
+    }
+  } catch (ex) {
+    return {
+      status: 500,
+      error: ex
+    }
+  }
+}
+
+export async function getAllBrands() {
+  try {
+    const allBrands = await db.assetBrand.findMany()
+    if (!allBrands) {
+      return {
+        status: 404
+      }
+    }
+    return {
+      status: 200,
+      allBrands
+    }
+  } catch (ex) {
+    return {
+      status: 500,
+      error: ex
+    }
+  }
+}
+
 export async function getAssetById(id: string) {
   try {
     const rawAsset = await db.asset.findUnique({
