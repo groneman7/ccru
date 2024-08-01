@@ -2,7 +2,22 @@
 import { db } from "./db";
 import { defaultQueryReturns } from './defaultQueryResponses'
 import type { QueryReturn } from "./defaultQueryResponses"
-import type { Inventory, InventoryBrand } from '@prisma/client'
+import type { Inventory, InventoryBrand, QuantityUnit } from '@prisma/client'
+
+export async function getAllQuantityUnits(): Promise<QueryReturn<QuantityUnit[]>> {
+  try {
+    const results = await db.quantityUnit.findMany()
+    if (!results) {
+      return defaultQueryReturns[404]
+    }
+    return {
+      ...defaultQueryReturns[200],
+      data: results
+    }
+  } catch (ex) {
+    return defaultQueryReturns[500]
+  }
+}
 
 export async function searchBrands(query: string): Promise<QueryReturn<InventoryBrand[]>> {
   try {

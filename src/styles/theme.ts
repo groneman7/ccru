@@ -62,7 +62,8 @@ export const defaultTheme: ThemeConfig = {
         lineWidthFocus: 4,
       },
       Form: {
-        itemMarginBottom: 0
+        itemMarginBottom: 0,
+        verticalLabelPadding: '0 0 8px 0'
       },
       Timeline: {
         itemPaddingBottom: 8,

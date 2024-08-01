@@ -10,7 +10,7 @@ export default async function ItemPage({ params }: {
   if (params.itemId === 'new') {
     return (
       <div className="default-admin-page">
-        <InventoryForm item={null} />
+        <InventoryForm />
       </div>
     );
   } else {
