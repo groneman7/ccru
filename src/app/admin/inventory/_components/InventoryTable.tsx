@@ -4,7 +4,7 @@ import type { Inventory } from '@prisma/client'
 import { Button, Input, Table } from 'antd'
 import type { InputRef, TableColumnsType } from "antd";
 import dayjs from 'dayjs';
-import { useKeyDown } from '~/utils/hooks'
+import { useBarcodeScan } from '~/utils/hooks'
 
 type InventoryTableProps = {
   data: Inventory[]
@@ -14,11 +14,10 @@ export function InventoryTable({ data }: InventoryTableProps) {
   const [inputValue, setInputValue] = useState<string>('')
   const inputRef = useRef <InputRef>(null)
 
-  // This keybind listens for a barcode to be scanned. The transmission is prefixed with 'F2'.
-  useKeyDown(() => {
+  useBarcodeScan(() => {
     setInputValue('')
     inputRef.current!.focus()
-  }, ['F2'])
+  })
   
   function handleChange(newValue: string) {
     setInputValue(newValue)

@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-export function useKeyDown(callbackFn: () => void, keys: string[]) {
+export function useKeyDown(callbackFn: (e: KeyboardEvent) => void, keys: string[]) {
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     const anyKeyPressed = keys.some((key) => e.key === key);
 
     if (anyKeyPressed) {
       e.preventDefault();
-      callbackFn();
+      callbackFn(e);
     }
   }, [])
 
@@ -17,6 +17,13 @@ export function useKeyDown(callbackFn: () => void, keys: string[]) {
       document.removeEventListener('keydown', onKeyDown)
     }
   }, [onKeyDown])
+}
+
+export function useBarcodeScan(callbackFn: (e: KeyboardEvent) => void) {
+  const BARCODE_KEY = 'F2'
+  useKeyDown((e) => {
+    callbackFn(e)
+  }, [BARCODE_KEY])
 }
 
 export function useTimeout(callbackFn: () => unknown, delay: number) {
