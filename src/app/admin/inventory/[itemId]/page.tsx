@@ -6,19 +6,13 @@ export default async function ItemPage({ params }: {
     itemId: string
   }
 }) {
+  const response = params.itemId === 'new' ? null : await getItemById(params?.itemId);
 
-  if (params.itemId === 'new') {
-    return (
-      <div className="default-admin-page">
-        <InventoryForm />
-      </div>
-    );
-  } else {
-    const response = await getItemById(params?.itemId);
+  return (
     <div className="default-admin-page">
-      {
-        response.status === 200 ? <InventoryForm item={response.data} /> : <div>{response.status}</div>
-      }
+      <InventoryForm
+        item={response?.data}
+      />
     </div>
-  }
+  )
 }
