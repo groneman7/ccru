@@ -1,10 +1,12 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import type { Inventory } from '@prisma/client';
+import type { Inventory, InventoryBrand } from '@prisma/client';
 import { Button, DatePicker, Form, Input, InputNumber, Select } from 'antd';
-import type { SelectProps } from 'antd';
+import type { InputRef, SelectProps } from 'antd';
+import type { BaseSelectRef } from 'rc-select/lib'
 import { getAllQuantityUnits, searchBrands } from '~/server/inventory'
-import { useDebounce } from '~/utils/hooks'
+import { useBarcodeScan, useDebounce } from '~/lib/hooks'
+import FormGroup from '~/components/FormGroup';
 
 const SEARCH_DELAY = 500;
 
@@ -13,28 +15,31 @@ type InventoryFormProps = {
 };
 
 export function InventoryForm({ item }: InventoryFormProps) {
-  const [inventoryForm] = Form.useForm();
+  // State
+  const [inventoryForm] = Form.useForm<Inventory>();
 
-  const [barcodeScan, setBarcodeScan] = useState<boolean>(!item ? false : false); // CHANGE BACK TO true : false
+  const [promptBarcodeScan, setPromptBarcodeScan] = useState<boolean>(!item ? false : false); // CHANGE BACK TO true : false IF new item
+  const [barcodeEntry, setBarcodeEntry] = useState<boolean>(false)
+  const [barcodeBypassed, setBarcodeBypassed] = useState<boolean>(false)
   const [brandSearchValue, setBrandSearchValue] = useState<string>('')
   const [brandSearchLoading, setBrandSearchLoading] = useState<boolean>(false)
-  const [brandItems, setBrandItems] = useState<SelectProps['options']>([])
-  const [addedOptions, setAddedOptions] = useState<SelectProps['options']>([])
-  const selectRef = useRef(null)
+  const [brands, setBrands] = useState<InventoryBrand[]>([])
+  const [addedBrands, setAddedBrands] = useState<InventoryBrand[]>([])
+  const [allBrands, setAllBrands] = useState<InventoryBrand[]>([])
+  
+  const upcRef = useRef<InputRef>(null)
+  const selectRef = useRef<BaseSelectRef>(null);
 
   const [unitsFieldFocused, setUnitsFieldFocused] = useState<boolean>(false)
   const [units, setUnits] = useState<SelectProps['options']>([])
 
-  useEffect(() => {
-    if (addedOptions && addedOptions.length > 0) {
-      inventoryForm.setFieldValue('brand', addedOptions[addedOptions.length - 1]!.value)
-    }
-  }, [addedOptions, inventoryForm])
 
+
+  // Functions
   function handleSearch(newValue: string) {
     if (newValue === '') {
       setBrandSearchLoading(false)
-      setBrandItems([])
+      setBrands([])
     } else {
       setBrandSearchLoading(true)
     }
@@ -42,15 +47,58 @@ export function InventoryForm({ item }: InventoryFormProps) {
   }
 
   function handleAddNewBrand(newBrand: string) {
-    setAddedOptions((current): SelectProps['options'] => ([
-      ...current!,
+    setAddedBrands((current) => ([
+      ...current,
       {
-        value: `TEMP_VALUE_${current!.length + 1}`,
-        label: newBrand
+        id: `TEMP_VALUE_${current.length + 1}`,
+        name: newBrand
       }
     ]))
-    selectRef?.current?.blur()
+    selectRef.current!.blur()
   }
+
+  function handleSubmit() {
+    // Handle submit logic here.
+    const formValues: Omit<Inventory, 'id'> = inventoryForm.getFieldsValue(true)
+    
+  }
+
+
+
+  // Hooks
+  useEffect(() => {
+    const test = []
+    if (addedBrands && addedBrands.length > 0) {
+      test.push({ name: 'Recently added', id: 'recent', options: [...addedBrands]})
+    }
+    if (brands && brands.length > 0) {
+      test.push({name: 'Search results', id: 'search', options: [...brands]})
+    }
+    setAllBrands(test)
+  }, [brands, addedBrands])
+
+  useEffect(() => {
+    if (addedBrands && addedBrands.length > 0) {
+      inventoryForm.setFieldValue('brand', addedBrands[addedBrands.length - 1]!.name)
+    }
+  }, [addedBrands, inventoryForm])
+
+  useEffect(() => {
+    if (barcodeEntry) {
+      upcRef.current!.focus()
+    }
+  }, [barcodeEntry])
+
+  useBarcodeScan(() => {
+    const upc = inventoryForm.getFieldValue('upc') as string
+    if (upc) {
+      inventoryForm.setFieldValue('upc', '')
+      upcRef.current!.focus()
+    }
+    if (!upc && !barcodeEntry) {
+      setBarcodeEntry(true)
+    }
+  })
 
   useDebounce(async () => {
     if (unitsFieldFocused) {
@@ -68,19 +116,15 @@ export function InventoryForm({ item }: InventoryFormProps) {
   useDebounce(async () => {
     if (brandSearchValue !== '') {
       const { data } = await searchBrands(brandSearchValue)
-      if (data) setBrandItems(data)
+      if (data) setBrands(data)
       setBrandSearchLoading(false)
     }
   }, SEARCH_DELAY, [brandSearchValue])
 
-  const mappedBrands: SelectProps['options'] = brandItems?.map((brand) => (
-    {
-      value: brand.id,
-      label: brand.name
-    }
-  )) ?? []
 
-  return barcodeScan ? (
+  
+  // Render
+  return promptBarcodeScan ? (
     <div className="flex flex-1 flex-col items-center justify-start gap-8">
       <div className="text-2xl font-semibold">
         Scan product barcode to get started
@@ -89,7 +133,7 @@ export function InventoryForm({ item }: InventoryFormProps) {
       <div>
         <Button
           className="btn-primary form-control"
-          onClick={() => setBarcodeScan(false)}
+          onClick={() => setPromptBarcodeScan(false)}
         >
           Manual Entry
         </Button>
@@ -100,26 +144,58 @@ export function InventoryForm({ item }: InventoryFormProps) {
       className="flex flex-1 flex-col gap-4"
       form={inventoryForm}
       layout="vertical"
-    >
-      <div className="flex gap-4">
-        <Form.Item className="flex-1" label="Item" name="itemName">
+      >
+        <div className="flex items-center justify-between gap-8">
+          <div className="flex items-center gap-4">
+            <Button type="link">Create link</Button>
+          </div>
+          <div>
+            <Button htmlType="submit" type="primary">Save</Button>
+          </div>
+        </div>
+      <FormGroup>
+        <Form.Item className="flex-1" label="Item" name="itemName" rules={[{ required: true, message: 'Please enter a name for this item.' }]}>
           <Input className="form-control input-primary" />
         </Form.Item>
-        <Form.Item className="basis-40 self-end">
-          <Button block className="btn-primary form-control">
-            Scan Barcode
-          </Button>
-        </Form.Item>
-      </div>
+        <div className="flex w-44 self-stretch">
+          {
+            (item?.upc ?? barcodeEntry) ? (
+              <Form.Item className="self-end" label="UPC" name="upc">
+                <Input 
+                  className='form-control input-primary'
+                  onBlur={(e) => {
+                    if (!e.target.value.trim()) {
+                      setBarcodeEntry(false)
+                      inventoryForm.setFieldValue('upc', '')
+                    }
+                  }} 
+                  ref={upcRef}
+                />
+              </Form.Item>
+            ) : (
+            <div 
+              className="self-stretch flex flex-col flex-1 gap-1 cursor-pointer select-none items-center justify-center rounded border border-slate-200 text-slate-500 hover:border-slate-400 hover:transition hover:duration-150 hover:bg-slate-50 active:bg-slate-200 active:transition active:duration-150" 
+              onClick={() => setBarcodeEntry(true)}
+            >
+              <span>Scan barcode</span>
+              <span className="text-xs text-slate-400 italic">Or manually enter UPC</span>
+            </div>
+          )
+        }
+        </div>
+      </FormGroup>
       <Form.Item label="Brand" name="brand">
         <Select
           className="form-control select-primary"
+          fieldNames={{ label: 'name', value: 'id' }}
           loading={brandSearchLoading}
           showSearch
           onSearch={handleSearch}
-          ref={selectRef}
-          options={[...mappedBrands, ...addedOptions!]}
-          optionFilterProp="label"
+            ref={selectRef}
+            // @ts-expect-error Weird antd typing that doesn't realize the option values can be strings.
+            optionRender={(option) => <div key={option.value} className="flex justify-between items-center"><span>{option.label}</span>{!option.value!.startsWith('TEMP') && <span className="text-slate-400">{option.value}</span>}</div>}
+          options={allBrands}
+          optionFilterProp="name"
           notFoundContent={
             brandSearchValue ? (
               brandSearchLoading ? (
@@ -155,11 +231,11 @@ export function InventoryForm({ item }: InventoryFormProps) {
               if (brandSearchLoading) {
                 return e.stopPropagation();
               }
-              if (!brandSearchLoading && [...brandItems!].length === 0) {
+              if (!brandSearchLoading && [...brands].length === 0) {
                 if (
-                  addedOptions!.length === 0 ||
-                  addedOptions!.filter((o) =>
-                    o.label?.toString()?.includes(brandSearchValue),
+                  addedBrands.length === 0 ||
+                  addedBrands.filter((o) =>
+                    o.name?.includes(brandSearchValue),
                   ).length === 0
                 ) {
                   e.stopPropagation();
@@ -170,9 +246,9 @@ export function InventoryForm({ item }: InventoryFormProps) {
           }}
         />
       </Form.Item>
-      <div className="flex gap-8">
-        <div className="flex gap-2">
-          <Form.Item label="Quantity" name="quantity">
+      <FormGroup>
+        <div className="flex items-end gap-2">
+          <Form.Item initialValue={1} label="Quantity" name="quantity">
             <InputNumber
               changeOnWheel
               className="form-control input-primary"
@@ -180,7 +256,7 @@ export function InventoryForm({ item }: InventoryFormProps) {
               min={1}
             />
           </Form.Item>
-          <Form.Item className="self-end" name="quantityUnits">
+          <Form.Item className="self-end" name="quantityUnits" rules={[{ required: true, message: "" }]}>
             <Select
               className="form-control select-primary"
               onFocus={() => !unitsFieldFocused && setUnitsFieldFocused(true)}
@@ -190,8 +266,8 @@ export function InventoryForm({ item }: InventoryFormProps) {
             />
           </Form.Item>
         </div>
-        <div className="flex gap-2">
-          <Form.Item label="Pkg size" name="packageSize">
+        <div className="flex items-end gap-2">
+          <Form.Item initialValue={1} label="Pkg size" name="packageSize">
             <InputNumber
               changeOnWheel
               className="form-control input-primary"
@@ -199,7 +275,7 @@ export function InventoryForm({ item }: InventoryFormProps) {
               min={1}
             />
           </Form.Item>
-          <Form.Item className="self-end" name="packageSizeUnits">
+          <Form.Item className="self-end" name="packageSizeUnits" rules={[{ required: true, message: "" }]}>
             <Select
               className="form-control select-primary"
               onFocus={() => !unitsFieldFocused && setUnitsFieldFocused(true)}
@@ -209,15 +285,30 @@ export function InventoryForm({ item }: InventoryFormProps) {
             />
           </Form.Item>
         </div>
-      </div>
-      <div className="flex flex-1 gap-8">
+      </FormGroup>
+      <FormGroup>
         <Form.Item label="Expiration" name="expiration">
           <DatePicker className="form-control input-primary" />
         </Form.Item>
         <Form.Item label="LOT" name="lot">
           <Input className="form-control input-primary" />
         </Form.Item>
-      </div>
+        <Form.Item label="NDC" name="ndc">
+          <Input
+            className="form-control input-primary"
+            onKeyDown={(e) => {
+              const match = /[a-zA-Z !@#$%^&*()_+={}[\]|\\:;"'<>,.?/]/
+              if (e.ctrlKey || e.altKey || e.metaKey) {
+                return
+              } else {
+                if (match.test(e.key) && !['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Insert', 'Delete', 'Home', 'End', 'PageUp', 'PageDown'].includes(e.key)) {
+                  e.preventDefault()
+                }
+              }
+            }}
+          />
+        </Form.Item>
+      </FormGroup>
     </Form>
   );
 }
