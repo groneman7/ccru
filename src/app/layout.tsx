@@ -7,7 +7,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider } from 'antd'
 import { type Metadata } from "next";
 import { GeistSans } from 'geist/font/sans';
-import Navbar from "~/app/_components/navbar";
+import Navbar from "~/components/navbar";
 import { defaultTheme } from '~/styles/theme'
 
 export const metadata: Metadata = {

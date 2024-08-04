@@ -4,7 +4,7 @@ import type { Inventory } from '@prisma/client'
 import { Button, Input, Table } from 'antd'
 import type { InputRef, TableColumnsType } from "antd";
 import dayjs from 'dayjs';
-import { useBarcodeScan } from '~/utils/hooks'
+import { useBarcodeScan } from '~/lib/hooks'
 
 type InventoryTableProps = {
   data: Inventory[]
