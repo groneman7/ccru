@@ -14,60 +14,62 @@ datasource db {
 
 // Model for the events hosted by CCRU.
 model Event {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
   date        DateTime
-  name        String
+  eventName   String
   description String?
   location    String?
   timeStart   DateTime?
   timeEnd     DateTime?
-  createdAt   DateTime    @default(now())
+  createdAt   DateTime  @default(now())
   createdBy   String
-  shifts      shiftType[]
+  shifts      String[]
 
   @@index([date])
 }
 
 // Model for the templates of events hosted by CCRU.
 model EventTemplate {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String?
-  location    String?
-  timeStart   DateTime?
-  timeEnd     DateTime?
-  shifts      shiftType[]
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  templateName String
+  description  String?
+  location     String?
+  timeStart    DateTime?
+  timeEnd      DateTime?
+  positions    String[] // LIst of position ids that are available for this template
 
-  @@index([name])
+  @@index([templateName])
 }
 
-type shiftType {
-  positionId String
-  userId     String?
+model EventShift {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  eventId     String
+  positionId  String
+  userId      String?
+  allowedType String[]
 }
 
 // Model for the roles of users (e.g., standard, volunteer, officer, and admin).
 model UserRole {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
+  label       String
   description String?
 }
 
 // Model for the types of users (e.g., medical student, undergraduate, MD/DO, etc.).
 model UserType {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
+  label       String
   description String?
 }
 
 // Model for the positions of event shifts (e.g., triage, interviewer, etc.).
 model Position {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  name             String
-  label            String?
-  description      String?
-  allowedUserTypes String[]
-  officerOnly      Boolean?
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  positionName String
+  label        String?
+  description  String?
+  officerOnly  Boolean?
 }
 
 // Model for the officers of CCRU (e.g., manager).
@@ -79,53 +81,52 @@ model Officer {
 
 // Model for the inventory of CCRU.
 model Inventory {
-  id              String    @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  brand           String?
-  category        String? // Link to id of InventoryCategory
-  location        String?
-  quantity        Int
-  quantityUnit    String? // Link to id of QuantityUnit
-  packageSize     Int?
-  packageSizeUnit String? // Link to id of QuantityUnit
-  upc             String?
-  ndc             String?
-  expiration      DateTime?
-  lot             String?
-  comments        String?
-  link            String? // Many-to-one releationship with InventoryLink
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  itemName          String
+  brandId           String?
+  categoryId        String? // Link to id of InventoryCategory
+  location          String?
+  quantity          Int
+  quantityUnitId    String? // Link to id of QuantityUnit
+  packageSize       Int?
+  packageSizeUnitId String? // Link to id of QuantityUnit
+  upc               String?
+  ndc               String?
+  expiration        DateTime?
+  lot               String?
+  comments          String?
+  linkId            String? // Many-to-one releationship with InventoryLink
 }
 
 // Model for the categories of inventory (e.g., medications, office supplies, medical equipment, etc.).
 // Note: Ideally, when a user selects a category, there would be a list of recommended tags for that category.
 model InventoryCategory {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
+  label       String
   description String?
 }
 
 // Model for the units of measurement of inventory.
 model QuantityUnit {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  label String
 }
 
 // Model for the tags of inventory. These are used to further categorize inventory (e.g., Rx Only, OTC, etc.).
 model InventoryTag {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  name  String
-  label String?
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  label String
 }
 
 // Model for the brands of inventory (e.g., Walgreens, Pfizer, etc.).
 model InventoryBrand {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  brandName String
 }
 
 model InventoryLink {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
+  linkName    String
   description String?
   category    String? // Link to id of InventoryCategory
   comments    String?
