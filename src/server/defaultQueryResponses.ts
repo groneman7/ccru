@@ -1,4 +1,4 @@
-export type QueryReturn<T> = {
+export type QueryResponse<T> = {
   status: number;
   message?: string;
   data?: T;
@@ -8,6 +8,10 @@ export const defaultQueryReturns = {
   200: {
     status: 200,
     message: 'OK'
+  },
+  201: {
+    status: 201,
+    message: 'Created'
   },
   404: {
     status: 404,

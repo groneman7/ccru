@@ -4,7 +4,7 @@ import type { Inventory, InventoryBrand } from '@prisma/client';
 import { Button, DatePicker, Form, Input, InputNumber, Select } from 'antd';
 import type { InputRef, SelectProps } from 'antd';
 import type { BaseSelectRef } from 'rc-select/lib'
-import { getAllQuantityUnits, searchBrands } from '~/server/inventory'
+import { createBrand, createItem, getAllQuantityUnits, searchBrands } from '~/server/inventory'
 import { useBarcodeScan, useDebounce } from '~/lib/hooks'
 import FormGroup from '~/components/FormGroup';
 
@@ -50,17 +50,29 @@ export function InventoryForm({ item }: InventoryFormProps) {
     setAddedBrands((current) => ([
       ...current,
       {
-        id: `TEMP_VALUE_${current.length + 1}`,
-        name: newBrand
+        id: `TEMP_BRAND_${current.length + 1}`,
+        brandName: newBrand
       }
     ]))
     selectRef.current!.blur()
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     // Handle submit logic here.
     const formValues: Omit<Inventory, 'id'> = inventoryForm.getFieldsValue(true)
+
+    if (formValues.brandId) {
+      if (formValues.brandId.startsWith('TEMP_BRAND')) {
+        const newBrandResponse = await createBrand(addedBrands.find((b) => b.id === formValues.brandId)!.brandName)
+        if (newBrandResponse.status === 201) {
+          formValues.brandId = newBrandResponse.data!.id;
+          console.log('New brand created', newBrandResponse.data)
+        }
+      }
+    }
     
+    const response = await createItem(formValues)
+    console.log(response)
   }
 
 
@@ -69,17 +81,17 @@ export function InventoryForm({ item }: InventoryFormProps) {
   useEffect(() => {
     const test = []
     if (addedBrands && addedBrands.length > 0) {
-      test.push({ name: 'Recently added', id: 'recent', options: [...addedBrands]})
+      test.push({ brandName: 'Recently added', id: 'recent', options: [...addedBrands] })
     }
     if (brands && brands.length > 0) {
-      test.push({name: 'Search results', id: 'search', options: [...brands]})
+      test.push({ brandName: 'Search results', id: 'search', options: [...brands] })
     }
     setAllBrands(test)
   }, [brands, addedBrands])
 
   useEffect(() => {
     if (addedBrands && addedBrands.length > 0) {
-      inventoryForm.setFieldValue('brand', addedBrands[addedBrands.length - 1]!.name)
+      inventoryForm.setFieldValue('brandId', addedBrands[addedBrands.length - 1]!.id)
     }
   }, [addedBrands, inventoryForm])
 
@@ -106,7 +118,7 @@ export function InventoryForm({ item }: InventoryFormProps) {
       if (data) {
         const mappedUnits = data.map(unit => ({
           value: unit.id,
-          label: unit.name
+          label: unit.label
         }))
         setUnits(mappedUnits)
       }
@@ -141,61 +153,81 @@ export function InventoryForm({ item }: InventoryFormProps) {
     </div>
   ) : (
     <Form
+      onFinish={handleSubmit}
       className="flex flex-1 flex-col gap-4"
       form={inventoryForm}
       layout="vertical"
-      >
-        <div className="flex items-center justify-between gap-8">
-          <div className="flex items-center gap-4">
-            <Button type="link">Create link</Button>
-          </div>
-          <div>
-            <Button htmlType="submit" type="primary">Save</Button>
-          </div>
+    >
+      <div className="flex items-center justify-between gap-8">
+        <div className="flex items-center gap-4">
+          <Button type="link">Create link</Button>
         </div>
+        <div>
+          <Button htmlType="submit" type="primary">
+            Save
+          </Button>
+        </div>
+      </div>
       <FormGroup>
-        <Form.Item className="flex-1" label="Item" name="itemName" rules={[{ required: true, message: 'Please enter a name for this item.' }]}>
+        <Form.Item
+          className="flex-1"
+          label="Item"
+          name="itemName"
+          rules={[
+            { required: true, message: "Please enter a name for this item." },
+          ]}
+        >
           <Input className="form-control input-primary" />
         </Form.Item>
         <div className="flex w-44 self-stretch">
-          {
-            (item?.upc ?? barcodeEntry) ? (
-              <Form.Item className="self-end" label="UPC" name="upc">
-                <Input 
-                  className='form-control input-primary'
-                  onBlur={(e) => {
-                    if (!e.target.value.trim()) {
-                      setBarcodeEntry(false)
-                      inventoryForm.setFieldValue('upc', '')
-                    }
-                  }} 
-                  ref={upcRef}
-                />
-              </Form.Item>
-            ) : (
-            <div 
-              className="self-stretch flex flex-col flex-1 gap-1 cursor-pointer select-none items-center justify-center rounded border border-slate-200 text-slate-500 hover:border-slate-400 hover:transition hover:duration-150 hover:bg-slate-50 active:bg-slate-200 active:transition active:duration-150" 
+          {(item?.upc ?? barcodeEntry) ? (
+            <Form.Item className="self-end" label="UPC" name="upc">
+              <Input
+                className="form-control input-primary"
+                onBlur={(e) => {
+                  if (!e.target.value.trim()) {
+                    setBarcodeEntry(false);
+                    inventoryForm.setFieldValue("upc", "");
+                  }
+                }}
+                ref={upcRef}
+              />
+            </Form.Item>
+          ) : (
+            <div
+              className="flex flex-1 cursor-pointer select-none flex-col items-center justify-center gap-1 self-stretch rounded border border-slate-200 text-slate-500 hover:border-slate-400 hover:bg-slate-50 hover:transition hover:duration-150 active:bg-slate-200 active:transition active:duration-150"
               onClick={() => setBarcodeEntry(true)}
             >
               <span>Scan barcode</span>
-              <span className="text-xs text-slate-400 italic">Or manually enter UPC</span>
+              <span className="text-xs italic text-slate-400">
+                Or manually enter UPC
+              </span>
             </div>
-          )
-        }
+          )}
         </div>
       </FormGroup>
-      <Form.Item label="Brand" name="brand">
+      <Form.Item label="Brand" name="brandId">
         <Select
           className="form-control select-primary"
-          fieldNames={{ label: 'name', value: 'id' }}
+          fieldNames={{ label: "brandName", value: "id" }}
           loading={brandSearchLoading}
           showSearch
           onSearch={handleSearch}
-            ref={selectRef}
-            // @ts-expect-error Weird antd typing that doesn't realize the option values can be strings.
-            optionRender={(option) => <div key={option.value} className="flex justify-between items-center"><span>{option.label}</span>{!option.value!.startsWith('TEMP') && <span className="text-slate-400">{option.value}</span>}</div>}
+          ref={selectRef}
+          optionRender={(option) => (
+            <div
+            key={option.value}
+            className="flex items-center justify-between"
+            >
+              <span>{option.label}</span>
+              {/* @ts-expect-error Weird antd typing that doesn't realize the option values can be strings. */}
+              {!option.value!.startsWith("TEMP_BRAND") && (
+                <span className="text-slate-400">{option.value}</span>
+              )}
+            </div>
+          )}
           options={allBrands}
-          optionFilterProp="name"
+          optionFilterProp="brandName"
           notFoundContent={
             brandSearchValue ? (
               brandSearchLoading ? (
@@ -235,7 +267,7 @@ export function InventoryForm({ item }: InventoryFormProps) {
                 if (
                   addedBrands.length === 0 ||
                   addedBrands.filter((o) =>
-                    o.name?.includes(brandSearchValue),
+                    o.brandName?.includes(brandSearchValue),
                   ).length === 0
                 ) {
                   e.stopPropagation();
@@ -256,10 +288,15 @@ export function InventoryForm({ item }: InventoryFormProps) {
               min={1}
             />
           </Form.Item>
-          <Form.Item className="self-end" name="quantityUnits" rules={[{ required: true, message: "" }]}>
+          <Form.Item
+            className="self-end"
+            name="quantityUnitId"
+            rules={[{ required: true, message: "" }]}
+          >
             <Select
               className="form-control select-primary"
               onFocus={() => !unitsFieldFocused && setUnitsFieldFocused(true)}
+              optionFilterProp="label"
               options={units}
               placeholder="Units"
               showSearch
@@ -275,10 +312,15 @@ export function InventoryForm({ item }: InventoryFormProps) {
               min={1}
             />
           </Form.Item>
-          <Form.Item className="self-end" name="packageSizeUnits" rules={[{ required: true, message: "" }]}>
+          <Form.Item
+            className="self-end"
+            name="packageSizeUnitId"
+            rules={[{ required: true, message: "" }]}
+          >
             <Select
               className="form-control select-primary"
               onFocus={() => !unitsFieldFocused && setUnitsFieldFocused(true)}
+              optionFilterProp="label"
               options={units}
               placeholder="Units"
               showSearch
@@ -297,12 +339,28 @@ export function InventoryForm({ item }: InventoryFormProps) {
           <Input
             className="form-control input-primary"
             onKeyDown={(e) => {
-              const match = /[a-zA-Z !@#$%^&*()_+={}[\]|\\:;"'<>,.?/]/
+              const match = /[a-zA-Z !@#$%^&*()_+={}[\]|\\:;"'<>,.?/]/;
               if (e.ctrlKey || e.altKey || e.metaKey) {
-                return
+                return;
               } else {
-                if (match.test(e.key) && !['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Insert', 'Delete', 'Home', 'End', 'PageUp', 'PageDown'].includes(e.key)) {
-                  e.preventDefault()
+                if (
+                  match.test(e.key) &&
+                  ![
+                    "Backspace",
+                    "Tab",
+                    "ArrowLeft",
+                    "ArrowRight",
+                    "ArrowUp",
+                    "ArrowDown",
+                    "Insert",
+                    "Delete",
+                    "Home",
+                    "End",
+                    "PageUp",
+                    "PageDown",
+                  ].includes(e.key)
+                ) {
+                  e.preventDefault();
                 }
               }
             }}

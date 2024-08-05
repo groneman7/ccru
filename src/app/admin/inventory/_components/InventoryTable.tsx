@@ -26,17 +26,17 @@ export function InventoryTable({ data }: InventoryTableProps) {
   const COLUMNS: TableColumnsType<Inventory> = [
     {
       title: "Item",
-      dataIndex: "name",
+      dataIndex: "itemName",
     },
     {
       title: "Package",
       key: "package",
-      render: (_, record) => `${record.packageSize} ${record.packageSizeUnit}${record.packageSize !== 1 ? 's' : ''}`,
+      render: (_, record) => `${record.packageSize} ${record.packageSizeUnitId}${record.packageSize !== 1 ? 's' : ''}`,
     },
     {
       title: "Quantity",
       key: "quantity",
-      render: (_, record) => `${record.quantity} ${record.quantityUnit}${record.quantity > 1 ? 's' : ''}`
+      render: (_, record) => `${record.quantity} ${record.quantityUnitId}${record.quantity > 1 ? 's' : ''}`
     },
     {
       title: "Category",

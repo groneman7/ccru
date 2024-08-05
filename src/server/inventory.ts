@@ -1,10 +1,29 @@
 "use server";
 import { db } from "./db";
 import { defaultQueryReturns } from './defaultQueryResponses'
-import type { QueryReturn } from "./defaultQueryResponses"
+import type { QueryResponse } from "./defaultQueryResponses"
 import type { Inventory, InventoryBrand, QuantityUnit } from '@prisma/client'
 
-export async function getAllQuantityUnits(): Promise<QueryReturn<QuantityUnit[]>> {
+export async function createItem(item: Omit<Inventory, 'id'>) {
+  try {
+
+    const newItem = await db.inventory.create({
+      data: {
+        ...item,
+      }
+    })
+    
+    return {
+      status: 201,
+      data: newItem,
+      message: "Item created successfully"
+    }
+  } catch (ex) {
+    return defaultQueryReturns[500]
+  }
+}
+
+export async function getAllQuantityUnits(): Promise<QueryResponse<QuantityUnit[]>> {
   try {
     const results = await db.quantityUnit.findMany()
     if (!results) {
@@ -19,11 +38,27 @@ export async function getAllQuantityUnits(): Promise<QueryReturn<QuantityUnit[]>
   }
 }
 
-export async function searchBrands(query: string): Promise<QueryReturn<InventoryBrand[]>> {
+export async function createBrand(brandName: string): Promise<QueryResponse<InventoryBrand>> {
+  try {
+    const newBrand = await db.inventoryBrand.create({
+      data: {
+        brandName
+      }
+    })
+    return {
+      ...defaultQueryReturns[201],
+      data: newBrand
+    }
+  } catch (ex) {
+    return defaultQueryReturns[500]
+  }
+}
+
+export async function searchBrands(query: string): Promise<QueryResponse<InventoryBrand[]>> {
   try {
     const results = await db.inventoryBrand.findMany({
       where: {
-        name: {
+        brandName: {
           contains: query,
           mode: "insensitive"
         }
@@ -41,7 +76,7 @@ export async function searchBrands(query: string): Promise<QueryReturn<Inventory
   }
 }
 
-export async function getAllBrands(): Promise<QueryReturn<InventoryBrand[]>> {
+export async function getAllBrands(): Promise<QueryResponse<InventoryBrand[]>> {
   try {
     const allBrands = await db.inventoryBrand.findMany()
     if (!allBrands) {
@@ -56,7 +91,26 @@ export async function getAllBrands(): Promise<QueryReturn<InventoryBrand[]>> {
   }
 }
 
-export async function getItemById(id: string): Promise<QueryReturn<Inventory>> {
+export async function getBrandById(id: string): Promise<QueryResponse<InventoryBrand>> {
+  try {
+    const brand = await db.inventoryBrand.findUnique({
+      where: {
+        id
+      }
+    });
+    if (!brand) {
+      return defaultQueryReturns[404]
+    }
+    return {
+      ...defaultQueryReturns[200],
+      data: brand
+    }
+  } catch (ex) {
+    return defaultQueryReturns[500]
+  }
+}
+
+export async function getItemById(id: string): Promise<QueryResponse<Inventory>> {
   try {
     const item = await db.inventory.findUnique({
       where: {
@@ -71,22 +125,12 @@ export async function getItemById(id: string): Promise<QueryReturn<Inventory>> {
     const categories = await db.inventoryCategory.findMany();
     const units = await db.quantityUnit.findMany();
   
-    const mappedItem: Inventory = {  
-      id: item.id,
-      name: item.name,
-      brand: brands.find((brand) => brand.id === item.brand)?.name ?? null,
-      category: categories.find((category) => category.id === item.category)?.name ?? null,
-      location: item.location,
-      quantity: item.quantity,
-      quantityUnit: units.find((unit) => unit.id === item.quantityUnit)?.name ?? null,
-      packageSize: item.packageSize,
-      packageSizeUnit: units.find((unit) => unit.id === item.packageSizeUnit)?.name ?? null,
-      upc: item.upc,
-      ndc: item.ndc,
-      expiration: item.expiration,
-      lot: item.lot,
-      comments: item.comments,
-      link: item.link
+    const mappedItem: Inventory = {
+      ...item,
+      brandId: brands.find((brand) => brand.id === item.brandId)?.brandName ?? null,
+      categoryId: categories.find((category) => category.id === item.categoryId)?.label ?? null,
+      quantityUnitId: units.find((unit) => unit.id === item.quantityUnitId)?.label ?? null,
+      packageSizeUnitId: units.find((unit) => unit.id === item.packageSizeUnitId)?.label ?? null,
     }
     return {
       ...defaultQueryReturns[200],
@@ -97,7 +141,7 @@ export async function getItemById(id: string): Promise<QueryReturn<Inventory>> {
   }
 }
 
-export async function getAllItems(): Promise<QueryReturn<Inventory[]>> {
+export async function getAllItems(): Promise<QueryResponse<Inventory[]>> {
   try {
     const items = await db.inventory.findMany();
     if (!items) {
@@ -110,21 +154,11 @@ export async function getAllItems(): Promise<QueryReturn<Inventory[]>> {
 
     const mappedItems: Inventory[] = items.map((item) => {
       return {
-        id: item.id,
-        name: item.name,
-        brand: brands.find((brand) => brand.id === item.brand)?.name ?? null,
-        category: categories.find((category) => category.id === item.category)?.name ?? null,
-        location: item.location,
-        quantity: item.quantity,
-        quantityUnit: units.find((unit) => unit.id === item.quantityUnit)?.name ?? null,
-        packageSize: item.packageSize,
-        packageSizeUnit: units.find((unit) => unit.id === item.packageSizeUnit)?.name ?? null,
-        upc: item.upc,
-        ndc: item.ndc,
-        expiration: item.expiration,
-        lot: item.lot,
-        comments: item.comments,
-        link: item.link
+        ...item,
+        brandId: brands.find((brand) => brand.id === item.brandId)?.brandName ?? null,
+        categoryId: categories.find((category) => category.id === item.categoryId)?.label ?? null,
+        quantityUnitId: units.find((unit) => unit.id === item.quantityUnitId)?.label ?? null,
+        packageSizeUnitId: units.find((unit) => unit.id === item.packageSizeUnitId)?.label ?? null,
       }
     })
 
