@@ -4,7 +4,7 @@ import { getEvents } from '~/server/queries'
 export default async function EventsLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const { data: events} = await getEvents()
+  const { data: events } = await getEvents()
 
   return (
     <div className="flex gap-4 justify-between">

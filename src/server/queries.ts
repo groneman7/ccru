@@ -1,6 +1,9 @@
 "use server"
 import dayjs from "dayjs";
 import { db } from "./db";
+import type { EventShift } from '@prisma/client'
+import { defaultQueryReturns } from './defaultQueryResponses'
+import type { QueryResponse } from './defaultQueryResponses'
 
 export async function getUserRolesAndTypes() {
   try {
@@ -16,6 +19,42 @@ export async function getUserRolesAndTypes() {
       status: 500,
       error: ex
     }
+  }
+}
+
+export async function addUserToShift(shiftId: string, userId: string) {
+  try {
+    const updatedShift = await db.eventShift.update({
+      where: { id: shiftId },
+      data: {
+        userId: userId
+      }
+    })
+    return {
+      ...defaultQueryReturns[200],
+      data: updatedShift
+    }
+  } catch (ex) {
+    return defaultQueryReturns[500]
+  }
+}
+
+export async function getShiftsForEvent(eventId: string): Promise<QueryResponse<EventShift[]>> {
+  try {
+    const shifts = await db.eventShift.findMany({
+      where: {
+        eventId: eventId
+      }
+    })
+    if (!shifts) {
+      return defaultQueryReturns[404]
+    }
+    return {
+      ...defaultQueryReturns[200],
+      data: shifts
+    }
+  } catch (ex) {
+    return defaultQueryReturns[500]
   }
 }
 
@@ -43,7 +82,6 @@ export async function getEvents(startDate?: string, endDate?: string) {
         data: [...allEvents]
       }
     } else if (startDate && !endDate) {
-      console.log('running middle query', startDate)
       const eventsOnDate = await db.event.findMany({
         where: {
           date: startDate,

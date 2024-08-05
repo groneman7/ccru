@@ -30,7 +30,7 @@ export default function EventCalender({ events }: EventCalendarProps) {
 
     return filtered && filtered.length > 0 ? (
       <ul>
-        {filtered.map((event) => <li key={event.id} className="text-sm">{event.name}</li>)}
+        {filtered.map((event) => <li key={event.id} className="text-sm">{event.eventName}</li>)}
       </ul>
     ) : (
       null
