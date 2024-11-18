@@ -5,6 +5,7 @@ import { Button, Input, Table } from 'antd'
 import type { InputRef, TableColumnsType } from "antd";
 import dayjs from 'dayjs';
 import { useBarcodeScan } from '~/lib/hooks'
+import Link from 'next/link';
 
 type InventoryTableProps = {
   data: Inventory[]
@@ -27,6 +28,7 @@ export function InventoryTable({ data }: InventoryTableProps) {
     {
       title: "Item",
       dataIndex: "itemName",
+      render: (_, record) => <Link href={`/admin/inventory/${record.id}`}>{record.itemName}</Link>
     },
     {
       title: "Package",

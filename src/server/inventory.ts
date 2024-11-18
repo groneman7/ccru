@@ -23,6 +23,22 @@ export async function createItem(item: Omit<Inventory, 'id'>) {
   }
 }
 
+export async function deleteItem(id: string): Promise<QueryResponse<Inventory>> {
+  try {
+    const item = await db.inventory.delete({
+      where: { id: id }
+    })
+    if (!item) {
+      return defaultQueryReturns[404]
+    }
+    return {
+      ...defaultQueryReturns[200]
+    }
+  } catch (ex) {
+    return defaultQueryReturns[500]
+  }
+}
+
 export async function getAllQuantityUnits(): Promise<QueryResponse<QuantityUnit[]>> {
   try {
     const results = await db.quantityUnit.findMany()
