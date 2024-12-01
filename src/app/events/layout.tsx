@@ -1,19 +1,20 @@
-import EventCalender from "./_components/event-calendar";
-import { getEvents } from '~/server/queries'
+import { EventCalendar } from "~/components/EventCalendar";
+import { getEvents } from "~/server/queries";
 
 export default async function EventsLayout({
-  children,
+    children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const { data: events } = await getEvents()
+    const { data: events } = await getEvents();
 
-  return (
-    <div className="flex gap-4 justify-between">
-      <div className="basis-2/3">
-        <EventCalender events={events}/>
-      </div>
-      <div className="flex-1">
-        {children}
-      </div>
-    </div>
-  )
+    return (
+        <div className="flex flex-1 justify-between gap-4">
+            <div className="flex basis-3/4 border-2 border-green-500">
+                <EventCalendar
+                    canEdit
+                    events={events}
+                />
+            </div>
+            <div className="flex-1 border-2 border-blue-500">{children}</div>
+        </div>
+    );
 }
