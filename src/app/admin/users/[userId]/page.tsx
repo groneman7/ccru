@@ -14,7 +14,7 @@ export default async function UserIdAdminPage({ params }: { params: { userId: st
   const userType = userTypes?.find(i => i.id === user.privateMetadata?.typeId)?.name
   
   return (
-    <div className="flex max-w-screen-lg flex-1 gap-8 rounded bg-white p-8 shadow-md">
+    <div className="flex max-w-(--breakpoint-lg) flex-1 gap-8 rounded bg-white p-8 shadow-md">
       <div className="flex basis-1/4 flex-col items-center gap-4">
         <div className="flex flex-col items-center gap-2">
           <Avatar src={user.imageUrl} size={96} />
