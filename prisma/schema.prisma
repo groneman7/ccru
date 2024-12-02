@@ -72,6 +72,7 @@ model EventPosition {
   positionName String
   label        String?
   description  String?
+  allowedUserTypes String[]
   officerOnly  Boolean?
 
   @@map("EVENT_POSITIONS")
