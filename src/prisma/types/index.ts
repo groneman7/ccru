@@ -237,7 +237,7 @@ export type EventShift = z.infer<typeof EventShiftSchema>
 export const EventIncludeSchema: z.ZodType<Prisma.EventInclude> = z.object({
 }).strict()
 
-export const EventArgsSchema: z.ZodType<Prisma.EventDefaultArgs> = z.object({
+export const EventArgsSchema: z.object({
   select: z.lazy(() => EventSelectSchema).optional(),
   include: z.lazy(() => EventIncludeSchema).optional(),
 }).strict();
@@ -261,7 +261,7 @@ export const EventSelectSchema: z.ZodType<Prisma.EventSelect> = z.object({
 export const EventTemplateIncludeSchema: z.ZodType<Prisma.EventTemplateInclude> = z.object({
 }).strict()
 
-export const EventTemplateArgsSchema: z.ZodType<Prisma.EventTemplateDefaultArgs> = z.object({
+export const EventTemplateArgsSchema: z.object({
   select: z.lazy(() => EventTemplateSelectSchema).optional(),
   include: z.lazy(() => EventTemplateIncludeSchema).optional(),
 }).strict();
@@ -279,7 +279,7 @@ export const EventTemplateSelectSchema: z.ZodType<Prisma.EventTemplateSelect> = 
 // EVENT POSITION
 //------------------------------------------------------
 
-export const EventPositionArgsSchema: z.ZodType<Prisma.EventPositionDefaultArgs> = z.object({
+export const EventPositionArgsSchema: z.object({
   select: z.lazy(() => EventPositionSelectSchema).optional(),
 }).strict();
 
@@ -295,7 +295,7 @@ export const EventPositionSelectSchema: z.ZodType<Prisma.EventPositionSelect> = 
 // INVENTORY
 //------------------------------------------------------
 
-export const InventoryArgsSchema: z.ZodType<Prisma.InventoryDefaultArgs> = z.object({
+export const InventoryArgsSchema: z.object({
   select: z.lazy(() => InventorySelectSchema).optional(),
 }).strict();
 
@@ -320,7 +320,7 @@ export const InventorySelectSchema: z.ZodType<Prisma.InventorySelect> = z.object
 // INVENTORY CATEGORY
 //------------------------------------------------------
 
-export const InventoryCategoryArgsSchema: z.ZodType<Prisma.InventoryCategoryDefaultArgs> = z.object({
+export const InventoryCategoryArgsSchema: z.object({
   select: z.lazy(() => InventoryCategorySelectSchema).optional(),
 }).strict();
 
@@ -333,7 +333,7 @@ export const InventoryCategorySelectSchema: z.ZodType<Prisma.InventoryCategorySe
 // QUANTITY UNIT
 //------------------------------------------------------
 
-export const QuantityUnitArgsSchema: z.ZodType<Prisma.QuantityUnitDefaultArgs> = z.object({
+export const QuantityUnitArgsSchema: z.object({
   select: z.lazy(() => QuantityUnitSelectSchema).optional(),
 }).strict();
 
@@ -345,7 +345,7 @@ export const QuantityUnitSelectSchema: z.ZodType<Prisma.QuantityUnitSelect> = z.
 // INVENTORY TAG
 //------------------------------------------------------
 
-export const InventoryTagArgsSchema: z.ZodType<Prisma.InventoryTagDefaultArgs> = z.object({
+export const InventoryTagArgsSchema: z.object({
   select: z.lazy(() => InventoryTagSelectSchema).optional(),
 }).strict();
 
@@ -357,7 +357,7 @@ export const InventoryTagSelectSchema: z.ZodType<Prisma.InventoryTagSelect> = z.
 // INVENTORY BRAND
 //------------------------------------------------------
 
-export const InventoryBrandArgsSchema: z.ZodType<Prisma.InventoryBrandDefaultArgs> = z.object({
+export const InventoryBrandArgsSchema: z.object({
   select: z.lazy(() => InventoryBrandSelectSchema).optional(),
 }).strict();
 
@@ -369,7 +369,7 @@ export const InventoryBrandSelectSchema: z.ZodType<Prisma.InventoryBrandSelect> 
 // INVENTORY LINK
 //------------------------------------------------------
 
-export const InventoryLinkArgsSchema: z.ZodType<Prisma.InventoryLinkDefaultArgs> = z.object({
+export const InventoryLinkArgsSchema: z.object({
   select: z.lazy(() => InventoryLinkSelectSchema).optional(),
 }).strict();
 
@@ -385,7 +385,7 @@ export const InventoryLinkSelectSchema: z.ZodType<Prisma.InventoryLinkSelect> = 
 // USER ROLE
 //------------------------------------------------------
 
-export const UserRoleArgsSchema: z.ZodType<Prisma.UserRoleDefaultArgs> = z.object({
+export const UserRoleArgsSchema: z.object({
   select: z.lazy(() => UserRoleSelectSchema).optional(),
 }).strict();
 
@@ -398,7 +398,7 @@ export const UserRoleSelectSchema: z.ZodType<Prisma.UserRoleSelect> = z.object({
 // USER TYPE
 //------------------------------------------------------
 
-export const UserTypeArgsSchema: z.ZodType<Prisma.UserTypeDefaultArgs> = z.object({
+export const UserTypeArgsSchema: z.object({
   select: z.lazy(() => UserTypeSelectSchema).optional(),
 }).strict();
 
@@ -411,7 +411,7 @@ export const UserTypeSelectSchema: z.ZodType<Prisma.UserTypeSelect> = z.object({
 // OFFICER ROLE
 //------------------------------------------------------
 
-export const OfficerRoleArgsSchema: z.ZodType<Prisma.OfficerRoleDefaultArgs> = z.object({
+export const OfficerRoleArgsSchema: z.object({
   select: z.lazy(() => OfficerRoleSelectSchema).optional(),
 }).strict();
 
@@ -424,7 +424,7 @@ export const OfficerRoleSelectSchema: z.ZodType<Prisma.OfficerRoleSelect> = z.ob
 // EVENT SHIFT
 //------------------------------------------------------
 
-export const EventShiftArgsSchema: z.ZodType<Prisma.EventShiftDefaultArgs> = z.object({
+export const EventShiftArgsSchema: z.object({
   select: z.lazy(() => EventShiftSelectSchema).optional(),
 }).strict();
 

@@ -7,6 +7,7 @@ import EventDetail from "../_components/EventDetail";
 
 export default async function DatePage({ params }: { params: { date: string } }) {
     const { date } = params;
+    console.log("date", date);
     const user = await currentUser();
     const { data: events } = await getEvents(dayjs(date));
     console.log("events", events);
