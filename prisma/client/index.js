@@ -214,7 +214,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\evan\\Documents\\GitHub Desktop\\ccru\\src\\prisma\\client",
+      "value": "C:\\Users\\evan\\Documents\\GitHub Desktop\\ccru\\prisma\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -230,12 +230,12 @@ const config = {
     "previewFeatures": [
       "prismaSchemaFolder"
     ],
-    "sourceFilePath": "C:\\Users\\evan\\Documents\\GitHub Desktop\\ccru\\src\\prisma\\schema\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\evan\\Documents\\GitHub Desktop\\ccru\\prisma\\schema\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
     "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "schemaEnvPath": "../../.env"
   },
   "relativePath": "../schema",
   "clientVersion": "6.0.1",
@@ -263,8 +263,8 @@ const fs = require('fs')
 config.dirname = __dirname
 if (!fs.existsSync(path.join(__dirname, 'schema.prisma'))) {
   const alternativePaths = [
-    "src/prisma/client",
     "prisma/client",
+    "client",
   ]
   
   const alternativePath = alternativePaths.find((altPath) => {
@@ -293,7 +293,7 @@ Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
 path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "src/prisma/client/query_engine-windows.dll.node")
+path.join(process.cwd(), "prisma/client/query_engine-windows.dll.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "src/prisma/client/schema.prisma")
+path.join(process.cwd(), "prisma/client/schema.prisma")

@@ -213,7 +213,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\evan\\Documents\\GitHub Desktop\\ccru\\src\\prisma\\client",
+      "value": "C:\\Users\\evan\\Documents\\GitHub Desktop\\ccru\\prisma\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -229,12 +229,12 @@ const config = {
     "previewFeatures": [
       "prismaSchemaFolder"
     ],
-    "sourceFilePath": "C:\\Users\\evan\\Documents\\GitHub Desktop\\ccru\\src\\prisma\\schema\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\evan\\Documents\\GitHub Desktop\\ccru\\prisma\\schema\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
     "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "schemaEnvPath": "../../.env"
   },
   "relativePath": "../schema",
   "clientVersion": "6.0.1",
