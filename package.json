@@ -27,7 +27,7 @@
         "@radix-ui/react-separator": "^1.1.0",
         "@radix-ui/react-slot": "^1.1.0",
         "@radix-ui/react-tooltip": "^1.1.4",
-        "@sentry/cli": "^2.39.1",
+        "@sentry/cli": "2.22.2",
         "@sentry/nextjs": "^8.19.0",
         "@t3-oss/env-nextjs": "^0.10.1",
         "antd": "^5.19.3",
