@@ -3,6 +3,9 @@
     "version": "0.1.0",
     "private": true,
     "type": "module",
+    "prisma": {
+        "schema": "src/prisma/schema"
+    },
     "scripts": {
         "build": "next build",
         "db:generate": "prisma migrate dev",
@@ -54,7 +57,7 @@
         "postcss": "^8.4.39",
         "prettier": "^3.4.1",
         "prettier-plugin-tailwindcss": "^0.6.9",
-        "prisma": "^5.14.0",
+        "prisma": "^6.0.1",
         "tailwindcss": "^4.0.0-beta.4",
         "typescript": "^5.5.3"
     },
