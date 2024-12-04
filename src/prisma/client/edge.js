@@ -7,12 +7,12 @@ const {
   PrismaClientRustPanicError,
   PrismaClientInitializationError,
   PrismaClientValidationError,
-  NotFoundError,
   getPrismaClient,
   sqltag,
   empty,
   join,
   raw,
+  skip,
   Decimal,
   Debug,
   objectEnumValues,
@@ -31,11 +31,11 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 5.17.0
+ * Prisma Client JS version: 6.0.1
  * Query Engine version: 5dbef10bdbfb579e07d35cc85fb1518d357cb99e
  */
 Prisma.prismaVersion = {
-  client: "5.17.0",
+  client: "6.0.1",
   engine: "5dbef10bdbfb579e07d35cc85fb1518d357cb99e"
 }
 
@@ -44,7 +44,6 @@ Prisma.PrismaClientUnknownRequestError = PrismaClientUnknownRequestError
 Prisma.PrismaClientRustPanicError = PrismaClientRustPanicError
 Prisma.PrismaClientInitializationError = PrismaClientInitializationError
 Prisma.PrismaClientValidationError = PrismaClientValidationError
-Prisma.NotFoundError = NotFoundError
 Prisma.Decimal = Decimal
 
 /**
@@ -74,6 +73,8 @@ Prisma.NullTypes = {
   JsonNull: objectEnumValues.classes.JsonNull,
   AnyNull: objectEnumValues.classes.AnyNull
 }
+
+
 
 
 
@@ -235,13 +236,14 @@ const config = {
     "rootEnvPath": null,
     "schemaEnvPath": "../../../.env"
   },
-  "relativePath": "..",
-  "clientVersion": "5.17.0",
+  "relativePath": "../schema",
+  "clientVersion": "6.0.1",
   "engineVersion": "5dbef10bdbfb579e07d35cc85fb1518d357cb99e",
   "datasourceNames": [
     "db"
   ],
   "activeProvider": "mongodb",
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {

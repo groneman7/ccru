@@ -308,7 +308,6 @@ export namespace Prisma {
   export import PrismaClientRustPanicError = runtime.PrismaClientRustPanicError
   export import PrismaClientInitializationError = runtime.PrismaClientInitializationError
   export import PrismaClientValidationError = runtime.PrismaClientValidationError
-  export import NotFoundError = runtime.NotFoundError
 
   /**
    * Re-export of sql-template-tag
@@ -318,6 +317,8 @@ export namespace Prisma {
   export import join = runtime.join
   export import raw = runtime.raw
   export import Sql = runtime.Sql
+
+
 
   /**
    * Decimal.js
@@ -345,7 +346,7 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 5.17.0
+   * Prisma Client JS version: 6.0.1
    * Query Engine version: 5dbef10bdbfb579e07d35cc85fb1518d357cb99e
    */
   export type PrismaVersion = {
@@ -358,51 +359,13 @@ export namespace Prisma {
    * Utility Types
    */
 
-  /**
-   * From https://github.com/sindresorhus/type-fest/
-   * Matches a JSON object.
-   * This type can be useful to enforce some input to be JSON-compatible or as a super-type to be extended from. 
-   */
-  export type JsonObject = {[Key in string]?: JsonValue}
 
-  /**
-   * From https://github.com/sindresorhus/type-fest/
-   * Matches a JSON array.
-   */
-  export interface JsonArray extends Array<JsonValue> {}
-
-  /**
-   * From https://github.com/sindresorhus/type-fest/
-   * Matches any valid JSON value.
-   */
-  export type JsonValue = string | number | boolean | JsonObject | JsonArray | null
-
-  /**
-   * Matches a JSON object.
-   * Unlike `JsonObject`, this type allows undefined and read-only properties.
-   */
-  export type InputJsonObject = {readonly [Key in string]?: InputJsonValue | null}
-
-  /**
-   * Matches a JSON array.
-   * Unlike `JsonArray`, readonly arrays are assignable to this type.
-   */
-  export interface InputJsonArray extends ReadonlyArray<InputJsonValue | null> {}
-
-  /**
-   * Matches any valid value that can be used as an input for operations like
-   * create and update as the value of a JSON field. Unlike `JsonValue`, this
-   * type allows read-only arrays and read-only object properties and disallows
-   * `null` at the top level.
-   *
-   * `null` cannot be used as the value of a JSON field because its meaning
-   * would be ambiguous. Use `Prisma.JsonNull` to store the JSON null value or
-   * `Prisma.DbNull` to clear the JSON value and set the field to the database
-   * NULL value instead.
-   *
-   * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
-   */
-  export type InputJsonValue = string | number | boolean | InputJsonObject | InputJsonArray | { toJSON(): unknown }
+  export import JsonObject = runtime.JsonObject
+  export import JsonArray = runtime.JsonArray
+  export import JsonValue = runtime.JsonValue
+  export import InputJsonObject = runtime.InputJsonObject
+  export import InputJsonArray = runtime.InputJsonArray
+  export import InputJsonValue = runtime.InputJsonValue
 
   /**
    * Types of the values used to represent different kinds of `null` values when working with JSON fields.
@@ -14902,62 +14865,6 @@ export namespace Prisma {
   }
 
 
-
-  /**
-   * Aliases for legacy arg types
-   */
-    /**
-     * @deprecated Use EventShiftDefaultArgs instead
-     */
-    export type EventShiftArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EventShiftDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use EventDefaultArgs instead
-     */
-    export type EventArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EventDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use EventTemplateDefaultArgs instead
-     */
-    export type EventTemplateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EventTemplateDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use EventPositionDefaultArgs instead
-     */
-    export type EventPositionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EventPositionDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use InventoryDefaultArgs instead
-     */
-    export type InventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InventoryDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use InventoryCategoryDefaultArgs instead
-     */
-    export type InventoryCategoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InventoryCategoryDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use QuantityUnitDefaultArgs instead
-     */
-    export type QuantityUnitArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = QuantityUnitDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use InventoryTagDefaultArgs instead
-     */
-    export type InventoryTagArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InventoryTagDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use InventoryBrandDefaultArgs instead
-     */
-    export type InventoryBrandArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InventoryBrandDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use InventoryLinkDefaultArgs instead
-     */
-    export type InventoryLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InventoryLinkDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use UserRoleDefaultArgs instead
-     */
-    export type UserRoleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserRoleDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use UserTypeDefaultArgs instead
-     */
-    export type UserTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserTypeDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use OfficerRoleDefaultArgs instead
-     */
-    export type OfficerRoleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = OfficerRoleDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany
