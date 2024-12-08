@@ -1,0 +1,156 @@
+// Model for the events hosted by CCRU.
+model Event {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  date        DateTime
+  eventName   String
+  description String?
+  location    String?
+  timeStart   DateTime?
+  timeEnd     DateTime?
+  createdAt   DateTime     @default(now())
+  createdBy   String
+  shifts      EventShift[]
+
+  @@index([date])
+  @@map("EVENTS")
+}
+
+type EventShift {
+  positionId String
+  userId     String?
+}
+
+// Model for the templates of events hosted by CCRU.
+model EventTemplate {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  templateName String
+  description  String?
+  location     String?
+  timeStart    DateTime?
+  timeEnd      DateTime?
+  shifts       EventShift[] // List of shifts that are available for this template
+
+  @@index([templateName])
+  @@map("EVENT_TEMPLATES")
+}
+
+// Model for the positions of event shifts (e.g., triage, interviewer, etc.).
+model EventPosition {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  positionName     String
+  label            String?
+  description      String?
+  allowedUserTypes String[]
+  officerOnly      Boolean?
+
+  @@map("EVENT_POSITIONS")
+}
+
+// Model for the inventory of CCRU.
+model Inventory {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  itemName          String
+  brandId           String?
+  categoryId        String? // Link to id of InventoryCategory
+  location          String?
+  quantity          Int
+  quantityUnitId    String? // Link to id of QuantityUnit
+  packageSize       Int?
+  packageSizeUnitId String? // Link to id of QuantityUnit
+  upc               String?
+  ndc               String?
+  expiration        DateTime?
+  lot               String?
+  comments          String?
+  linkId            String? // Many-to-one releationship with InventoryLink
+
+  @@map("INVENTORY")
+}
+
+// Model for the categories of inventory (e.g., medications, office supplies, medical equipment, etc.).
+// Note: Ideally, when a user selects a category, there would be a list of recommended tags for that category.
+model InventoryCategory {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  label       String
+  description String?
+
+  @@map("INVENTORY_CATEGORIES")
+}
+
+// Model for the units of measurement of inventory.
+model QuantityUnit {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  label String
+
+  @@map("QUANTITY_UNITS")
+}
+
+// Model for the tags of inventory. These are used to further categorize inventory (e.g., Rx Only, OTC, etc.).
+model InventoryTag {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  label String
+
+  @@map("INVENTORY_TAGS")
+}
+
+// Model for the brands of inventory (e.g., Walgreens, Pfizer, etc.).
+model InventoryBrand {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  brandName String
+
+  @@map("INVENTORY_BRANDS")
+}
+
+model InventoryLink {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  linkName    String
+  description String?
+  category    String? // Link to id of InventoryCategory
+  comments    String?
+  items       String[] @default([])
+
+  @@map("INVENTORY_LINKS")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"]
+  output          = "./../client"
+}
+
+generator zod {
+  provider = "zod-prisma-types"
+  output   = "./../types"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Model for the roles of users (e.g., standard, volunteer, officer, and admin).
+model UserRole {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  label       String
+  description String?
+
+  @@map("USER_ROLES")
+}
+
+// Model for the types of users (e.g., medical student, undergraduate, MD/DO, etc.).
+model UserType {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  label       String
+  description String?
+
+  @@map("USER_TYPES")
+}
+
+// Model for the officers of CCRU (e.g., manager).
+model OfficerRole {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  label       String
+  description String?
+
+  @@map("OFFICER_ROLES")
+}
