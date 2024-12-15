@@ -1,7 +1,7 @@
 import dayjs, { type Dayjs } from "dayjs";
 import { prisma } from "~/lib/prisma";
-import type { Event } from "~/prisma/client";
-import { defaultQueryReturns, type QueryResponse } from "~/lib/defaultQueryResponses";
+import type { Event, EventPosition } from "~/prisma/client";
+import { defaultQueryResponses, type QueryResponse } from "~/lib/defaultQueryResponses";
 
 export async function getEvents(
     startDate?: Dayjs,
@@ -44,8 +44,23 @@ export async function getEvents(
         }
     } catch (ex) {
         return {
-            status: 500,
-            error: ex,
+            ...defaultQueryResponses[500],
+            message: ex as string,
+        };
+    }
+}
+
+export async function getPositions(): Promise<QueryResponse<EventPosition[]>> {
+    try {
+        const positions = await prisma.eventPosition.findMany();
+        return {
+            status: 200,
+            data: [...positions],
+        };
+    } catch (ex) {
+        return {
+            ...defaultQueryResponses[500],
+            message: ex as string,
         };
     }
 }
