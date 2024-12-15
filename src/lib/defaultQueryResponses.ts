@@ -4,7 +4,7 @@ export type QueryResponse<T> = {
     data?: T;
 };
 
-export const defaultQueryReturns = {
+export const defaultQueryResponses = {
     200: {
         status: 200,
         message: "OK",
