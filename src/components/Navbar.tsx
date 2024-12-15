@@ -17,7 +17,11 @@ export default async function Navbar() {
     return (
         <nav className="flex items-center gap-4 border-b p-4">
             <div className="flex basis-1/4 items-center justify-start">
-                <h1 className="text-xl font-bold">Compassionate Care Reaching yoU</h1>
+                <img
+                    src="/ccru.svg"
+                    className="w-8"
+                    alt="CCRU logo"
+                />
             </div>
             <div className="flex flex-1 items-center justify-center gap-4">
                 <Link href="/events">
