@@ -1,8 +1,12 @@
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import type { Event /* TestShift */ } from "~/prisma/client";
 import { getPositions } from "~/prisma/events";
-import dayjs from "dayjs";
 import { Button } from "~/components/ui/button";
+import dayjs, { type Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+// dayjs.extend(utc);
+dayjs.extend(timezone);
 
 type EventDetailProps = {
     event: Event;
@@ -10,7 +14,6 @@ type EventDetailProps = {
 
 export default async function EventDetail({ event }: EventDetailProps) {
     const user = await currentUser();
-    console.log("EventDetail.tsx ln 12", user);
     const clerk = await clerkClient();
 
     const { data: positions } = await getPositions();
@@ -25,8 +28,8 @@ export default async function EventDetail({ event }: EventDetailProps) {
         <div className="p-4">
             <div className="text-lg font-semibold">{event.eventName}</div>
             <div>
-                {dayjs(event.timeStart).format("h:mm A")} –{" "}
-                {dayjs(event.timeEnd).format("h:mm A")}
+                {dayjs(event.timeStart).tz("America/New_York").format("h:mm A")} –{" "}
+                {dayjs(event.timeEnd).tz("America/New_York").format("h:mm A")}
             </div>
             <div className="py-2">{event.location}</div>
             <div className="flex flex-col divide-y px-2 py-4">

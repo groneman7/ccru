@@ -7,16 +7,11 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
-// dayjs.tz.setDefault("America/New_York");
 
 export async function getEvents(
     startDate?: Dayjs,
     endDate?: Dayjs
 ): Promise<QueryResponse<Event[]>> {
-    console.log("getEvents called");
-    console.log("startDate:", startDate);
-    console.log("startDate UTC:", startDate?.utc());
-    console.log("startDate EST:", startDate?.tz("America/New_York"));
     try {
         if (!startDate) {
             const allEvents = await prisma.event.findMany();
@@ -29,8 +24,8 @@ export async function getEvents(
                 where: {
                     date: {
                         gte: dayjs(startDate).toDate(),
-                        lte: dayjs(startDate).add(1, 'day').toDate()
-                    }
+                        lte: dayjs(startDate).add(1, "day").toDate(),
+                    },
                 },
             });
             return {
