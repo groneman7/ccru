@@ -7,6 +7,9 @@ export async function getEvents(
     startDate?: Dayjs,
     endDate?: Dayjs
 ): Promise<QueryResponse<Event[]>> {
+    console.log("getEvents called");
+    console.log("startDate:", startDate);
+    console.log("endDate:", endDate);
     try {
         if (!startDate) {
             const allEvents = await prisma.event.findMany();
