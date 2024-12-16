@@ -1,16 +1,23 @@
 import { SignedIn } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import { Button } from "~/components/ui/button";
-import dayjs from "dayjs";
 import { getEvents } from "~/prisma/events";
 import EventDetail from "../_components/EventDetail";
+import dayjs, { type Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default async function DatePage({ params }: { params: { date: string } }) {
     const { date } = params;
     console.log("date", date);
     const user = await currentUser();
     const { data: events } = await getEvents(dayjs(date));
-    console.log("events", events);
+    console.log("CALLING getEvents FROM DATE PAGE");
+    console.log("date:", dayjs(date));
+    console.log("date UTC", dayjs(date).utc());
+    console.log("date EST", dayjs(date).tz("America/New_York"));
 
     return (
         <div className="p-4">
