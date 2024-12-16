@@ -18,8 +18,8 @@ export default async function Navbar() {
         <nav className="flex items-center gap-4 border-b p-4">
             <div className="flex basis-1/4 items-center justify-start">
                 <img
-                    src="/ccru.svg"
-                    className="w-8"
+                    src="/ccru-prev.svg"
+                    className="h-10"
                     alt="CCRU logo"
                 />
             </div>
