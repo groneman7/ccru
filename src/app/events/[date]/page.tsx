@@ -13,6 +13,7 @@ export default async function DatePage({ params }: { params: { date: string } })
     const { date } = params;
     console.log("date", date);
     const user = await currentUser();
+    console.log("user", user);
     const { data: events } = await getEvents(dayjs(date));
     console.log("CALLING getEvents FROM DATE PAGE");
     console.log("date:", dayjs(date));
@@ -23,11 +24,11 @@ export default async function DatePage({ params }: { params: { date: string } })
         <div className="p-4">
             <div className="flex flex-col justify-between gap-2">
                 <h3 className="text-2xl font-bold">{dayjs(date).format("dddd, MMMM D")}</h3>
-                <SignedIn>
+                {/* <SignedIn>
                     {user?.privateMetadata?.permissions?.["events:create_new"] && (
                         <Button>Create New Event</Button>
                     )}
-                </SignedIn>
+                </SignedIn> */}
             </div>
             <div>
                 {events && events.length > 0 ? (

@@ -16,6 +16,7 @@ export default async function EventDetail({ event }: EventDetailProps) {
 
     async function getVolunteerName(userId: string) {
         const user = await clerk.users.getUser(userId);
+        console.log("volunteer user object", user);
         return `${user.firstName} ${user.lastName}`;
     }
 
