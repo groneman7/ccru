@@ -1,5 +1,11 @@
+import { type Metadata } from "next";
 import { EventCalendar } from "~/components/EventCalendar";
 import { getEvents } from "~/prisma/events";
+
+export const metadata: Metadata = {
+    title: "CCRU | Events",
+    description: "Our event calendar.",
+};
 
 export default async function EventsLayout({
     children,
