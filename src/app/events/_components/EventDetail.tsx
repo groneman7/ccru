@@ -10,13 +10,14 @@ type EventDetailProps = {
 
 export default async function EventDetail({ event }: EventDetailProps) {
     const user = await currentUser();
+    console.log("EventDetail.tsx ln 12", user);
     const clerk = await clerkClient();
 
     const { data: positions } = await getPositions();
 
     async function getVolunteerName(userId: string) {
         const user = await clerk.users.getUser(userId);
-        console.log("volunteer user object", user);
+        console.log("EventDetail.tsx ln 19", user);
         return `${user.firstName} ${user.lastName}`;
     }
 
@@ -31,9 +32,9 @@ export default async function EventDetail({ event }: EventDetailProps) {
             <div className="flex flex-col divide-y px-2 py-4">
                 {event.shifts.map((shift, i: number) => {
                     const position = positions?.find((p) => p.id === shift.positionId);
-                    const userCanSignUp = position?.allowedUserTypes?.includes(
-                        user!.privateMetadata.typeId
-                    );
+                    const userCanSignUp =
+                        user &&
+                        position?.allowedUserTypes?.includes(user.privateMetadata.typeId);
                     return (
                         <div
                             key={`${shift.positionId}-${i}`}
