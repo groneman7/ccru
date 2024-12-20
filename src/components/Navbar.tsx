@@ -16,13 +16,15 @@ export default async function Navbar() {
 
     return (
         <nav className="flex items-center gap-4 border-b p-4">
-            <div className="flex basis-1/4 items-center justify-start">
+            <Link
+                href="/"
+                className="flex basis-1/4 items-center justify-start">
                 <img
                     src="/ccru-prev.svg"
                     className="h-10"
                     alt="CCRU logo"
                 />
-            </div>
+            </Link>
             <div className="flex flex-1 items-center justify-center gap-4">
                 <Link href="/events">
                     <Button>Events</Button>
