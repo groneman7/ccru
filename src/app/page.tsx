@@ -1,6 +1,7 @@
 // import Link from "next/link";
 
-export default function HomePage() {
+// Home Page
+export default function Page() {
     return (
         <div className="flex flex-1 flex-col">
             <div>

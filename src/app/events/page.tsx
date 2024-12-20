@@ -1,7 +1,8 @@
 import { permanentRedirect } from "next/navigation";
 import dayjs from "dayjs";
 
-export default function EventsPage() {
+// Events Page
+export default function Page() {
     const today = dayjs().format("YYYY-MM-DD");
     permanentRedirect(`/events/${today}`);
 }

@@ -10,7 +10,8 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export default async function DatePage({ params }: { params: { date: string } }) {
+// Date Page
+export default async function Page({ params }: { params: { date: string } }) {
     const { date } = params;
     const user = await currentUser();
     const { data: events } = await getEvents(dayjs(date));

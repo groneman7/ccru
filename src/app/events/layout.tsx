@@ -7,9 +7,8 @@ export const metadata: Metadata = {
     description: "Our event calendar.",
 };
 
-export default async function EventsLayout({
-    children,
-}: Readonly<{ children: React.ReactNode }>) {
+// Events Layout
+export default async function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
     const { data: events } = await getEvents();
     // console.log(events);
 
