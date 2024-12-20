@@ -1,3 +1,9 @@
+import { Skeleton } from "~/components/ui/skeleton";
+
 export default function Loading() {
-    return <div>Loading...</div>;
+    return (
+        <div>
+            <Skeleton className="/>
+        </div>
+    );
 }
