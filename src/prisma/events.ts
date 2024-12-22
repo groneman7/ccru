@@ -58,6 +58,30 @@ export async function getEvents(
     }
 }
 
+export async function getEventById(eventId: string): Promise<QueryResponse<Event>> {
+    try {
+        const event = await prisma.event.findUnique({
+            where: {
+                id: eventId,
+            },
+        });
+        if (!event) {
+            return {
+                ...defaultQueryResponses[404],
+            };
+        }
+        return {
+            ...defaultQueryResponses[200],
+            data: event,
+        };
+    } catch (ex) {
+        return {
+            ...defaultQueryResponses[500],
+            message: ex as string,
+        };
+    }
+}
+
 export async function getPositions(): Promise<QueryResponse<EventPosition[]>> {
     try {
         const positions = await prisma.eventPosition.findMany();
