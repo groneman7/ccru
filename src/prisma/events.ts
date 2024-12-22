@@ -1,5 +1,6 @@
 import { prisma } from "~/lib/prisma";
-import type { Event, EventPosition } from "~/prisma/client";
+import type { Event, EventPosition, EventShift } from "~/prisma/client";
+import { getUserNameAndSuffix } from "~/prisma/users";
 import { defaultQueryResponses, type QueryResponse } from "~/lib/defaultQueryResponses";
 
 import dayjs, { type Dayjs } from "dayjs";
@@ -58,7 +59,13 @@ export async function getEvents(
     }
 }
 
-export async function getEventById(eventId: string): Promise<QueryResponse<Event>> {
+export async function getEventById(eventId: string): Promise<
+    QueryResponse<
+        Omit<Event, "shifts"> & {
+            shifts: (Omit<EventShift, "userId"> & { user?: { id: string; name: string } })[];
+        }
+    >
+> {
     try {
         const event = await prisma.event.findUnique({
             where: {
@@ -70,9 +77,28 @@ export async function getEventById(eventId: string): Promise<QueryResponse<Event
                 ...defaultQueryResponses[404],
             };
         }
+
+        const mappedShifts = await Promise.all(
+            event.shifts.map(async (shift) => {
+                const { data: label } = await getPositionLabel(shift.positionId);
+                const user = shift.userId
+                    ? {
+                          id: shift.userId,
+                          name: await getUserNameAndSuffix(shift.userId),
+                      }
+                    : undefined;
+
+                return {
+                    positionId: shift.positionId,
+                    positionLabel: label,
+                    user,
+                };
+            })
+        );
+
         return {
             ...defaultQueryResponses[200],
-            data: event,
+            data: { ...event, shifts: mappedShifts },
         };
     } catch (ex) {
         return {
@@ -88,6 +114,58 @@ export async function getPositions(): Promise<QueryResponse<EventPosition[]>> {
         return {
             status: 200,
             data: [...positions],
+        };
+    } catch (ex) {
+        return {
+            ...defaultQueryResponses[500],
+            message: ex as string,
+        };
+    }
+}
+
+export async function getPositionById(
+    positionId: string
+): Promise<QueryResponse<EventPosition>> {
+    try {
+        const position = await prisma.eventPosition.findUnique({
+            where: {
+                id: positionId,
+            },
+        });
+        if (!position) {
+            return {
+                ...defaultQueryResponses[404],
+            };
+        }
+        return {
+            ...defaultQueryResponses[200],
+            data: position,
+        };
+    } catch (ex) {
+        return {
+            ...defaultQueryResponses[500],
+            message: ex as string,
+        };
+    }
+}
+
+export async function getPositionLabel(
+    positionId: string
+): Promise<QueryResponse<string | null>> {
+    try {
+        const position = await prisma.eventPosition.findUnique({
+            where: {
+                id: positionId,
+            },
+        });
+        if (!position) {
+            return {
+                ...defaultQueryResponses[404],
+            };
+        }
+        return {
+            ...defaultQueryResponses[200],
+            data: position.label,
         };
     } catch (ex) {
         return {
