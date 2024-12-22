@@ -3,14 +3,14 @@ declare global {
     //       [k: string]: unknown;
     //   }
 
-    type Permissions =
+    export type Permission =
         | "events:create_new"
         | "events:modify_signup"
         | "events:assign_user"
         | "events:edit_calendar";
 
     type UserPermisions = {
-        [k in Permissions]?: boolean;
+        [k in Permission]?: boolean;
     };
 
     interface UserPrivateMetadata {
