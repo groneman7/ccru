@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import type { Event } from "~/prisma/client";
 import dayjs, { type Dayjs } from "dayjs";
 import { cn } from "~/lib/utils";
@@ -31,10 +33,9 @@ export function EventCalendar({
     onDateClick,
     onEventClick,
 }: CalendarProps) {
-    // const test = dayjs("2024-12-01T00:00:00.000-05:00");
-    // console.log(test.format("YYYY-MM-DD"));
-    // console.log(events);
+    const pathname = usePathname();
 
+    const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
     const [selectedDate, setSelectedDate] = useState<Dayjs>(initialDate ?? dayjs());
     const [selectedMonth, setSelectedMonth] = useState<Dayjs>(initialMonth ?? dayjs());
 
@@ -62,6 +63,13 @@ export function EventCalendar({
             setSelectedMonth(date);
         }
     }
+
+    useEffect(() => {
+        const eventId = pathname.split("/").at(-1);
+        if (eventId) {
+            setSelectedEventId(eventId);
+        }
+    }, [pathname]);
 
     function CalendarHeader() {
         return (
@@ -127,14 +135,15 @@ export function EventCalendar({
         return (
             <ContextMenu>
                 <ContextMenuTrigger>
-                    <div
-                        className="bg-accent hover:bg-accent-hover active:bg-accent-active/75 flex cursor-pointer select-none rounded-sm px-1 text-sm transition-colors duration-75"
+                    <Link
+                        href={`/events/${event.id}`}
+                        className="flex cursor-pointer rounded-sm bg-accent px-1 text-sm transition-colors duration-75 select-none hover:bg-accent-hover active:bg-accent-active/75"
                         onClick={(e) => {
                             e.stopPropagation();
                             onEventClick?.(e.currentTarget.id);
                         }}>
                         {event.eventName}
-                    </div>
+                    </Link>
                 </ContextMenuTrigger>
                 <ContextMenuContent>
                     <ContextMenuItem>Sign up</ContextMenuItem>
@@ -160,7 +169,7 @@ export function EventCalendar({
             <div
                 className={cn(
                     "flex flex-col items-stretch justify-start transition-colors duration-75",
-                    canEdit && "hover:bg-accent/25 cursor-pointer",
+                    canEdit && "cursor-pointer hover:bg-accent/25",
                     date.isSame(selectedMonth, "month") ? "bg-white" : "bg-secondary/20",
                     index % 7 < 6 && "border-r",
                     date.isBefore(endOfCalendar.subtract(1, "week")) && "border-b-1"
@@ -169,7 +178,7 @@ export function EventCalendar({
             >
                 <div
                     className={cn(
-                        "mt-2 select-none self-center rounded-full p-1 text-sm font-semibold",
+                        "mt-2 self-center rounded-full p-1 text-sm font-semibold select-none",
                         date.isSame(dayjs(), "date") && "bg-primary text-white",
                         !date.isSame(selectedMonth, "month") && "text-secondary-foreground/60"
                     )}>
