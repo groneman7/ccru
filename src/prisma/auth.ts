@@ -1,0 +1,18 @@
+import { clerkClient } from "@clerk/nextjs/server";
+import { getPositionById } from "~/prisma/events";
+
+export async function has(userId: string, permission: Permission) {
+    const clerk = await clerkClient();
+    return (await clerk.users.getUser(userId)).privateMetadata.permissions?.[permission];
+}
+
+export async function userAllowedToSignUp(
+    userId: string,
+    positionId: string
+): Promise<boolean> {
+    const clerk = await clerkClient();
+    const user = await clerk.users.getUser(userId);
+    const { data: position } = await getPositionById(positionId);
+
+    return position?.allowedUserTypes?.includes(user.privateMetadata.typeId) || false;
+}
