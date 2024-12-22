@@ -1,66 +1,58 @@
-import { clerkClient, currentUser } from "@clerk/nextjs/server";
-import type { Event /* TestShift */ } from "~/prisma/client";
+import { currentUser } from "@clerk/nextjs/server";
+import type { Event, EventShift } from "~/prisma/client";
 import { getPositions } from "~/prisma/events";
-import { Button } from "~/components/ui/button";
+
 import dayjs, { type Dayjs } from "dayjs";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-// dayjs.extend(utc);
+import ShiftListItem from "./ShiftListItem";
+import { userAllowedToSignUp } from "~/prisma/auth";
 dayjs.extend(timezone);
 
 type EventDetailProps = {
-    event: Event;
+    event: Omit<Event, "shifts"> & {
+        shifts: (Omit<EventShift, "userId"> & {
+            positionLabel: string;
+            user?: { id: string; name: string };
+        })[];
+    };
 };
 
 export default async function EventDetail({ event }: EventDetailProps) {
-    const user = await currentUser();
-    const clerk = await clerkClient();
+    const me = await currentUser();
 
     const { data: positions } = await getPositions();
-
-    async function getVolunteerName(userId: string) {
-        const user = await clerk.users.getUser(userId);
-        console.log("EventDetail.tsx ln 19", user);
-        return `${user.firstName} ${user.lastName}`;
+    if (!positions) {
+        return <div>Error... positions not found.</div>;
     }
 
     return (
         <div className="p-4">
-            <div className="text-lg font-semibold">{event.eventName}</div>
+            <div className="text-lg font-semibold">
+                {dayjs(event.date).format("dddd, MMMM D")}
+            </div>
             <div>
                 {dayjs(event.timeStart).tz("America/New_York").format("h:mm A")} –{" "}
                 {dayjs(event.timeEnd).tz("America/New_York").format("h:mm A")}
             </div>
             <div className="py-2">{event.location}</div>
             <div className="flex flex-col divide-y px-2 py-4">
-                {event.shifts.map((shift, i: number) => {
-                    const position = positions?.find((p) => p.id === shift.positionId);
-                    const userCanSignUp =
-                        user &&
-                        position?.allowedUserTypes?.includes(user.privateMetadata.typeId);
-                    return (
-                        <div
-                            key={`${shift.positionId}-${i}`}
-                            className="flex items-center gap-4 py-3">
-                            <span className="w-36">
-                                {positions?.find((p) => p.id === shift.positionId)?.label}
-                            </span>
-                            <span className="flex-1 truncate">
-                                {shift.userId || // TODO: Change this to user's name rather than user ID.
-                                    (userCanSignUp ? (
-                                        <Button
-                                            className="-my-1"
-                                            size="sm"
-                                            variant="link">
-                                            Sign up
-                                        </Button>
-                                    ) : (
-                                        ""
-                                    ))}
-                            </span>
-                        </div>
-                    );
-                })}
+                {Promise.all(
+                    event.shifts.map(async (shift, i: number) => {
+                        return (
+                            <ShiftListItem
+                                key={`${i}-${shift.positionId}`}
+                                canSignUp={
+                                    me
+                                        ? await userAllowedToSignUp(me.id, shift.positionId)
+                                        : false
+                                }
+                                label={shift.positionLabel || "Position label not found."}
+                                positionId={shift.positionId}
+                                user={shift.user}
+                            />
+                        );
+                    })
+                )}
             </div>
         </div>
     );

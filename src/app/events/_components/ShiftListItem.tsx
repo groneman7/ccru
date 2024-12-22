@@ -3,6 +3,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Event, EventPosition } from "~/prisma/client";
 import { Button } from "~/components/ui/button";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "~/components/ui/select";
+
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
@@ -13,25 +23,20 @@ dayjs.extend(timezone);
 dayjs.tz.setDefault("America/New_York");
 
 type ShiftListItemProps = {
-    key: string;
-    currentUser: {
+    canSignUp: boolean;
+    label: string;
+    positionId: string;
+    user?: {
         id: string;
         name: string;
-        username: string;
     };
-    event: Event;
-    position: EventPosition;
-    shiftId: string;
-    volunteer?: string;
 };
 
 export default function ShiftListItem({
-    key,
-    currentUser,
-    event,
-    position,
-    shiftId,
-    volunteer,
+    canSignUp,
+    label,
+    positionId,
+    user,
 }: ShiftListItemProps) {
     const [confirmModal, setConfirmModal] = useState<boolean>(false);
     const router = useRouter();
@@ -82,21 +87,38 @@ export default function ShiftListItem({
                 onCancel={() => setConfirmModal(false)}
                 onOk={handleSignUp}
             /> */}
-            <div
-                key={key}
-                className="flex items-center gap-4 pt-2">
-                <div className="basis-1/3">{position?.label ?? position?.positionName}</div>
-                {volunteer ? (
-                    <div>{volunteer}</div>
-                ) : (
-                    <Button
-                        onClick={() => setConfirmModal(true)}
-                        /* type="text" */
-                    >
-                        Sign up
-                    </Button>
-                )}
+            <div className="flex items-center gap-4 py-3">
+                <span className="w-36">{label}</span>
+                <span className="flex-1 truncate">
+                    {user ? (
+                        user.name
+                    ) : canSignUp ? (
+                        <Button variant="link">Sign up</Button>
+                    ) : null}
+                </span>
+                <Button
+                    size="sm"
+                    variant="secondary">
+                    {user ? "Reassign" : "Assign"}
+                </Button>
             </div>
         </>
     );
 }
+
+// <Select>
+//     <SelectTrigger className="">
+//         <SelectValue placeholder="Assign user" />
+//     </SelectTrigger>
+//     <SelectContent>
+//         {/* {userList.map((user) => {
+//             return (
+//                 <SelectItem
+//                     key={user.username}
+//                     value={user.username}>
+//                     {user.firstName} {user.lastName}
+//                 </SelectItem>
+//             );
+//         })} */}
+//     </SelectContent>
+// </Select>

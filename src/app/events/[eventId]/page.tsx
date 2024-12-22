@@ -23,16 +23,7 @@ export default async function Page({ params }: { params: { eventId: string } }) 
     return (
         <div className="p-4">
             <div className="flex flex-col justify-between gap-2">
-                <h3 className="text-2xl font-bold">
-                    {dayjs(event.date).format("dddd, MMMM D")}
-                </h3>
-                <SignedIn>
-                    {user && user.privateMetadata?.permissions?.["events:create_new"] && (
-                        <Link href="/events/new">
-                            <Button>Create New Event</Button>
-                        </Link>
-                    )}
-                </SignedIn>
+                <h3 className="text-2xl font-bold">{event.eventName}</h3>
             </div>
             <div>
                 {event ? (
