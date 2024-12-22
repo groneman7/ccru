@@ -3,17 +3,19 @@ declare global {
     //       [k: string]: unknown;
     //   }
 
-    type TestPermissions =
+    type Permissions =
         | "events:create_new"
         | "events:modify_signup"
+        | "events:assign_user"
         | "events:edit_calendar";
 
     type UserPermisions = {
-        [k in TestPermissions]?: boolean;
+        [k in Permissions]?: boolean;
     };
 
     interface UserPrivateMetadata {
         isConfigured: boolean;
+        suffix?: string;
         roleId: string;
         typeId: string;
         officerTypeId?: string;
