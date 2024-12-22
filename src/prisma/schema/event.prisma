@@ -1,13 +1,13 @@
 // Model for the events hosted by CCRU.
 model Event {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
   date        DateTime
   eventName   String
   description String?
   location    String?
   timeStart   DateTime?
   timeEnd     DateTime?
-  createdAt   DateTime    @default(now())
+  createdAt   DateTime     @default(now())
   createdBy   String
   shifts      EventShift[]
 
@@ -22,7 +22,7 @@ type EventShift {
 
 // Model for the templates of events hosted by CCRU.
 model EventTemplate {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
   templateName String
   description  String?
   location     String?
