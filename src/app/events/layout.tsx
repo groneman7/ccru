@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 // Events Layout
 export default async function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
     const { data: events } = await getEvents();
-    // console.log(events);
 
     return (
         <div className="flex flex-1 justify-between gap-4">
@@ -20,7 +19,7 @@ export default async function Layout({ children }: Readonly<{ children: React.Re
                     events={events}
                 />
             </div>
-            <div className="w-[24rem]">{children}</div>
+            <div className="w-[32rem]">{children}</div>
         </div>
     );
 }
