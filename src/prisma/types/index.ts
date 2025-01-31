@@ -3293,10 +3293,12 @@ export const EventUpdateArgsSchema: z.ZodType<Prisma.EventUpdateArgs> = z.object
 export const EventUpdateManyArgsSchema: z.ZodType<Prisma.EventUpdateManyArgs> = z.object({
   data: z.union([ EventUpdateManyMutationInputSchema,EventUncheckedUpdateManyInputSchema ]),
   where: EventWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const EventDeleteManyArgsSchema: z.ZodType<Prisma.EventDeleteManyArgs> = z.object({
   where: EventWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const EventTemplateCreateArgsSchema: z.ZodType<Prisma.EventTemplateCreateArgs> = z.object({
@@ -3333,10 +3335,12 @@ export const EventTemplateUpdateArgsSchema: z.ZodType<Prisma.EventTemplateUpdate
 export const EventTemplateUpdateManyArgsSchema: z.ZodType<Prisma.EventTemplateUpdateManyArgs> = z.object({
   data: z.union([ EventTemplateUpdateManyMutationInputSchema,EventTemplateUncheckedUpdateManyInputSchema ]),
   where: EventTemplateWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const EventTemplateDeleteManyArgsSchema: z.ZodType<Prisma.EventTemplateDeleteManyArgs> = z.object({
   where: EventTemplateWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const EventPositionCreateArgsSchema: z.ZodType<Prisma.EventPositionCreateArgs> = z.object({
@@ -3369,10 +3373,12 @@ export const EventPositionUpdateArgsSchema: z.ZodType<Prisma.EventPositionUpdate
 export const EventPositionUpdateManyArgsSchema: z.ZodType<Prisma.EventPositionUpdateManyArgs> = z.object({
   data: z.union([ EventPositionUpdateManyMutationInputSchema,EventPositionUncheckedUpdateManyInputSchema ]),
   where: EventPositionWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const EventPositionDeleteManyArgsSchema: z.ZodType<Prisma.EventPositionDeleteManyArgs> = z.object({
   where: EventPositionWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const InventoryCreateArgsSchema: z.ZodType<Prisma.InventoryCreateArgs> = z.object({
@@ -3405,10 +3411,12 @@ export const InventoryUpdateArgsSchema: z.ZodType<Prisma.InventoryUpdateArgs> = 
 export const InventoryUpdateManyArgsSchema: z.ZodType<Prisma.InventoryUpdateManyArgs> = z.object({
   data: z.union([ InventoryUpdateManyMutationInputSchema,InventoryUncheckedUpdateManyInputSchema ]),
   where: InventoryWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const InventoryDeleteManyArgsSchema: z.ZodType<Prisma.InventoryDeleteManyArgs> = z.object({
   where: InventoryWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const InventoryCategoryCreateArgsSchema: z.ZodType<Prisma.InventoryCategoryCreateArgs> = z.object({
@@ -3441,10 +3449,12 @@ export const InventoryCategoryUpdateArgsSchema: z.ZodType<Prisma.InventoryCatego
 export const InventoryCategoryUpdateManyArgsSchema: z.ZodType<Prisma.InventoryCategoryUpdateManyArgs> = z.object({
   data: z.union([ InventoryCategoryUpdateManyMutationInputSchema,InventoryCategoryUncheckedUpdateManyInputSchema ]),
   where: InventoryCategoryWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const InventoryCategoryDeleteManyArgsSchema: z.ZodType<Prisma.InventoryCategoryDeleteManyArgs> = z.object({
   where: InventoryCategoryWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const QuantityUnitCreateArgsSchema: z.ZodType<Prisma.QuantityUnitCreateArgs> = z.object({
@@ -3477,10 +3487,12 @@ export const QuantityUnitUpdateArgsSchema: z.ZodType<Prisma.QuantityUnitUpdateAr
 export const QuantityUnitUpdateManyArgsSchema: z.ZodType<Prisma.QuantityUnitUpdateManyArgs> = z.object({
   data: z.union([ QuantityUnitUpdateManyMutationInputSchema,QuantityUnitUncheckedUpdateManyInputSchema ]),
   where: QuantityUnitWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const QuantityUnitDeleteManyArgsSchema: z.ZodType<Prisma.QuantityUnitDeleteManyArgs> = z.object({
   where: QuantityUnitWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const InventoryTagCreateArgsSchema: z.ZodType<Prisma.InventoryTagCreateArgs> = z.object({
@@ -3513,10 +3525,12 @@ export const InventoryTagUpdateArgsSchema: z.ZodType<Prisma.InventoryTagUpdateAr
 export const InventoryTagUpdateManyArgsSchema: z.ZodType<Prisma.InventoryTagUpdateManyArgs> = z.object({
   data: z.union([ InventoryTagUpdateManyMutationInputSchema,InventoryTagUncheckedUpdateManyInputSchema ]),
   where: InventoryTagWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const InventoryTagDeleteManyArgsSchema: z.ZodType<Prisma.InventoryTagDeleteManyArgs> = z.object({
   where: InventoryTagWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const InventoryBrandCreateArgsSchema: z.ZodType<Prisma.InventoryBrandCreateArgs> = z.object({
@@ -3549,10 +3563,12 @@ export const InventoryBrandUpdateArgsSchema: z.ZodType<Prisma.InventoryBrandUpda
 export const InventoryBrandUpdateManyArgsSchema: z.ZodType<Prisma.InventoryBrandUpdateManyArgs> = z.object({
   data: z.union([ InventoryBrandUpdateManyMutationInputSchema,InventoryBrandUncheckedUpdateManyInputSchema ]),
   where: InventoryBrandWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const InventoryBrandDeleteManyArgsSchema: z.ZodType<Prisma.InventoryBrandDeleteManyArgs> = z.object({
   where: InventoryBrandWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const InventoryLinkCreateArgsSchema: z.ZodType<Prisma.InventoryLinkCreateArgs> = z.object({
@@ -3585,10 +3601,12 @@ export const InventoryLinkUpdateArgsSchema: z.ZodType<Prisma.InventoryLinkUpdate
 export const InventoryLinkUpdateManyArgsSchema: z.ZodType<Prisma.InventoryLinkUpdateManyArgs> = z.object({
   data: z.union([ InventoryLinkUpdateManyMutationInputSchema,InventoryLinkUncheckedUpdateManyInputSchema ]),
   where: InventoryLinkWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const InventoryLinkDeleteManyArgsSchema: z.ZodType<Prisma.InventoryLinkDeleteManyArgs> = z.object({
   where: InventoryLinkWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const UserRoleCreateArgsSchema: z.ZodType<Prisma.UserRoleCreateArgs> = z.object({
@@ -3621,10 +3639,12 @@ export const UserRoleUpdateArgsSchema: z.ZodType<Prisma.UserRoleUpdateArgs> = z.
 export const UserRoleUpdateManyArgsSchema: z.ZodType<Prisma.UserRoleUpdateManyArgs> = z.object({
   data: z.union([ UserRoleUpdateManyMutationInputSchema,UserRoleUncheckedUpdateManyInputSchema ]),
   where: UserRoleWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const UserRoleDeleteManyArgsSchema: z.ZodType<Prisma.UserRoleDeleteManyArgs> = z.object({
   where: UserRoleWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const UserTypeCreateArgsSchema: z.ZodType<Prisma.UserTypeCreateArgs> = z.object({
@@ -3657,10 +3677,12 @@ export const UserTypeUpdateArgsSchema: z.ZodType<Prisma.UserTypeUpdateArgs> = z.
 export const UserTypeUpdateManyArgsSchema: z.ZodType<Prisma.UserTypeUpdateManyArgs> = z.object({
   data: z.union([ UserTypeUpdateManyMutationInputSchema,UserTypeUncheckedUpdateManyInputSchema ]),
   where: UserTypeWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const UserTypeDeleteManyArgsSchema: z.ZodType<Prisma.UserTypeDeleteManyArgs> = z.object({
   where: UserTypeWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const OfficerRoleCreateArgsSchema: z.ZodType<Prisma.OfficerRoleCreateArgs> = z.object({
@@ -3693,8 +3715,10 @@ export const OfficerRoleUpdateArgsSchema: z.ZodType<Prisma.OfficerRoleUpdateArgs
 export const OfficerRoleUpdateManyArgsSchema: z.ZodType<Prisma.OfficerRoleUpdateManyArgs> = z.object({
   data: z.union([ OfficerRoleUpdateManyMutationInputSchema,OfficerRoleUncheckedUpdateManyInputSchema ]),
   where: OfficerRoleWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const OfficerRoleDeleteManyArgsSchema: z.ZodType<Prisma.OfficerRoleDeleteManyArgs> = z.object({
   where: OfficerRoleWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
