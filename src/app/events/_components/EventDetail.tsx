@@ -5,10 +5,11 @@ import { getPositions } from "~/prisma/events";
 import dayjs, { type Dayjs } from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import ShiftListItem from "./ShiftListItem";
-import { userAllowedToSignUp } from "~/prisma/auth";
+import { canModifySignups as getCanModifySignups, canSignUp } from "~/prisma/auth";
+import { getUserListForAssignments } from "~/prisma/users";
 dayjs.extend(timezone);
 
-type EventDetailProps = {
+export type EventDetailProps = {
     event: Omit<Event, "shifts"> & {
         shifts: (Omit<EventShift, "userId"> & {
             positionLabel: string;
@@ -19,6 +20,9 @@ type EventDetailProps = {
 
 export default async function EventDetail({ event }: EventDetailProps) {
     const me = await currentUser();
+    const userList = await getUserListForAssignments();
+
+    const canModifySignups: boolean = me ? await getCanModifySignups(me.id) : false;
 
     const { data: positions } = await getPositions();
     if (!positions) {
@@ -42,13 +46,19 @@ export default async function EventDetail({ event }: EventDetailProps) {
                             <ShiftListItem
                                 key={`${i}-${shift.positionId}`}
                                 canSignUp={
-                                    me
-                                        ? await userAllowedToSignUp(me.id, shift.positionId)
-                                        : false
+                                    me ? await canSignUp(me.id, shift.positionId) : false
                                 }
+                                canModifySignups={canModifySignups}
+                                event={event}
+                                isMe={me?.id === shift.user?.id}
                                 label={shift.positionLabel || "Position label not found."}
                                 positionId={shift.positionId}
                                 user={shift.user}
+                                userList={
+                                    me?.id === shift.user?.id || canModifySignups
+                                        ? userList
+                                        : undefined
+                                }
                             />
                         );
                     })
