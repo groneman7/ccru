@@ -2,13 +2,13 @@
 model Event {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   date        DateTime
-  eventName   String
+  name        String
   description String?
   location    String?
-  timeStart   DateTime?
-  timeEnd     DateTime?
-  createdAt   DateTime     @default(now())
-  createdBy   String
+  time_start  DateTime?
+  time_end    DateTime?
+  created_at  DateTime     @default(now())
+  created_by  String
   shifts      EventShift[]
 
   @@index([date])
@@ -16,32 +16,32 @@ model Event {
 }
 
 type EventShift {
-  positionId String
-  userId     String?
+  position String
+  user     String?
 }
 
 // Model for the templates of events hosted by CCRU.
 model EventTemplate {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  templateName String
-  description  String?
-  location     String?
-  timeStart    DateTime?
-  timeEnd      DateTime?
-  shifts       EventShift[] // List of shifts that are available for this template
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  location    String?
+  time_start  DateTime?
+  time_end    DateTime?
+  shifts      EventShift[] // List of shifts that are available for this template
 
-  @@index([templateName])
+  @@index([name])
   @@map("EVENT_TEMPLATES")
 }
 
 // Model for the positions of event shifts (e.g., triage, interviewer, etc.).
 model EventPosition {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  positionName     String
-  label            String?
-  description      String?
-  allowedUserTypes String[]
-  officerOnly      Boolean?
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  label              String?
+  description        String?
+  allowed_user_types String[]
+  officer_only       Boolean?
 
   @@map("EVENT_POSITIONS")
 }

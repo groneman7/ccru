@@ -10,13 +10,13 @@ import type { Prisma } from '../client';
 // ENUMS
 /////////////////////////////////////////
 
-export const EventScalarFieldEnumSchema = z.enum(['id','date','eventName','description','location','timeStart','timeEnd','createdAt','createdBy']);
+export const EventScalarFieldEnumSchema = z.enum(['id','date','name','description','location','time_start','time_end','created_at','created_by']);
 
-export const EventTemplateScalarFieldEnumSchema = z.enum(['id','templateName','description','location','timeStart','timeEnd']);
+export const EventTemplateScalarFieldEnumSchema = z.enum(['id','name','description','location','time_start','time_end']);
 
-export const EventPositionScalarFieldEnumSchema = z.enum(['id','positionName','label','description','allowedUserTypes','officerOnly']);
+export const EventPositionScalarFieldEnumSchema = z.enum(['id','name','label','description','allowed_user_types','officer_only']);
 
-export const InventoryScalarFieldEnumSchema = z.enum(['id','itemName','brandId','categoryId','location','quantity','quantityUnitId','packageSize','packageSizeUnitId','upc','ndc','expiration','lot','comments','linkId']);
+export const InventoryScalarFieldEnumSchema = z.enum(['id','item','brand','category','location','qty','qty_unit','pkg_size','pkg_size_unit','upc','ndc','expiration','lot','comments','link_id']);
 
 export const InventoryCategoryScalarFieldEnumSchema = z.enum(['id','label','description']);
 
@@ -24,9 +24,9 @@ export const QuantityUnitScalarFieldEnumSchema = z.enum(['id','label']);
 
 export const InventoryTagScalarFieldEnumSchema = z.enum(['id','label']);
 
-export const InventoryBrandScalarFieldEnumSchema = z.enum(['id','brandName']);
+export const InventoryBrandScalarFieldEnumSchema = z.enum(['id','name']);
 
-export const InventoryLinkScalarFieldEnumSchema = z.enum(['id','linkName','description','category','comments','items']);
+export const InventoryLinkScalarFieldEnumSchema = z.enum(['id','name','description','category','comments','items']);
 
 export const UserRoleScalarFieldEnumSchema = z.enum(['id','label','description']);
 
@@ -48,13 +48,13 @@ export const QueryModeSchema = z.enum(['default','insensitive']);
 export const EventSchema = z.object({
   id: z.string(),
   date: z.coerce.date(),
-  eventName: z.string(),
+  name: z.string(),
   description: z.string().nullable(),
   location: z.string().nullable(),
-  timeStart: z.coerce.date().nullable(),
-  timeEnd: z.coerce.date().nullable(),
-  createdAt: z.coerce.date(),
-  createdBy: z.string(),
+  time_start: z.coerce.date().nullable(),
+  time_end: z.coerce.date().nullable(),
+  created_at: z.coerce.date(),
+  created_by: z.string(),
 })
 
 export type Event = z.infer<typeof EventSchema>
@@ -65,11 +65,11 @@ export type Event = z.infer<typeof EventSchema>
 
 export const EventTemplateSchema = z.object({
   id: z.string(),
-  templateName: z.string(),
+  name: z.string(),
   description: z.string().nullable(),
   location: z.string().nullable(),
-  timeStart: z.coerce.date().nullable(),
-  timeEnd: z.coerce.date().nullable(),
+  time_start: z.coerce.date().nullable(),
+  time_end: z.coerce.date().nullable(),
 })
 
 export type EventTemplate = z.infer<typeof EventTemplateSchema>
@@ -80,11 +80,11 @@ export type EventTemplate = z.infer<typeof EventTemplateSchema>
 
 export const EventPositionSchema = z.object({
   id: z.string(),
-  positionName: z.string(),
+  name: z.string(),
   label: z.string().nullable(),
   description: z.string().nullable(),
-  allowedUserTypes: z.string().array(),
-  officerOnly: z.boolean().nullable(),
+  allowed_user_types: z.string().array(),
+  officer_only: z.boolean().nullable(),
 })
 
 export type EventPosition = z.infer<typeof EventPositionSchema>
@@ -95,20 +95,20 @@ export type EventPosition = z.infer<typeof EventPositionSchema>
 
 export const InventorySchema = z.object({
   id: z.string(),
-  itemName: z.string(),
-  brandId: z.string().nullable(),
-  categoryId: z.string().nullable(),
+  item: z.string(),
+  brand: z.string().nullable(),
+  category: z.string().nullable(),
   location: z.string().nullable(),
-  quantity: z.number().int(),
-  quantityUnitId: z.string().nullable(),
-  packageSize: z.number().int().nullable(),
-  packageSizeUnitId: z.string().nullable(),
+  qty: z.number().int(),
+  qty_unit: z.string().nullable(),
+  pkg_size: z.number().int().nullable(),
+  pkg_size_unit: z.string().nullable(),
   upc: z.string().nullable(),
   ndc: z.string().nullable(),
   expiration: z.coerce.date().nullable(),
   lot: z.string().nullable(),
   comments: z.string().nullable(),
-  linkId: z.string().nullable(),
+  link_id: z.string().nullable(),
 })
 
 export type Inventory = z.infer<typeof InventorySchema>
@@ -153,7 +153,7 @@ export type InventoryTag = z.infer<typeof InventoryTagSchema>
 
 export const InventoryBrandSchema = z.object({
   id: z.string(),
-  brandName: z.string(),
+  name: z.string(),
 })
 
 export type InventoryBrand = z.infer<typeof InventoryBrandSchema>
@@ -164,7 +164,7 @@ export type InventoryBrand = z.infer<typeof InventoryBrandSchema>
 
 export const InventoryLinkSchema = z.object({
   id: z.string(),
-  linkName: z.string(),
+  name: z.string(),
   description: z.string().nullable(),
   category: z.string().nullable(),
   comments: z.string().nullable(),
@@ -221,8 +221,8 @@ export type OfficerRole = z.infer<typeof OfficerRoleSchema>
 /////////////////////////////////////////
 
 export const EventShiftSchema = z.object({
-  positionId: z.string(),
-  userId: z.string().nullable(),
+  position: z.string(),
+  user: z.string().nullable(),
 })
 
 export type EventShift = z.infer<typeof EventShiftSchema>
@@ -245,13 +245,13 @@ export const EventArgsSchema: z.ZodType<Prisma.EventDefaultArgs> = z.object({
 export const EventSelectSchema: z.ZodType<Prisma.EventSelect> = z.object({
   id: z.boolean().optional(),
   date: z.boolean().optional(),
-  eventName: z.boolean().optional(),
+  name: z.boolean().optional(),
   description: z.boolean().optional(),
   location: z.boolean().optional(),
-  timeStart: z.boolean().optional(),
-  timeEnd: z.boolean().optional(),
-  createdAt: z.boolean().optional(),
-  createdBy: z.boolean().optional(),
+  time_start: z.boolean().optional(),
+  time_end: z.boolean().optional(),
+  created_at: z.boolean().optional(),
+  created_by: z.boolean().optional(),
   shifts: z.union([z.boolean(),z.lazy(() => EventShiftArgsSchema)]).optional(),
 }).strict()
 
@@ -268,11 +268,11 @@ export const EventTemplateArgsSchema: z.ZodType<Prisma.EventTemplateDefaultArgs>
 
 export const EventTemplateSelectSchema: z.ZodType<Prisma.EventTemplateSelect> = z.object({
   id: z.boolean().optional(),
-  templateName: z.boolean().optional(),
+  name: z.boolean().optional(),
   description: z.boolean().optional(),
   location: z.boolean().optional(),
-  timeStart: z.boolean().optional(),
-  timeEnd: z.boolean().optional(),
+  time_start: z.boolean().optional(),
+  time_end: z.boolean().optional(),
   shifts: z.union([z.boolean(),z.lazy(() => EventShiftArgsSchema)]).optional(),
 }).strict()
 
@@ -285,11 +285,11 @@ export const EventPositionArgsSchema: z.ZodType<Prisma.EventPositionDefaultArgs>
 
 export const EventPositionSelectSchema: z.ZodType<Prisma.EventPositionSelect> = z.object({
   id: z.boolean().optional(),
-  positionName: z.boolean().optional(),
+  name: z.boolean().optional(),
   label: z.boolean().optional(),
   description: z.boolean().optional(),
-  allowedUserTypes: z.boolean().optional(),
-  officerOnly: z.boolean().optional(),
+  allowed_user_types: z.boolean().optional(),
+  officer_only: z.boolean().optional(),
 }).strict()
 
 // INVENTORY
@@ -301,20 +301,20 @@ export const InventoryArgsSchema: z.ZodType<Prisma.InventoryDefaultArgs> = z.obj
 
 export const InventorySelectSchema: z.ZodType<Prisma.InventorySelect> = z.object({
   id: z.boolean().optional(),
-  itemName: z.boolean().optional(),
-  brandId: z.boolean().optional(),
-  categoryId: z.boolean().optional(),
+  item: z.boolean().optional(),
+  brand: z.boolean().optional(),
+  category: z.boolean().optional(),
   location: z.boolean().optional(),
-  quantity: z.boolean().optional(),
-  quantityUnitId: z.boolean().optional(),
-  packageSize: z.boolean().optional(),
-  packageSizeUnitId: z.boolean().optional(),
+  qty: z.boolean().optional(),
+  qty_unit: z.boolean().optional(),
+  pkg_size: z.boolean().optional(),
+  pkg_size_unit: z.boolean().optional(),
   upc: z.boolean().optional(),
   ndc: z.boolean().optional(),
   expiration: z.boolean().optional(),
   lot: z.boolean().optional(),
   comments: z.boolean().optional(),
-  linkId: z.boolean().optional(),
+  link_id: z.boolean().optional(),
 }).strict()
 
 // INVENTORY CATEGORY
@@ -363,7 +363,7 @@ export const InventoryBrandArgsSchema: z.ZodType<Prisma.InventoryBrandDefaultArg
 
 export const InventoryBrandSelectSchema: z.ZodType<Prisma.InventoryBrandSelect> = z.object({
   id: z.boolean().optional(),
-  brandName: z.boolean().optional(),
+  name: z.boolean().optional(),
 }).strict()
 
 // INVENTORY LINK
@@ -375,7 +375,7 @@ export const InventoryLinkArgsSchema: z.ZodType<Prisma.InventoryLinkDefaultArgs>
 
 export const InventoryLinkSelectSchema: z.ZodType<Prisma.InventoryLinkSelect> = z.object({
   id: z.boolean().optional(),
-  linkName: z.boolean().optional(),
+  name: z.boolean().optional(),
   description: z.boolean().optional(),
   category: z.boolean().optional(),
   comments: z.boolean().optional(),
@@ -429,8 +429,8 @@ export const EventShiftArgsSchema: z.ZodType<Prisma.EventShiftDefaultArgs> = z.o
 }).strict();
 
 export const EventShiftSelectSchema: z.ZodType<Prisma.EventShiftSelect> = z.object({
-  positionId: z.boolean().optional(),
-  userId: z.boolean().optional(),
+  position: z.boolean().optional(),
+  user: z.boolean().optional(),
 }).strict()
 
 
@@ -444,26 +444,26 @@ export const EventWhereInputSchema: z.ZodType<Prisma.EventWhereInput> = z.object
   NOT: z.union([ z.lazy(() => EventWhereInputSchema),z.lazy(() => EventWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  eventName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  timeStart: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  timeEnd: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  createdBy: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  time_start: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_end: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  created_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  created_by: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   shifts: z.union([ z.lazy(() => EventShiftCompositeListFilterSchema),z.lazy(() => EventShiftObjectEqualityInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventOrderByWithRelationInputSchema: z.ZodType<Prisma.EventOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   date: z.lazy(() => SortOrderSchema).optional(),
-  eventName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  timeStart: z.lazy(() => SortOrderSchema).optional(),
-  timeEnd: z.lazy(() => SortOrderSchema).optional(),
-  createdAt: z.lazy(() => SortOrderSchema).optional(),
-  createdBy: z.lazy(() => SortOrderSchema).optional(),
+  time_start: z.lazy(() => SortOrderSchema).optional(),
+  time_end: z.lazy(() => SortOrderSchema).optional(),
+  created_at: z.lazy(() => SortOrderSchema).optional(),
+  created_by: z.lazy(() => SortOrderSchema).optional(),
   shifts: z.lazy(() => EventShiftOrderByCompositeAggregateInputSchema).optional()
 }).strict();
 
@@ -476,26 +476,26 @@ export const EventWhereUniqueInputSchema: z.ZodType<Prisma.EventWhereUniqueInput
   OR: z.lazy(() => EventWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => EventWhereInputSchema),z.lazy(() => EventWhereInputSchema).array() ]).optional(),
   date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  eventName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  timeStart: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  timeEnd: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  createdBy: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  time_start: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_end: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  created_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  created_by: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   shifts: z.union([ z.lazy(() => EventShiftCompositeListFilterSchema),z.lazy(() => EventShiftObjectEqualityInputSchema).array() ]).optional(),
 }).strict());
 
 export const EventOrderByWithAggregationInputSchema: z.ZodType<Prisma.EventOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   date: z.lazy(() => SortOrderSchema).optional(),
-  eventName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  timeStart: z.lazy(() => SortOrderSchema).optional(),
-  timeEnd: z.lazy(() => SortOrderSchema).optional(),
-  createdAt: z.lazy(() => SortOrderSchema).optional(),
-  createdBy: z.lazy(() => SortOrderSchema).optional(),
+  time_start: z.lazy(() => SortOrderSchema).optional(),
+  time_end: z.lazy(() => SortOrderSchema).optional(),
+  created_at: z.lazy(() => SortOrderSchema).optional(),
+  created_by: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => EventCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => EventMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => EventMinOrderByAggregateInputSchema).optional()
@@ -507,13 +507,13 @@ export const EventScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.EventSc
   NOT: z.union([ z.lazy(() => EventScalarWhereWithAggregatesInputSchema),z.lazy(() => EventScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   date: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
-  eventName: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  timeStart: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
-  timeEnd: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
-  createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
-  createdBy: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  time_start: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_end: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
+  created_at: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+  created_by: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
 }).strict();
 
 export const EventTemplateWhereInputSchema: z.ZodType<Prisma.EventTemplateWhereInput> = z.object({
@@ -521,21 +521,21 @@ export const EventTemplateWhereInputSchema: z.ZodType<Prisma.EventTemplateWhereI
   OR: z.lazy(() => EventTemplateWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => EventTemplateWhereInputSchema),z.lazy(() => EventTemplateWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  templateName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  timeStart: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  timeEnd: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_start: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_end: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   shifts: z.union([ z.lazy(() => EventShiftCompositeListFilterSchema),z.lazy(() => EventShiftObjectEqualityInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventTemplateOrderByWithRelationInputSchema: z.ZodType<Prisma.EventTemplateOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  templateName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  timeStart: z.lazy(() => SortOrderSchema).optional(),
-  timeEnd: z.lazy(() => SortOrderSchema).optional(),
+  time_start: z.lazy(() => SortOrderSchema).optional(),
+  time_end: z.lazy(() => SortOrderSchema).optional(),
   shifts: z.lazy(() => EventShiftOrderByCompositeAggregateInputSchema).optional()
 }).strict();
 
@@ -547,21 +547,21 @@ export const EventTemplateWhereUniqueInputSchema: z.ZodType<Prisma.EventTemplate
   AND: z.union([ z.lazy(() => EventTemplateWhereInputSchema),z.lazy(() => EventTemplateWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => EventTemplateWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => EventTemplateWhereInputSchema),z.lazy(() => EventTemplateWhereInputSchema).array() ]).optional(),
-  templateName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  timeStart: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  timeEnd: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_start: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_end: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   shifts: z.union([ z.lazy(() => EventShiftCompositeListFilterSchema),z.lazy(() => EventShiftObjectEqualityInputSchema).array() ]).optional(),
 }).strict());
 
 export const EventTemplateOrderByWithAggregationInputSchema: z.ZodType<Prisma.EventTemplateOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  templateName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  timeStart: z.lazy(() => SortOrderSchema).optional(),
-  timeEnd: z.lazy(() => SortOrderSchema).optional(),
+  time_start: z.lazy(() => SortOrderSchema).optional(),
+  time_end: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => EventTemplateCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => EventTemplateMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => EventTemplateMinOrderByAggregateInputSchema).optional()
@@ -572,11 +572,11 @@ export const EventTemplateScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma
   OR: z.lazy(() => EventTemplateScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => EventTemplateScalarWhereWithAggregatesInputSchema),z.lazy(() => EventTemplateScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  templateName: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  timeStart: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
-  timeEnd: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_start: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_end: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
 }).strict();
 
 export const EventPositionWhereInputSchema: z.ZodType<Prisma.EventPositionWhereInput> = z.object({
@@ -584,20 +584,20 @@ export const EventPositionWhereInputSchema: z.ZodType<Prisma.EventPositionWhereI
   OR: z.lazy(() => EventPositionWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => EventPositionWhereInputSchema),z.lazy(() => EventPositionWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  positionName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   label: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  allowedUserTypes: z.lazy(() => StringNullableListFilterSchema).optional(),
-  officerOnly: z.union([ z.lazy(() => BoolNullableFilterSchema),z.boolean() ]).optional().nullable(),
+  allowed_user_types: z.lazy(() => StringNullableListFilterSchema).optional(),
+  officer_only: z.union([ z.lazy(() => BoolNullableFilterSchema),z.boolean() ]).optional().nullable(),
 }).strict();
 
 export const EventPositionOrderByWithRelationInputSchema: z.ZodType<Prisma.EventPositionOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  positionName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   label: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
-  allowedUserTypes: z.lazy(() => SortOrderSchema).optional(),
-  officerOnly: z.lazy(() => SortOrderSchema).optional()
+  allowed_user_types: z.lazy(() => SortOrderSchema).optional(),
+  officer_only: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const EventPositionWhereUniqueInputSchema: z.ZodType<Prisma.EventPositionWhereUniqueInput> = z.object({
@@ -608,20 +608,20 @@ export const EventPositionWhereUniqueInputSchema: z.ZodType<Prisma.EventPosition
   AND: z.union([ z.lazy(() => EventPositionWhereInputSchema),z.lazy(() => EventPositionWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => EventPositionWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => EventPositionWhereInputSchema),z.lazy(() => EventPositionWhereInputSchema).array() ]).optional(),
-  positionName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   label: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  allowedUserTypes: z.lazy(() => StringNullableListFilterSchema).optional(),
-  officerOnly: z.union([ z.lazy(() => BoolNullableFilterSchema),z.boolean() ]).optional().nullable(),
+  allowed_user_types: z.lazy(() => StringNullableListFilterSchema).optional(),
+  officer_only: z.union([ z.lazy(() => BoolNullableFilterSchema),z.boolean() ]).optional().nullable(),
 }).strict());
 
 export const EventPositionOrderByWithAggregationInputSchema: z.ZodType<Prisma.EventPositionOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  positionName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   label: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
-  allowedUserTypes: z.lazy(() => SortOrderSchema).optional(),
-  officerOnly: z.lazy(() => SortOrderSchema).optional(),
+  allowed_user_types: z.lazy(() => SortOrderSchema).optional(),
+  officer_only: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => EventPositionCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => EventPositionMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => EventPositionMinOrderByAggregateInputSchema).optional()
@@ -632,11 +632,11 @@ export const EventPositionScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma
   OR: z.lazy(() => EventPositionScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => EventPositionScalarWhereWithAggregatesInputSchema),z.lazy(() => EventPositionScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  positionName: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   label: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   description: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  allowedUserTypes: z.lazy(() => StringNullableListFilterSchema).optional(),
-  officerOnly: z.union([ z.lazy(() => BoolNullableWithAggregatesFilterSchema),z.boolean() ]).optional().nullable(),
+  allowed_user_types: z.lazy(() => StringNullableListFilterSchema).optional(),
+  officer_only: z.union([ z.lazy(() => BoolNullableWithAggregatesFilterSchema),z.boolean() ]).optional().nullable(),
 }).strict();
 
 export const InventoryWhereInputSchema: z.ZodType<Prisma.InventoryWhereInput> = z.object({
@@ -644,38 +644,38 @@ export const InventoryWhereInputSchema: z.ZodType<Prisma.InventoryWhereInput> = 
   OR: z.lazy(() => InventoryWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => InventoryWhereInputSchema),z.lazy(() => InventoryWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  itemName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  brandId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  categoryId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  item: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  brand: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  category: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  quantity: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
-  quantityUnitId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  packageSize: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
-  packageSizeUnitId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  qty: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  qty_unit: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  pkg_size: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  pkg_size_unit: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   upc: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   ndc: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   expiration: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   lot: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   comments: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  linkId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  link_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const InventoryOrderByWithRelationInputSchema: z.ZodType<Prisma.InventoryOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  itemName: z.lazy(() => SortOrderSchema).optional(),
-  brandId: z.lazy(() => SortOrderSchema).optional(),
-  categoryId: z.lazy(() => SortOrderSchema).optional(),
+  item: z.lazy(() => SortOrderSchema).optional(),
+  brand: z.lazy(() => SortOrderSchema).optional(),
+  category: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  quantity: z.lazy(() => SortOrderSchema).optional(),
-  quantityUnitId: z.lazy(() => SortOrderSchema).optional(),
-  packageSize: z.lazy(() => SortOrderSchema).optional(),
-  packageSizeUnitId: z.lazy(() => SortOrderSchema).optional(),
+  qty: z.lazy(() => SortOrderSchema).optional(),
+  qty_unit: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size_unit: z.lazy(() => SortOrderSchema).optional(),
   upc: z.lazy(() => SortOrderSchema).optional(),
   ndc: z.lazy(() => SortOrderSchema).optional(),
   expiration: z.lazy(() => SortOrderSchema).optional(),
   lot: z.lazy(() => SortOrderSchema).optional(),
   comments: z.lazy(() => SortOrderSchema).optional(),
-  linkId: z.lazy(() => SortOrderSchema).optional()
+  link_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const InventoryWhereUniqueInputSchema: z.ZodType<Prisma.InventoryWhereUniqueInput> = z.object({
@@ -686,38 +686,38 @@ export const InventoryWhereUniqueInputSchema: z.ZodType<Prisma.InventoryWhereUni
   AND: z.union([ z.lazy(() => InventoryWhereInputSchema),z.lazy(() => InventoryWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => InventoryWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => InventoryWhereInputSchema),z.lazy(() => InventoryWhereInputSchema).array() ]).optional(),
-  itemName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  brandId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  categoryId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  item: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  brand: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  category: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  quantity: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
-  quantityUnitId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  packageSize: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
-  packageSizeUnitId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  qty: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
+  qty_unit: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  pkg_size: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
+  pkg_size_unit: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   upc: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   ndc: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   expiration: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   lot: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   comments: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  linkId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  link_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
 }).strict());
 
 export const InventoryOrderByWithAggregationInputSchema: z.ZodType<Prisma.InventoryOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  itemName: z.lazy(() => SortOrderSchema).optional(),
-  brandId: z.lazy(() => SortOrderSchema).optional(),
-  categoryId: z.lazy(() => SortOrderSchema).optional(),
+  item: z.lazy(() => SortOrderSchema).optional(),
+  brand: z.lazy(() => SortOrderSchema).optional(),
+  category: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  quantity: z.lazy(() => SortOrderSchema).optional(),
-  quantityUnitId: z.lazy(() => SortOrderSchema).optional(),
-  packageSize: z.lazy(() => SortOrderSchema).optional(),
-  packageSizeUnitId: z.lazy(() => SortOrderSchema).optional(),
+  qty: z.lazy(() => SortOrderSchema).optional(),
+  qty_unit: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size_unit: z.lazy(() => SortOrderSchema).optional(),
   upc: z.lazy(() => SortOrderSchema).optional(),
   ndc: z.lazy(() => SortOrderSchema).optional(),
   expiration: z.lazy(() => SortOrderSchema).optional(),
   lot: z.lazy(() => SortOrderSchema).optional(),
   comments: z.lazy(() => SortOrderSchema).optional(),
-  linkId: z.lazy(() => SortOrderSchema).optional(),
+  link_id: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => InventoryCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => InventoryAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => InventoryMaxOrderByAggregateInputSchema).optional(),
@@ -730,20 +730,20 @@ export const InventoryScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Inv
   OR: z.lazy(() => InventoryScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => InventoryScalarWhereWithAggregatesInputSchema),z.lazy(() => InventoryScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  itemName: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  brandId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  categoryId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  item: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  brand: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  category: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  quantity: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
-  quantityUnitId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  packageSize: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
-  packageSizeUnitId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  qty: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  qty_unit: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  pkg_size: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
+  pkg_size_unit: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   upc: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   ndc: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   expiration: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
   lot: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   comments: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  linkId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  link_id: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const InventoryCategoryWhereInputSchema: z.ZodType<Prisma.InventoryCategoryWhereInput> = z.object({
@@ -876,12 +876,12 @@ export const InventoryBrandWhereInputSchema: z.ZodType<Prisma.InventoryBrandWher
   OR: z.lazy(() => InventoryBrandWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => InventoryBrandWhereInputSchema),z.lazy(() => InventoryBrandWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  brandName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
 }).strict();
 
 export const InventoryBrandOrderByWithRelationInputSchema: z.ZodType<Prisma.InventoryBrandOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  brandName: z.lazy(() => SortOrderSchema).optional()
+  name: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const InventoryBrandWhereUniqueInputSchema: z.ZodType<Prisma.InventoryBrandWhereUniqueInput> = z.object({
@@ -892,12 +892,12 @@ export const InventoryBrandWhereUniqueInputSchema: z.ZodType<Prisma.InventoryBra
   AND: z.union([ z.lazy(() => InventoryBrandWhereInputSchema),z.lazy(() => InventoryBrandWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => InventoryBrandWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => InventoryBrandWhereInputSchema),z.lazy(() => InventoryBrandWhereInputSchema).array() ]).optional(),
-  brandName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
 }).strict());
 
 export const InventoryBrandOrderByWithAggregationInputSchema: z.ZodType<Prisma.InventoryBrandOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  brandName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => InventoryBrandCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => InventoryBrandMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => InventoryBrandMinOrderByAggregateInputSchema).optional()
@@ -908,7 +908,7 @@ export const InventoryBrandScalarWhereWithAggregatesInputSchema: z.ZodType<Prism
   OR: z.lazy(() => InventoryBrandScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => InventoryBrandScalarWhereWithAggregatesInputSchema),z.lazy(() => InventoryBrandScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  brandName: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
 }).strict();
 
 export const InventoryLinkWhereInputSchema: z.ZodType<Prisma.InventoryLinkWhereInput> = z.object({
@@ -916,7 +916,7 @@ export const InventoryLinkWhereInputSchema: z.ZodType<Prisma.InventoryLinkWhereI
   OR: z.lazy(() => InventoryLinkWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => InventoryLinkWhereInputSchema),z.lazy(() => InventoryLinkWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  linkName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   category: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   comments: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
@@ -925,7 +925,7 @@ export const InventoryLinkWhereInputSchema: z.ZodType<Prisma.InventoryLinkWhereI
 
 export const InventoryLinkOrderByWithRelationInputSchema: z.ZodType<Prisma.InventoryLinkOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  linkName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   category: z.lazy(() => SortOrderSchema).optional(),
   comments: z.lazy(() => SortOrderSchema).optional(),
@@ -940,7 +940,7 @@ export const InventoryLinkWhereUniqueInputSchema: z.ZodType<Prisma.InventoryLink
   AND: z.union([ z.lazy(() => InventoryLinkWhereInputSchema),z.lazy(() => InventoryLinkWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => InventoryLinkWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => InventoryLinkWhereInputSchema),z.lazy(() => InventoryLinkWhereInputSchema).array() ]).optional(),
-  linkName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   category: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   comments: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
@@ -949,7 +949,7 @@ export const InventoryLinkWhereUniqueInputSchema: z.ZodType<Prisma.InventoryLink
 
 export const InventoryLinkOrderByWithAggregationInputSchema: z.ZodType<Prisma.InventoryLinkOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  linkName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   category: z.lazy(() => SortOrderSchema).optional(),
   comments: z.lazy(() => SortOrderSchema).optional(),
@@ -964,7 +964,7 @@ export const InventoryLinkScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma
   OR: z.lazy(() => InventoryLinkScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => InventoryLinkScalarWhereWithAggregatesInputSchema),z.lazy(() => InventoryLinkScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  linkName: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   category: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   comments: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
@@ -1109,335 +1109,335 @@ export const OfficerRoleScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.O
 export const EventCreateInputSchema: z.ZodType<Prisma.EventCreateInput> = z.object({
   id: z.string().optional(),
   date: z.coerce.date(),
-  eventName: z.string(),
+  name: z.string(),
   description: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  timeStart: z.coerce.date().optional().nullable(),
-  timeEnd: z.coerce.date().optional().nullable(),
-  createdAt: z.coerce.date().optional(),
-  createdBy: z.string(),
+  time_start: z.coerce.date().optional().nullable(),
+  time_end: z.coerce.date().optional().nullable(),
+  created_at: z.coerce.date().optional(),
+  created_by: z.string(),
   shifts: z.union([ z.lazy(() => EventShiftListCreateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventUncheckedCreateInputSchema: z.ZodType<Prisma.EventUncheckedCreateInput> = z.object({
   id: z.string().optional(),
   date: z.coerce.date(),
-  eventName: z.string(),
+  name: z.string(),
   description: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  timeStart: z.coerce.date().optional().nullable(),
-  timeEnd: z.coerce.date().optional().nullable(),
-  createdAt: z.coerce.date().optional(),
-  createdBy: z.string(),
+  time_start: z.coerce.date().optional().nullable(),
+  time_end: z.coerce.date().optional().nullable(),
+  created_at: z.coerce.date().optional(),
+  created_by: z.string(),
   shifts: z.union([ z.lazy(() => EventShiftListCreateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventUpdateInputSchema: z.ZodType<Prisma.EventUpdateInput> = z.object({
   date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  eventName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeStart: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  createdBy: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  created_by: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   shifts: z.union([ z.lazy(() => EventShiftListUpdateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventUncheckedUpdateInputSchema: z.ZodType<Prisma.EventUncheckedUpdateInput> = z.object({
   date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  eventName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeStart: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  createdBy: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  created_by: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   shifts: z.union([ z.lazy(() => EventShiftListUpdateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventCreateManyInputSchema: z.ZodType<Prisma.EventCreateManyInput> = z.object({
   id: z.string().optional(),
   date: z.coerce.date(),
-  eventName: z.string(),
+  name: z.string(),
   description: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  timeStart: z.coerce.date().optional().nullable(),
-  timeEnd: z.coerce.date().optional().nullable(),
-  createdAt: z.coerce.date().optional(),
-  createdBy: z.string(),
+  time_start: z.coerce.date().optional().nullable(),
+  time_end: z.coerce.date().optional().nullable(),
+  created_at: z.coerce.date().optional(),
+  created_by: z.string(),
   shifts: z.union([ z.lazy(() => EventShiftListCreateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventUpdateManyMutationInputSchema: z.ZodType<Prisma.EventUpdateManyMutationInput> = z.object({
   date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  eventName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeStart: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  createdBy: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  created_by: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   shifts: z.union([ z.lazy(() => EventShiftListUpdateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventUncheckedUpdateManyInputSchema: z.ZodType<Prisma.EventUncheckedUpdateManyInput> = z.object({
   date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  eventName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeStart: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  createdBy: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  created_by: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   shifts: z.union([ z.lazy(() => EventShiftListUpdateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventTemplateCreateInputSchema: z.ZodType<Prisma.EventTemplateCreateInput> = z.object({
   id: z.string().optional(),
-  templateName: z.string(),
+  name: z.string(),
   description: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  timeStart: z.coerce.date().optional().nullable(),
-  timeEnd: z.coerce.date().optional().nullable(),
+  time_start: z.coerce.date().optional().nullable(),
+  time_end: z.coerce.date().optional().nullable(),
   shifts: z.union([ z.lazy(() => EventShiftListCreateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventTemplateUncheckedCreateInputSchema: z.ZodType<Prisma.EventTemplateUncheckedCreateInput> = z.object({
   id: z.string().optional(),
-  templateName: z.string(),
+  name: z.string(),
   description: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  timeStart: z.coerce.date().optional().nullable(),
-  timeEnd: z.coerce.date().optional().nullable(),
+  time_start: z.coerce.date().optional().nullable(),
+  time_end: z.coerce.date().optional().nullable(),
   shifts: z.union([ z.lazy(() => EventShiftListCreateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventTemplateUpdateInputSchema: z.ZodType<Prisma.EventTemplateUpdateInput> = z.object({
-  templateName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeStart: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   shifts: z.union([ z.lazy(() => EventShiftListUpdateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventTemplateUncheckedUpdateInputSchema: z.ZodType<Prisma.EventTemplateUncheckedUpdateInput> = z.object({
-  templateName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeStart: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   shifts: z.union([ z.lazy(() => EventShiftListUpdateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventTemplateCreateManyInputSchema: z.ZodType<Prisma.EventTemplateCreateManyInput> = z.object({
   id: z.string().optional(),
-  templateName: z.string(),
+  name: z.string(),
   description: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  timeStart: z.coerce.date().optional().nullable(),
-  timeEnd: z.coerce.date().optional().nullable(),
+  time_start: z.coerce.date().optional().nullable(),
+  time_end: z.coerce.date().optional().nullable(),
   shifts: z.union([ z.lazy(() => EventShiftListCreateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventTemplateUpdateManyMutationInputSchema: z.ZodType<Prisma.EventTemplateUpdateManyMutationInput> = z.object({
-  templateName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeStart: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   shifts: z.union([ z.lazy(() => EventShiftListUpdateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventTemplateUncheckedUpdateManyInputSchema: z.ZodType<Prisma.EventTemplateUncheckedUpdateManyInput> = z.object({
-  templateName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeStart: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  timeEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   shifts: z.union([ z.lazy(() => EventShiftListUpdateEnvelopeInputSchema),z.lazy(() => EventShiftCreateInputSchema),z.lazy(() => EventShiftCreateInputSchema).array() ]).optional(),
 }).strict();
 
 export const EventPositionCreateInputSchema: z.ZodType<Prisma.EventPositionCreateInput> = z.object({
   id: z.string().optional(),
-  positionName: z.string(),
+  name: z.string(),
   label: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
-  allowedUserTypes: z.union([ z.lazy(() => EventPositionCreateallowedUserTypesInputSchema),z.string().array() ]).optional(),
-  officerOnly: z.boolean().optional().nullable()
+  allowed_user_types: z.union([ z.lazy(() => EventPositionCreateallowed_user_typesInputSchema),z.string().array() ]).optional(),
+  officer_only: z.boolean().optional().nullable()
 }).strict();
 
 export const EventPositionUncheckedCreateInputSchema: z.ZodType<Prisma.EventPositionUncheckedCreateInput> = z.object({
   id: z.string().optional(),
-  positionName: z.string(),
+  name: z.string(),
   label: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
-  allowedUserTypes: z.union([ z.lazy(() => EventPositionCreateallowedUserTypesInputSchema),z.string().array() ]).optional(),
-  officerOnly: z.boolean().optional().nullable()
+  allowed_user_types: z.union([ z.lazy(() => EventPositionCreateallowed_user_typesInputSchema),z.string().array() ]).optional(),
+  officer_only: z.boolean().optional().nullable()
 }).strict();
 
 export const EventPositionUpdateInputSchema: z.ZodType<Prisma.EventPositionUpdateInput> = z.object({
-  positionName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   label: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  allowedUserTypes: z.union([ z.lazy(() => EventPositionUpdateallowedUserTypesInputSchema),z.string().array() ]).optional(),
-  officerOnly: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  allowed_user_types: z.union([ z.lazy(() => EventPositionUpdateallowed_user_typesInputSchema),z.string().array() ]).optional(),
+  officer_only: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const EventPositionUncheckedUpdateInputSchema: z.ZodType<Prisma.EventPositionUncheckedUpdateInput> = z.object({
-  positionName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   label: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  allowedUserTypes: z.union([ z.lazy(() => EventPositionUpdateallowedUserTypesInputSchema),z.string().array() ]).optional(),
-  officerOnly: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  allowed_user_types: z.union([ z.lazy(() => EventPositionUpdateallowed_user_typesInputSchema),z.string().array() ]).optional(),
+  officer_only: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const EventPositionCreateManyInputSchema: z.ZodType<Prisma.EventPositionCreateManyInput> = z.object({
   id: z.string().optional(),
-  positionName: z.string(),
+  name: z.string(),
   label: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
-  allowedUserTypes: z.union([ z.lazy(() => EventPositionCreateallowedUserTypesInputSchema),z.string().array() ]).optional(),
-  officerOnly: z.boolean().optional().nullable()
+  allowed_user_types: z.union([ z.lazy(() => EventPositionCreateallowed_user_typesInputSchema),z.string().array() ]).optional(),
+  officer_only: z.boolean().optional().nullable()
 }).strict();
 
 export const EventPositionUpdateManyMutationInputSchema: z.ZodType<Prisma.EventPositionUpdateManyMutationInput> = z.object({
-  positionName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   label: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  allowedUserTypes: z.union([ z.lazy(() => EventPositionUpdateallowedUserTypesInputSchema),z.string().array() ]).optional(),
-  officerOnly: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  allowed_user_types: z.union([ z.lazy(() => EventPositionUpdateallowed_user_typesInputSchema),z.string().array() ]).optional(),
+  officer_only: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const EventPositionUncheckedUpdateManyInputSchema: z.ZodType<Prisma.EventPositionUncheckedUpdateManyInput> = z.object({
-  positionName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   label: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  allowedUserTypes: z.union([ z.lazy(() => EventPositionUpdateallowedUserTypesInputSchema),z.string().array() ]).optional(),
-  officerOnly: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  allowed_user_types: z.union([ z.lazy(() => EventPositionUpdateallowed_user_typesInputSchema),z.string().array() ]).optional(),
+  officer_only: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const InventoryCreateInputSchema: z.ZodType<Prisma.InventoryCreateInput> = z.object({
   id: z.string().optional(),
-  itemName: z.string(),
-  brandId: z.string().optional().nullable(),
-  categoryId: z.string().optional().nullable(),
+  item: z.string(),
+  brand: z.string().optional().nullable(),
+  category: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  quantity: z.number().int(),
-  quantityUnitId: z.string().optional().nullable(),
-  packageSize: z.number().int().optional().nullable(),
-  packageSizeUnitId: z.string().optional().nullable(),
+  qty: z.number().int(),
+  qty_unit: z.string().optional().nullable(),
+  pkg_size: z.number().int().optional().nullable(),
+  pkg_size_unit: z.string().optional().nullable(),
   upc: z.string().optional().nullable(),
   ndc: z.string().optional().nullable(),
   expiration: z.coerce.date().optional().nullable(),
   lot: z.string().optional().nullable(),
   comments: z.string().optional().nullable(),
-  linkId: z.string().optional().nullable()
+  link_id: z.string().optional().nullable()
 }).strict();
 
 export const InventoryUncheckedCreateInputSchema: z.ZodType<Prisma.InventoryUncheckedCreateInput> = z.object({
   id: z.string().optional(),
-  itemName: z.string(),
-  brandId: z.string().optional().nullable(),
-  categoryId: z.string().optional().nullable(),
+  item: z.string(),
+  brand: z.string().optional().nullable(),
+  category: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  quantity: z.number().int(),
-  quantityUnitId: z.string().optional().nullable(),
-  packageSize: z.number().int().optional().nullable(),
-  packageSizeUnitId: z.string().optional().nullable(),
+  qty: z.number().int(),
+  qty_unit: z.string().optional().nullable(),
+  pkg_size: z.number().int().optional().nullable(),
+  pkg_size_unit: z.string().optional().nullable(),
   upc: z.string().optional().nullable(),
   ndc: z.string().optional().nullable(),
   expiration: z.coerce.date().optional().nullable(),
   lot: z.string().optional().nullable(),
   comments: z.string().optional().nullable(),
-  linkId: z.string().optional().nullable()
+  link_id: z.string().optional().nullable()
 }).strict();
 
 export const InventoryUpdateInputSchema: z.ZodType<Prisma.InventoryUpdateInput> = z.object({
-  itemName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  brandId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  categoryId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  item: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  brand: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  quantity: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  quantityUnitId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  packageSize: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  packageSizeUnitId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  qty: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  qty_unit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pkg_size: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pkg_size_unit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   upc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ndc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiration: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   lot: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  linkId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  link_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const InventoryUncheckedUpdateInputSchema: z.ZodType<Prisma.InventoryUncheckedUpdateInput> = z.object({
-  itemName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  brandId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  categoryId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  item: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  brand: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  quantity: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  quantityUnitId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  packageSize: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  packageSizeUnitId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  qty: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  qty_unit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pkg_size: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pkg_size_unit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   upc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ndc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiration: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   lot: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  linkId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  link_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const InventoryCreateManyInputSchema: z.ZodType<Prisma.InventoryCreateManyInput> = z.object({
   id: z.string().optional(),
-  itemName: z.string(),
-  brandId: z.string().optional().nullable(),
-  categoryId: z.string().optional().nullable(),
+  item: z.string(),
+  brand: z.string().optional().nullable(),
+  category: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  quantity: z.number().int(),
-  quantityUnitId: z.string().optional().nullable(),
-  packageSize: z.number().int().optional().nullable(),
-  packageSizeUnitId: z.string().optional().nullable(),
+  qty: z.number().int(),
+  qty_unit: z.string().optional().nullable(),
+  pkg_size: z.number().int().optional().nullable(),
+  pkg_size_unit: z.string().optional().nullable(),
   upc: z.string().optional().nullable(),
   ndc: z.string().optional().nullable(),
   expiration: z.coerce.date().optional().nullable(),
   lot: z.string().optional().nullable(),
   comments: z.string().optional().nullable(),
-  linkId: z.string().optional().nullable()
+  link_id: z.string().optional().nullable()
 }).strict();
 
 export const InventoryUpdateManyMutationInputSchema: z.ZodType<Prisma.InventoryUpdateManyMutationInput> = z.object({
-  itemName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  brandId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  categoryId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  item: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  brand: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  quantity: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  quantityUnitId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  packageSize: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  packageSizeUnitId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  qty: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  qty_unit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pkg_size: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pkg_size_unit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   upc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ndc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiration: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   lot: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  linkId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  link_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const InventoryUncheckedUpdateManyInputSchema: z.ZodType<Prisma.InventoryUncheckedUpdateManyInput> = z.object({
-  itemName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  brandId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  categoryId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  item: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  brand: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  quantity: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  quantityUnitId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  packageSize: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  packageSizeUnitId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  qty: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  qty_unit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pkg_size: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pkg_size_unit: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   upc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ndc: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiration: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   lot: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  linkId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  link_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const InventoryCategoryCreateInputSchema: z.ZodType<Prisma.InventoryCategoryCreateInput> = z.object({
@@ -1542,38 +1542,38 @@ export const InventoryTagUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Invent
 
 export const InventoryBrandCreateInputSchema: z.ZodType<Prisma.InventoryBrandCreateInput> = z.object({
   id: z.string().optional(),
-  brandName: z.string()
+  name: z.string()
 }).strict();
 
 export const InventoryBrandUncheckedCreateInputSchema: z.ZodType<Prisma.InventoryBrandUncheckedCreateInput> = z.object({
   id: z.string().optional(),
-  brandName: z.string()
+  name: z.string()
 }).strict();
 
 export const InventoryBrandUpdateInputSchema: z.ZodType<Prisma.InventoryBrandUpdateInput> = z.object({
-  brandName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const InventoryBrandUncheckedUpdateInputSchema: z.ZodType<Prisma.InventoryBrandUncheckedUpdateInput> = z.object({
-  brandName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const InventoryBrandCreateManyInputSchema: z.ZodType<Prisma.InventoryBrandCreateManyInput> = z.object({
   id: z.string().optional(),
-  brandName: z.string()
+  name: z.string()
 }).strict();
 
 export const InventoryBrandUpdateManyMutationInputSchema: z.ZodType<Prisma.InventoryBrandUpdateManyMutationInput> = z.object({
-  brandName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const InventoryBrandUncheckedUpdateManyInputSchema: z.ZodType<Prisma.InventoryBrandUncheckedUpdateManyInput> = z.object({
-  brandName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const InventoryLinkCreateInputSchema: z.ZodType<Prisma.InventoryLinkCreateInput> = z.object({
   id: z.string().optional(),
-  linkName: z.string(),
+  name: z.string(),
   description: z.string().optional().nullable(),
   category: z.string().optional().nullable(),
   comments: z.string().optional().nullable(),
@@ -1582,7 +1582,7 @@ export const InventoryLinkCreateInputSchema: z.ZodType<Prisma.InventoryLinkCreat
 
 export const InventoryLinkUncheckedCreateInputSchema: z.ZodType<Prisma.InventoryLinkUncheckedCreateInput> = z.object({
   id: z.string().optional(),
-  linkName: z.string(),
+  name: z.string(),
   description: z.string().optional().nullable(),
   category: z.string().optional().nullable(),
   comments: z.string().optional().nullable(),
@@ -1590,7 +1590,7 @@ export const InventoryLinkUncheckedCreateInputSchema: z.ZodType<Prisma.Inventory
 }).strict();
 
 export const InventoryLinkUpdateInputSchema: z.ZodType<Prisma.InventoryLinkUpdateInput> = z.object({
-  linkName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1598,7 +1598,7 @@ export const InventoryLinkUpdateInputSchema: z.ZodType<Prisma.InventoryLinkUpdat
 }).strict();
 
 export const InventoryLinkUncheckedUpdateInputSchema: z.ZodType<Prisma.InventoryLinkUncheckedUpdateInput> = z.object({
-  linkName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1607,7 +1607,7 @@ export const InventoryLinkUncheckedUpdateInputSchema: z.ZodType<Prisma.Inventory
 
 export const InventoryLinkCreateManyInputSchema: z.ZodType<Prisma.InventoryLinkCreateManyInput> = z.object({
   id: z.string().optional(),
-  linkName: z.string(),
+  name: z.string(),
   description: z.string().optional().nullable(),
   category: z.string().optional().nullable(),
   comments: z.string().optional().nullable(),
@@ -1615,7 +1615,7 @@ export const InventoryLinkCreateManyInputSchema: z.ZodType<Prisma.InventoryLinkC
 }).strict();
 
 export const InventoryLinkUpdateManyMutationInputSchema: z.ZodType<Prisma.InventoryLinkUpdateManyMutationInput> = z.object({
-  linkName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1623,7 +1623,7 @@ export const InventoryLinkUpdateManyMutationInputSchema: z.ZodType<Prisma.Invent
 }).strict();
 
 export const InventoryLinkUncheckedUpdateManyInputSchema: z.ZodType<Prisma.InventoryLinkUncheckedUpdateManyInput> = z.object({
-  linkName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   category: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   comments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1808,8 +1808,8 @@ export const EventShiftCompositeListFilterSchema: z.ZodType<Prisma.EventShiftCom
 }).strict();
 
 export const EventShiftObjectEqualityInputSchema: z.ZodType<Prisma.EventShiftObjectEqualityInput> = z.object({
-  positionId: z.string(),
-  userId: z.string().optional().nullable()
+  position: z.string(),
+  user: z.string().optional().nullable()
 }).strict();
 
 export const EventShiftOrderByCompositeAggregateInputSchema: z.ZodType<Prisma.EventShiftOrderByCompositeAggregateInput> = z.object({
@@ -1819,37 +1819,37 @@ export const EventShiftOrderByCompositeAggregateInputSchema: z.ZodType<Prisma.Ev
 export const EventCountOrderByAggregateInputSchema: z.ZodType<Prisma.EventCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   date: z.lazy(() => SortOrderSchema).optional(),
-  eventName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  timeStart: z.lazy(() => SortOrderSchema).optional(),
-  timeEnd: z.lazy(() => SortOrderSchema).optional(),
-  createdAt: z.lazy(() => SortOrderSchema).optional(),
-  createdBy: z.lazy(() => SortOrderSchema).optional()
+  time_start: z.lazy(() => SortOrderSchema).optional(),
+  time_end: z.lazy(() => SortOrderSchema).optional(),
+  created_at: z.lazy(() => SortOrderSchema).optional(),
+  created_by: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const EventMaxOrderByAggregateInputSchema: z.ZodType<Prisma.EventMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   date: z.lazy(() => SortOrderSchema).optional(),
-  eventName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  timeStart: z.lazy(() => SortOrderSchema).optional(),
-  timeEnd: z.lazy(() => SortOrderSchema).optional(),
-  createdAt: z.lazy(() => SortOrderSchema).optional(),
-  createdBy: z.lazy(() => SortOrderSchema).optional()
+  time_start: z.lazy(() => SortOrderSchema).optional(),
+  time_end: z.lazy(() => SortOrderSchema).optional(),
+  created_at: z.lazy(() => SortOrderSchema).optional(),
+  created_by: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const EventMinOrderByAggregateInputSchema: z.ZodType<Prisma.EventMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   date: z.lazy(() => SortOrderSchema).optional(),
-  eventName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  timeStart: z.lazy(() => SortOrderSchema).optional(),
-  timeEnd: z.lazy(() => SortOrderSchema).optional(),
-  createdAt: z.lazy(() => SortOrderSchema).optional(),
-  createdBy: z.lazy(() => SortOrderSchema).optional()
+  time_start: z.lazy(() => SortOrderSchema).optional(),
+  time_end: z.lazy(() => SortOrderSchema).optional(),
+  created_at: z.lazy(() => SortOrderSchema).optional(),
+  created_by: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const StringWithAggregatesFilterSchema: z.ZodType<Prisma.StringWithAggregatesFilter> = z.object({
@@ -1920,29 +1920,29 @@ export const DateTimeNullableWithAggregatesFilterSchema: z.ZodType<Prisma.DateTi
 
 export const EventTemplateCountOrderByAggregateInputSchema: z.ZodType<Prisma.EventTemplateCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  templateName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  timeStart: z.lazy(() => SortOrderSchema).optional(),
-  timeEnd: z.lazy(() => SortOrderSchema).optional()
+  time_start: z.lazy(() => SortOrderSchema).optional(),
+  time_end: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const EventTemplateMaxOrderByAggregateInputSchema: z.ZodType<Prisma.EventTemplateMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  templateName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  timeStart: z.lazy(() => SortOrderSchema).optional(),
-  timeEnd: z.lazy(() => SortOrderSchema).optional()
+  time_start: z.lazy(() => SortOrderSchema).optional(),
+  time_end: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const EventTemplateMinOrderByAggregateInputSchema: z.ZodType<Prisma.EventTemplateMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  templateName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  timeStart: z.lazy(() => SortOrderSchema).optional(),
-  timeEnd: z.lazy(() => SortOrderSchema).optional()
+  time_start: z.lazy(() => SortOrderSchema).optional(),
+  time_end: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const StringNullableListFilterSchema: z.ZodType<Prisma.StringNullableListFilter> = z.object({
@@ -1961,27 +1961,27 @@ export const BoolNullableFilterSchema: z.ZodType<Prisma.BoolNullableFilter> = z.
 
 export const EventPositionCountOrderByAggregateInputSchema: z.ZodType<Prisma.EventPositionCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  positionName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   label: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
-  allowedUserTypes: z.lazy(() => SortOrderSchema).optional(),
-  officerOnly: z.lazy(() => SortOrderSchema).optional()
+  allowed_user_types: z.lazy(() => SortOrderSchema).optional(),
+  officer_only: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const EventPositionMaxOrderByAggregateInputSchema: z.ZodType<Prisma.EventPositionMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  positionName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   label: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
-  officerOnly: z.lazy(() => SortOrderSchema).optional()
+  officer_only: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const EventPositionMinOrderByAggregateInputSchema: z.ZodType<Prisma.EventPositionMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  positionName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   label: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
-  officerOnly: z.lazy(() => SortOrderSchema).optional()
+  officer_only: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const BoolNullableWithAggregatesFilterSchema: z.ZodType<Prisma.BoolNullableWithAggregatesFilter> = z.object({
@@ -2018,66 +2018,66 @@ export const IntNullableFilterSchema: z.ZodType<Prisma.IntNullableFilter> = z.ob
 
 export const InventoryCountOrderByAggregateInputSchema: z.ZodType<Prisma.InventoryCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  itemName: z.lazy(() => SortOrderSchema).optional(),
-  brandId: z.lazy(() => SortOrderSchema).optional(),
-  categoryId: z.lazy(() => SortOrderSchema).optional(),
+  item: z.lazy(() => SortOrderSchema).optional(),
+  brand: z.lazy(() => SortOrderSchema).optional(),
+  category: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  quantity: z.lazy(() => SortOrderSchema).optional(),
-  quantityUnitId: z.lazy(() => SortOrderSchema).optional(),
-  packageSize: z.lazy(() => SortOrderSchema).optional(),
-  packageSizeUnitId: z.lazy(() => SortOrderSchema).optional(),
+  qty: z.lazy(() => SortOrderSchema).optional(),
+  qty_unit: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size_unit: z.lazy(() => SortOrderSchema).optional(),
   upc: z.lazy(() => SortOrderSchema).optional(),
   ndc: z.lazy(() => SortOrderSchema).optional(),
   expiration: z.lazy(() => SortOrderSchema).optional(),
   lot: z.lazy(() => SortOrderSchema).optional(),
   comments: z.lazy(() => SortOrderSchema).optional(),
-  linkId: z.lazy(() => SortOrderSchema).optional()
+  link_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const InventoryAvgOrderByAggregateInputSchema: z.ZodType<Prisma.InventoryAvgOrderByAggregateInput> = z.object({
-  quantity: z.lazy(() => SortOrderSchema).optional(),
-  packageSize: z.lazy(() => SortOrderSchema).optional()
+  qty: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const InventoryMaxOrderByAggregateInputSchema: z.ZodType<Prisma.InventoryMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  itemName: z.lazy(() => SortOrderSchema).optional(),
-  brandId: z.lazy(() => SortOrderSchema).optional(),
-  categoryId: z.lazy(() => SortOrderSchema).optional(),
+  item: z.lazy(() => SortOrderSchema).optional(),
+  brand: z.lazy(() => SortOrderSchema).optional(),
+  category: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  quantity: z.lazy(() => SortOrderSchema).optional(),
-  quantityUnitId: z.lazy(() => SortOrderSchema).optional(),
-  packageSize: z.lazy(() => SortOrderSchema).optional(),
-  packageSizeUnitId: z.lazy(() => SortOrderSchema).optional(),
+  qty: z.lazy(() => SortOrderSchema).optional(),
+  qty_unit: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size_unit: z.lazy(() => SortOrderSchema).optional(),
   upc: z.lazy(() => SortOrderSchema).optional(),
   ndc: z.lazy(() => SortOrderSchema).optional(),
   expiration: z.lazy(() => SortOrderSchema).optional(),
   lot: z.lazy(() => SortOrderSchema).optional(),
   comments: z.lazy(() => SortOrderSchema).optional(),
-  linkId: z.lazy(() => SortOrderSchema).optional()
+  link_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const InventoryMinOrderByAggregateInputSchema: z.ZodType<Prisma.InventoryMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  itemName: z.lazy(() => SortOrderSchema).optional(),
-  brandId: z.lazy(() => SortOrderSchema).optional(),
-  categoryId: z.lazy(() => SortOrderSchema).optional(),
+  item: z.lazy(() => SortOrderSchema).optional(),
+  brand: z.lazy(() => SortOrderSchema).optional(),
+  category: z.lazy(() => SortOrderSchema).optional(),
   location: z.lazy(() => SortOrderSchema).optional(),
-  quantity: z.lazy(() => SortOrderSchema).optional(),
-  quantityUnitId: z.lazy(() => SortOrderSchema).optional(),
-  packageSize: z.lazy(() => SortOrderSchema).optional(),
-  packageSizeUnitId: z.lazy(() => SortOrderSchema).optional(),
+  qty: z.lazy(() => SortOrderSchema).optional(),
+  qty_unit: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size_unit: z.lazy(() => SortOrderSchema).optional(),
   upc: z.lazy(() => SortOrderSchema).optional(),
   ndc: z.lazy(() => SortOrderSchema).optional(),
   expiration: z.lazy(() => SortOrderSchema).optional(),
   lot: z.lazy(() => SortOrderSchema).optional(),
   comments: z.lazy(() => SortOrderSchema).optional(),
-  linkId: z.lazy(() => SortOrderSchema).optional()
+  link_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const InventorySumOrderByAggregateInputSchema: z.ZodType<Prisma.InventorySumOrderByAggregateInput> = z.object({
-  quantity: z.lazy(() => SortOrderSchema).optional(),
-  packageSize: z.lazy(() => SortOrderSchema).optional()
+  qty: z.lazy(() => SortOrderSchema).optional(),
+  pkg_size: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFilter> = z.object({
@@ -2163,22 +2163,22 @@ export const InventoryTagMinOrderByAggregateInputSchema: z.ZodType<Prisma.Invent
 
 export const InventoryBrandCountOrderByAggregateInputSchema: z.ZodType<Prisma.InventoryBrandCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  brandName: z.lazy(() => SortOrderSchema).optional()
+  name: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const InventoryBrandMaxOrderByAggregateInputSchema: z.ZodType<Prisma.InventoryBrandMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  brandName: z.lazy(() => SortOrderSchema).optional()
+  name: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const InventoryBrandMinOrderByAggregateInputSchema: z.ZodType<Prisma.InventoryBrandMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  brandName: z.lazy(() => SortOrderSchema).optional()
+  name: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const InventoryLinkCountOrderByAggregateInputSchema: z.ZodType<Prisma.InventoryLinkCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  linkName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   category: z.lazy(() => SortOrderSchema).optional(),
   comments: z.lazy(() => SortOrderSchema).optional(),
@@ -2187,7 +2187,7 @@ export const InventoryLinkCountOrderByAggregateInputSchema: z.ZodType<Prisma.Inv
 
 export const InventoryLinkMaxOrderByAggregateInputSchema: z.ZodType<Prisma.InventoryLinkMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  linkName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   category: z.lazy(() => SortOrderSchema).optional(),
   comments: z.lazy(() => SortOrderSchema).optional()
@@ -2195,7 +2195,7 @@ export const InventoryLinkMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Inven
 
 export const InventoryLinkMinOrderByAggregateInputSchema: z.ZodType<Prisma.InventoryLinkMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  linkName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   category: z.lazy(() => SortOrderSchema).optional(),
   comments: z.lazy(() => SortOrderSchema).optional()
@@ -2260,8 +2260,8 @@ export const EventShiftListCreateEnvelopeInputSchema: z.ZodType<Prisma.EventShif
 }).strict();
 
 export const EventShiftCreateInputSchema: z.ZodType<Prisma.EventShiftCreateInput> = z.object({
-  positionId: z.string(),
-  userId: z.string().optional().nullable()
+  position: z.string(),
+  user: z.string().optional().nullable()
 }).strict();
 
 export const DateTimeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.DateTimeFieldUpdateOperationsInput> = z.object({
@@ -2289,11 +2289,11 @@ export const EventShiftListUpdateEnvelopeInputSchema: z.ZodType<Prisma.EventShif
   deleteMany: z.lazy(() => EventShiftDeleteManyInputSchema).optional()
 }).strict();
 
-export const EventPositionCreateallowedUserTypesInputSchema: z.ZodType<Prisma.EventPositionCreateallowedUserTypesInput> = z.object({
+export const EventPositionCreateallowed_user_typesInputSchema: z.ZodType<Prisma.EventPositionCreateallowed_user_typesInput> = z.object({
   set: z.string().array()
 }).strict();
 
-export const EventPositionUpdateallowedUserTypesInputSchema: z.ZodType<Prisma.EventPositionUpdateallowedUserTypesInput> = z.object({
+export const EventPositionUpdateallowed_user_typesInputSchema: z.ZodType<Prisma.EventPositionUpdateallowed_user_typesInput> = z.object({
   set: z.string().array().optional(),
   push: z.union([ z.string(),z.string().array() ]).optional(),
 }).strict();
@@ -2385,8 +2385,8 @@ export const EventShiftWhereInputSchema: z.ZodType<Prisma.EventShiftWhereInput> 
   AND: z.union([ z.lazy(() => EventShiftWhereInputSchema),z.lazy(() => EventShiftWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => EventShiftWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => EventShiftWhereInputSchema),z.lazy(() => EventShiftWhereInputSchema).array() ]).optional(),
-  positionId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  userId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  position: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  user: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const NestedStringWithAggregatesFilterSchema: z.ZodType<Prisma.NestedStringWithAggregatesFilter> = z.object({
@@ -2557,8 +2557,8 @@ export const EventShiftDeleteManyInputSchema: z.ZodType<Prisma.EventShiftDeleteM
 }).strict();
 
 export const EventShiftUpdateInputSchema: z.ZodType<Prisma.EventShiftUpdateInput> = z.object({
-  positionId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  position: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  user: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 /////////////////////////////////////////
