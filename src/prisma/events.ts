@@ -9,6 +9,42 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+export async function assignUser(
+    userId: string,
+    eventId: string,
+    positionId: string
+): Promise<QueryResponse> {
+    try {
+        const event = await prisma.event.findUnique({ where: { id: eventId } });
+        if (!event) {
+            return {
+                ...defaultQueryResponses[404],
+                message: "Event not found",
+            };
+        }
+
+        const index = event.shifts.findIndex((shift) => shift.positionId === positionId);
+        if (index === -1) {
+            // ADDS A SHIFT THAT WAS NOT PREVIOUSLY ON THE EVENT
+        } else {
+            const assignment = { positionId, userId };
+            const updateShifts = prisma.event.update({
+                where: { id: eventId },
+                data: { shifts: { set: [...event.shifts, assignment] } },
+            });
+        }
+
+        return {
+            ...defaultQueryResponses[200],
+        };
+    } catch (ex) {
+        return {
+            ...defaultQueryResponses[500],
+            message: ex as string,
+        };
+    }
+}
+
 export async function getEvents(
     startDate?: Dayjs,
     endDate?: Dayjs
