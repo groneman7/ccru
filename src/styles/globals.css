@@ -15,6 +15,12 @@
     --color-background: var(--color-white);
     --color-foreground: var(--color-slate-900);
 
+    --color-form-control: var(--color-background);
+    --color-form-control-hover: var(--color-slate-50);
+    --color-form-control-active: var(--color-slate-100);
+
+    --color-placeholder: var(--color-slate-400);
+
     --color-card: var(--color-white);
     --color-card-foreground: var(--color-slate-900);
 
