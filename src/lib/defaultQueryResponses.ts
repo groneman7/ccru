@@ -1,4 +1,4 @@
-export type QueryResponse<T> = {
+export type QueryResponse<T = undefined> = {
     status: number;
     message?: string;
     data?: T;
