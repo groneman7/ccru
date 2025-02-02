@@ -23,6 +23,8 @@ const buttonVariants = cva(
                 link: "text-link underline-offset-2 hover:underline !px-1 !py-0 -ml-1",
                 daypicker:
                     "bg-form-control border border-input focus:border-blue-400 hover:border-blue-400 data-[date-picker=open]:ring-4 data-[date-picker=open]:border-blue-400",
+                autoselect:
+                    "w-full justify-start bg-background text-slate-900 rounded-none transition-none",
             },
             size: {
                 sm: "h-8 rounded-md px-3 [&_svg]:size-4",
