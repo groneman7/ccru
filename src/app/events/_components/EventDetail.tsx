@@ -1,6 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import type { Event, EventShift } from "~/prisma/client";
-import { getPositions } from "~/prisma/events";
+import { getAllPositions } from "~/prisma/events";
 
 import dayjs, { type Dayjs } from "dayjs";
 import timezone from "dayjs/plugin/timezone";
@@ -24,7 +24,7 @@ export default async function EventDetail({ event }: EventDetailProps) {
 
     const canModifySignups: boolean = me ? await getCanModifySignups(me.id) : false;
 
-    const { data: positions } = await getPositions();
+    const { data: positions } = await getAllPositions();
     if (!positions) {
         return <div>Error... positions not found.</div>;
     }

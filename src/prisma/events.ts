@@ -1,11 +1,20 @@
-import { prisma } from "~/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 import type { Event, EventPosition, EventShift } from "~/prisma/client";
-import { getUserNameAndSuffix } from "~/prisma/users";
-import { defaultQueryResponses, type QueryResponse } from "~/lib/defaultQueryResponses";
+import { prisma } from "~/lib/prisma";
+import {
+    badRequest,
+    created,
+    forbidden,
+    internalServerError,
+    notFound,
+    ok,
+    type QueryResponse,
+} from "~/lib/defaultQueryResponses";
 
 import dayjs, { type Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { has } from "./auth";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -13,15 +22,10 @@ export async function assignUser(
     userId: string,
     eventId: string,
     positionId: string
-): Promise<QueryResponse> {
+): Promise<QueryResponse<Event>> {
     try {
         const event = await prisma.event.findUnique({ where: { id: eventId } });
-        if (!event) {
-            return {
-                ...defaultQueryResponses[404],
-                message: "Event not found",
-            };
-        }
+        if (!event) return notFound();
 
         const index = event.shifts.findIndex((shift) => shift.position === positionId);
         if (index === -1) {
@@ -34,14 +38,33 @@ export async function assignUser(
             });
         }
 
-        return {
-            ...defaultQueryResponses[200],
-        };
+        return ok(event);
     } catch (ex) {
-        return {
-            ...defaultQueryResponses[500],
-            message: ex as string,
-        };
+        return internalServerError(ex as string);
+    }
+}
+
+export async function createEvent(
+    event: Omit<Event, "id" | "created_at" | "created_by">
+): Promise<QueryResponse<Event>> {
+    try {
+        const user = await currentUser();
+        if (!user) return forbidden("User not logged in.");
+        if ((await has(user.id, "events:create_new")) === false)
+            return forbidden("User doesn't have permission to create new events.");
+
+        const createdEvent = await prisma.event.create({
+            data: {
+                ...event,
+                created_by: user.id,
+                created_at: new Date(),
+            },
+        });
+        if (!createdEvent) return internalServerError("Error creating event.");
+
+        return created(createdEvent);
+    } catch (ex) {
+        return internalServerError(ex as string);
     }
 }
 
@@ -52,10 +75,8 @@ export async function getEvents(
     try {
         if (!startDate) {
             const allEvents = await prisma.event.findMany();
-            return {
-                status: 200,
-                data: [...allEvents],
-            };
+
+            return ok(allEvents);
         } else if (startDate && !endDate) {
             const eventsOnDate = await prisma.event.findMany({
                 where: {
@@ -65,12 +86,11 @@ export async function getEvents(
                     },
                 },
             });
-            return {
-                status: 200,
-                data: [...eventsOnDate],
-            };
+            if (!eventsOnDate) return notFound();
+
+            return ok(eventsOnDate);
         } else if (startDate && endDate) {
-            const eventsInRagne = await prisma.event.findMany({
+            const eventsInRange = await prisma.event.findMany({
                 where: {
                     date: {
                         gte: dayjs(startDate).toISOString(),
@@ -78,84 +98,39 @@ export async function getEvents(
                     },
                 },
             });
-            return {
-                status: 200,
-                data: [...eventsInRagne],
-            };
+            if (!eventsInRange) return notFound();
+
+            return ok(eventsInRange);
         } else {
-            return {
-                status: 400,
-            };
+            return badRequest();
         }
     } catch (ex) {
-        return {
-            ...defaultQueryResponses[500],
-            message: ex as string,
-        };
+        return internalServerError(ex as string);
     }
 }
 
-export async function getEventById(eventId: string): Promise<
-    QueryResponse<
-        Omit<Event, "shifts"> & {
-            shifts: (Omit<EventShift, "user"> & { user?: { id: string; name: string } })[];
-        }
-    >
-> {
+export async function getEventById(eventId: string): Promise<QueryResponse<Event>> {
     try {
         const event = await prisma.event.findUnique({
             where: {
                 id: eventId,
             },
         });
-        if (!event) {
-            return {
-                ...defaultQueryResponses[404],
-            };
-        }
+        if (!event) return notFound();
 
-        const mappedShifts = await Promise.all(
-            event.shifts.map(async (shift) => {
-                const { data: label } = await getPositionLabel(shift.position);
-                const user = shift.user
-                    ? {
-                          id: shift.user,
-                          name: await getUserNameAndSuffix(shift.user),
-                      }
-                    : undefined;
-
-                return {
-                    positionId: shift.position,
-                    positionLabel: label,
-                    user,
-                };
-            })
-        );
-
-        return {
-            ...defaultQueryResponses[200],
-            data: { ...event, shifts: mappedShifts },
-        };
+        return ok(event);
     } catch (ex) {
-        return {
-            ...defaultQueryResponses[500],
-            message: ex as string,
-        };
+        return internalServerError(ex as string);
     }
 }
 
-export async function getPositions(): Promise<QueryResponse<EventPosition[]>> {
+export async function getAllPositions(): Promise<QueryResponse<EventPosition[]>> {
     try {
         const positions = await prisma.eventPosition.findMany();
-        return {
-            status: 200,
-            data: [...positions],
-        };
+
+        return ok(positions);
     } catch (ex) {
-        return {
-            ...defaultQueryResponses[500],
-            message: ex as string,
-        };
+        return internalServerError(ex as string);
     }
 }
 
@@ -168,40 +143,11 @@ export async function getPositionById(
                 id: positionId,
             },
         });
-        if (!position) {
-            return {
-                ...defaultQueryResponses[404],
-            };
-        }
-        return {
-            ...defaultQueryResponses[200],
-            data: position,
-        };
-    } catch (ex) {
-        return {
-            ...defaultQueryResponses[500],
-            message: ex as string,
-        };
-    }
-}
+        if (!position) return notFound();
 
-export async function getAllPositions(): Promise<QueryResponse<EventPosition[]>> {
-    try {
-        const positions = await prisma.eventPosition.findMany();
-        if (!positions) {
-            return {
-                ...defaultQueryResponses[404],
-            };
-        }
-        return {
-            status: 200,
-            data: [...positions],
-        };
+        return ok(position);
     } catch (ex) {
-        return {
-            ...defaultQueryResponses[500],
-            message: ex as string,
-        };
+        return internalServerError(ex as string);
     }
 }
 
@@ -214,19 +160,9 @@ export async function getPositionLabel(
                 id: positionId,
             },
         });
-        if (!position) {
-            return {
-                ...defaultQueryResponses[404],
-            };
-        }
-        return {
-            ...defaultQueryResponses[200],
-            data: position.label,
-        };
+        if (!position) return notFound();
+        return ok(position.label);
     } catch (ex) {
-        return {
-            ...defaultQueryResponses[500],
-            message: ex as string,
-        };
+        return internalServerError(ex as string);
     }
 }

@@ -1,6 +1,3 @@
-import { prisma } from "~/lib/prisma";
-import type { Event, EventPosition } from "~/prisma/client";
-import { defaultQueryResponses, type QueryResponse } from "~/lib/defaultQueryResponses";
 import { clerkClient } from "@clerk/nextjs/server";
 
 export type UserList = {
