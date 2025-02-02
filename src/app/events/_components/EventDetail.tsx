@@ -32,30 +32,30 @@ export default async function EventDetail({ event }: EventDetailProps) {
     return (
         <div className="p-4">
             <div className="text-lg font-semibold">
-                {dayjs(event.date).format("dddd, MMMM D")}
+                {dayjs(event["date"]).format("dddd, MMMM D")}
             </div>
             <div>
-                {dayjs(event.timeStart).tz("America/New_York").format("h:mm A")} –{" "}
-                {dayjs(event.timeEnd).tz("America/New_York").format("h:mm A")}
+                {dayjs(event["time_start"]).tz("America/New_York").format("h:mm A")} –{" "}
+                {dayjs(event["time_end"]).tz("America/New_York").format("h:mm A")}
             </div>
-            <div className="py-2">{event.location}</div>
+            <div className="py-2">{event["location"]}</div>
             <div className="flex flex-col divide-y px-2 py-4">
                 {Promise.all(
-                    event.shifts.map(async (shift, i: number) => {
+                    event["shifts"].map(async (shift, i: number) => {
                         return (
                             <ShiftListItem
-                                key={`${i}-${shift.positionId}`}
+                                key={`${i}-${shift["position"]}`}
                                 canSignUp={
-                                    me ? await canSignUp(me.id, shift.positionId) : false
+                                    me ? await canSignUp(me.id, shift["position"]) : false
                                 }
                                 canModifySignups={canModifySignups}
                                 event={event}
                                 isMe={me?.id === shift.user?.id}
                                 label={shift.positionLabel || "Position label not found."}
-                                positionId={shift.positionId}
-                                user={shift.user}
+                                positionId={shift["position"]}
+                                user={shift["user"]}
                                 userList={
-                                    me?.id === shift.user?.id || canModifySignups
+                                    me?.id === shift["user"]?.id || canModifySignups
                                         ? userList
                                         : undefined
                                 }

@@ -142,7 +142,7 @@ export function EventCalendar({
                             e.stopPropagation();
                             onEventClick?.(e.currentTarget.id);
                         }}>
-                        {event.eventName}
+                        {event.name}
                     </Link>
                 </ContextMenuTrigger>
                 <ContextMenuContent>

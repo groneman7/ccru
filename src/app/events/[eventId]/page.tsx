@@ -23,7 +23,7 @@ export default async function Page({ params }: { params: { eventId: string } }) 
     return (
         <div className="p-4">
             <div className="flex flex-col justify-between gap-2">
-                <h3 className="text-2xl font-bold">{event.eventName}</h3>
+                <h3 className="text-2xl font-bold">{event.name}</h3>
             </div>
             <div>
                 {event ? (
