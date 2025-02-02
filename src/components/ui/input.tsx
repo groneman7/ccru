@@ -39,7 +39,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         { className, iconClassName, iconLeft, iconRight, inputSize, type, variant, ...props },
         ref
     ) => {
-        console.log(iconLeft);
         return (
             <div
                 className={`relative flex items-center ${
