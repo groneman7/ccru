@@ -23,7 +23,7 @@ export async function assignUser(
             };
         }
 
-        const index = event.shifts.findIndex((shift) => shift.positionId === positionId);
+        const index = event.shifts.findIndex((shift) => shift.position === positionId);
         if (index === -1) {
             // ADDS A SHIFT THAT WAS NOT PREVIOUSLY ON THE EVENT
         } else {
@@ -98,7 +98,7 @@ export async function getEvents(
 export async function getEventById(eventId: string): Promise<
     QueryResponse<
         Omit<Event, "shifts"> & {
-            shifts: (Omit<EventShift, "userId"> & { user?: { id: string; name: string } })[];
+            shifts: (Omit<EventShift, "user"> & { user?: { id: string; name: string } })[];
         }
     >
 > {
@@ -116,16 +116,16 @@ export async function getEventById(eventId: string): Promise<
 
         const mappedShifts = await Promise.all(
             event.shifts.map(async (shift) => {
-                const { data: label } = await getPositionLabel(shift.positionId);
-                const user = shift.userId
+                const { data: label } = await getPositionLabel(shift.position);
+                const user = shift.user
                     ? {
-                          id: shift.userId,
-                          name: await getUserNameAndSuffix(shift.userId),
+                          id: shift.user,
+                          name: await getUserNameAndSuffix(shift.user),
                       }
                     : undefined;
 
                 return {
-                    positionId: shift.positionId,
+                    positionId: shift.position,
                     positionLabel: label,
                     user,
                 };
@@ -176,6 +176,26 @@ export async function getPositionById(
         return {
             ...defaultQueryResponses[200],
             data: position,
+        };
+    } catch (ex) {
+        return {
+            ...defaultQueryResponses[500],
+            message: ex as string,
+        };
+    }
+}
+
+export async function getAllPositions(): Promise<QueryResponse<EventPosition[]>> {
+    try {
+        const positions = await prisma.eventPosition.findMany();
+        if (!positions) {
+            return {
+                ...defaultQueryResponses[404],
+            };
+        }
+        return {
+            status: 200,
+            data: [...positions],
         };
     } catch (ex) {
         return {
