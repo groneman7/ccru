@@ -7,7 +7,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "~/lib/utils";
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors duration-75 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-pointer select-none",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors duration-75 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-pointer select-none focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-[width,color,background-color,border-color,text-decoration-color,fill,stroke,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,box-shadow;] duration-150 focus:ring-4 ring-blue-300/70",
     {
         variants: {
             variant: {
@@ -21,6 +21,8 @@ const buttonVariants = cva(
                     "bg-secondary text-secondary-foreground hover:bg-secondary-interaction/50 active:bg-secondary-interaction/75",
                 ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent-hover",
                 link: "text-link underline-offset-2 hover:underline !px-1 !py-0 -ml-1",
+                daypicker:
+                    "bg-form-control border border-input focus:border-blue-400 hover:border-blue-400 data-[date-picker=open]:ring-4 data-[date-picker=open]:border-blue-400",
             },
             size: {
                 sm: "h-8 rounded-md px-3 [&_svg]:size-4",
