@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { cn } from "~/lib/utils";
+import { cn, parseAndFormatTime, convert24to12, combineDateAndTimeToUTC } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
 import {
@@ -22,74 +21,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Autocomplete } from "~/components/Autocomplete";
-import { EventPosition } from "~/prisma/client";
+import type { Event, EventPosition } from "~/prisma/client";
 
-// A helper function to parse user input for times like "330p" or "3:30 PM".
-// Returns an object containing { iso, display } if successfully parsed, or null otherwise.
-function parseAndFormatTime(value: string) {
-    // Trim and lowercase to simplify matching
-    const raw = value.trim().toLowerCase();
-
-    // Regex to capture hour, optional minute, and optional am/pm.
-    // Examples matched: 330p, 3:30p, 330pm, 3:30 pm, 14:00, etc.
-    const match = raw.match(/^([0-1]?\d|2[0-3])(?::?(\d{2}))?\s*([ap]m?)?$/);
-    if (!match) {
-        // Could not parse; return null.
-        return null;
-    }
-
-    let [, hourStr, minuteStr, ampm] = match;
-    if (!hourStr) {
-        return null;
-    }
-
-    let hour = parseInt(hourStr, 10);
-    let minute = minuteStr ? parseInt(minuteStr, 10) : 0;
-
-    // If user typed an am/pm indicator, convert to 24-hr.
-    if (ampm) {
-        if (ampm.startsWith("p") && hour < 12) {
-            hour += 12;
-        }
-        if (ampm.startsWith("a") && hour === 12) {
-            hour = 0;
-        }
-    }
-
-    if (hour > 23 || minute > 59) {
-        return null;
-    }
-
-    // Build ISO-like 24-hour time string, e.g. "15:30".
-    const iso = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
-
-    // Convert to 12-hour for display.
-    let displayHour = hour % 12;
-    if (displayHour === 0) {
-        displayHour = 12;
-    }
-    const amPmLabel = hour >= 12 ? "PM" : "AM";
-    const displayMinute = minute.toString().padStart(2, "0");
-    const display = `${displayHour}:${displayMinute} ${amPmLabel}`;
-
-    return { iso, display };
-}
-
-// Convert a 24-hour "HH:mm" string to a 12-hour time with AM/PM for display.
-function convert24to12(isoTime: string) {
-    if (!isoTime) return "";
-    const [hourStr, minuteStr] = isoTime.split(":");
-    const hour = parseInt(hourStr, 10);
-    const minute = parseInt(minuteStr, 10);
-
-    let displayHour = hour % 12;
-    if (displayHour === 0) {
-        displayHour = 12;
-    }
-    const amPmLabel = hour >= 12 ? "PM" : "AM";
-    const displayMinute = minute.toString().padStart(2, "0");
-    return `${displayHour}:${displayMinute} ${amPmLabel}`;
-}
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const FormSchema = z.object({
     name: z.string().nonempty({ message: "Event name is required." }),
@@ -103,13 +41,17 @@ const FormSchema = z.object({
 });
 
 type EventFormProps = {
+    currentUserId: string;
     positionList: EventPosition[];
+    onSubmitAction: (event: Omit<Event, "id" | "created_at" | "created_by">) => void;
 };
 
-export default function NewEventForm({ positionList }: EventFormProps) {
+export default function NewEventForm({
+    currentUserId,
+    positionList,
+    onSubmitAction,
+}: EventFormProps) {
     const [datePickerOpen, setDatePickerOpen] = useState<boolean>(false);
-
-    // We'll store selected positions + their quantity in local state.
     const [selectedPositions, setSelectedPositions] = useState<
         {
             id: string;
@@ -132,10 +74,39 @@ export default function NewEventForm({ positionList }: EventFormProps) {
         },
     });
 
+    // onSubmit: convert local times to UTC + post.
     function onSubmit(data: z.infer<typeof FormSchema>) {
-        // You may want to also pass selectedPositions.
-        console.log("Form submitted:", data);
-        console.log("Positions:", selectedPositions);
+        const { name, event_date, time_start, time_end, description, location } = data;
+
+        // interpret event_date in local TZ => store as UTC date
+        const dateUTC = dayjs(event_date).tz("America/New_York", true).utc().toDate();
+
+        const startUTC = time_start
+            ? combineDateAndTimeToUTC(event_date!, time_start)
+            : undefined;
+        const endUTC = time_end ? combineDateAndTimeToUTC(event_date!, time_end) : undefined;
+
+        // Build the "shifts" array. If quantity > 1, we repeat that item.
+        // user is empty ("") by default.
+        const shifts = selectedPositions.flatMap((pos) => {
+            const shiftArray = [];
+            for (let i = 0; i < pos.quantity; i++) {
+                shiftArray.push({ position: pos.id, user: "" });
+            }
+            return shiftArray;
+        });
+
+        const payload: Omit<Event, "id" | "created_at" | "created_by"> = {
+            name,
+            date: dateUTC,
+            description: description || null,
+            location: location || null,
+            time_start: startUTC ?? null,
+            time_end: endUTC ?? null,
+            shifts,
+        };
+
+        onSubmitAction(payload);
     }
 
     // Time input logic
@@ -187,10 +158,6 @@ export default function NewEventForm({ positionList }: EventFormProps) {
         ]);
     }
 
-    useEffect(() => {
-        console.log(selectedPositions);
-    }, [selectedPositions]);
-
     function handleRemovePosition(id: string) {
         setSelectedPositions((prev) => prev.filter((p) => p.id !== id));
     }
@@ -209,6 +176,7 @@ export default function NewEventForm({ positionList }: EventFormProps) {
     return (
         <Form {...form}>
             <form
+                // action={onSubmit}
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col gap-4">
                 {/* Event Name */}
@@ -251,7 +219,7 @@ export default function NewEventForm({ positionList }: EventFormProps) {
                                                 !field.value && "text-slate-400"
                                             )}>
                                             {field.value ? (
-                                                format(field.value, "PPP")
+                                                dayjs(field.value).format("dddd, MMMM D, YYYY")
                                             ) : (
                                                 <span>Pick a date</span>
                                             )}
@@ -384,7 +352,6 @@ export default function NewEventForm({ positionList }: EventFormProps) {
                 <div className="flex flex-col">
                     <FormLabel>Positions</FormLabel>
                     <div className="mt-2 space-y-2">
-                        {/* Render selected positions, each with a quantity and remove button */}
                         {selectedPositions.map((pos) => (
                             <div
                                 key={pos.id}
