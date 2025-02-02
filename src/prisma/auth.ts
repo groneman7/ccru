@@ -1,10 +1,6 @@
-import { clerkClient } from "@clerk/nextjs/server";
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { getPositionById } from "~/prisma/events";
-
-// export async function getMe(userId: string) {
-//     const clerk = await clerkClient();
-//     const me = await clerk.users.getUser(userId);
-// }
+import { success } from "~/lib/defaultQueryResponses";
 
 export async function has(userId: string, permission: Permission) {
     const clerk = await clerkClient();
@@ -22,7 +18,12 @@ export async function canModifySignups(userId: string): Promise<boolean> {
 export async function canSignUp(userId: string, positionId: string): Promise<boolean> {
     const clerk = await clerkClient();
     const user = await clerk.users.getUser(userId);
-    const { data: position } = await getPositionById(positionId);
+    const response = await getPositionById(positionId);
 
-    return position?.allowedUserTypes?.includes(user.privateMetadata.typeId) || false;
+    if (success(response)) {
+        const position = response.data;
+        return position?.["allowed_user_types"]?.includes(user.privateMetadata.typeId) || false;
+    }
+
+    return false;
 }
