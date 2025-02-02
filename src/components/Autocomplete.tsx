@@ -6,28 +6,75 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
-interface AutocompleteItem {
-    id: string;
-    label: string;
-}
-
-interface AutocompleteProps {
-    /** The list of items to filter and display. */
-    items: AutocompleteItem[];
-    /** Called when a user selects an item's label. */
-    onSelect?: (itemLabel: string) => void;
-    /** Placeholder for the input. */
-    placeholder?: string;
-    /** ClassName for the outer container. */
+/** The base props common to all forms of Autocomplete. */
+interface AutocompleteBaseProps<T> {
+    items: T[];
+    onSelect?: (item: T) => void;
+    /** Called to custom-render each item. Otherwise we use either `item.label` or `getItemLabel` */
+    renderItem?: (item: T) => React.ReactNode;
+    /** Clear the input after a selection? */
+    clearOnSelect?: boolean;
+    /** Classname, placeholder, etc. */
     className?: string;
+    placeholder?: string;
 }
 
-export function Autocomplete({
-    items,
-    onSelect,
-    placeholder = "Type to search...",
+/** CASE A: T has both `id` and `label` => no getters needed or allowed. */
+interface AutocompleteHasIdAndLabel<T extends { id: string; label: string }>
+    extends AutocompleteBaseProps<T> {
+    getItemId?: never;
+    getItemLabel?: never;
+}
+
+/** CASE B: T has only `label`, so we need at least `getItemId`. */
+interface AutocompleteHasLabelOnly<T extends { label: string }>
+    extends AutocompleteBaseProps<T> {
+    /** Must supply how to get `id`. */
+    getItemId: (item: T) => string;
+    /** We already have `label`, so not allowed to supply getItemLabel. */
+    getItemLabel?: never;
+}
+
+/** CASE C: T has only `id`, so we need at least `getItemLabel`. */
+interface AutocompleteHasIdOnly<T extends { id: string }> extends AutocompleteBaseProps<T> {
+    /** We already have `id`, so not allowed to supply getItemId. */
+    getItemId?: never;
+    /** Must supply how to get `label`. */
+    getItemLabel: (item: T) => string;
+}
+
+/** CASE D: T has neither `id` nor `label`, so we need both getters. */
+interface AutocompleteNoIdNoLabel<T> extends AutocompleteBaseProps<T> {
+    getItemId: (item: T) => string;
+    getItemLabel: (item: T) => string;
+}
+
+/**
+ * The combined type: if `T` has both `id` and `label`, you can omit the getters.
+ * If it only has `label`, you must provide `getItemId`. If it only has `id`, you must provide `getItemLabel`.
+ * Otherwise (neither), you must provide both.
+ */
+export type AutocompleteProps<T> =
+    // T extends both id & label
+    T extends { id: string; label: string }
+        ? AutocompleteHasIdAndLabel<T>
+        : // T extends label only
+          T extends { label: string }
+          ? AutocompleteHasLabelOnly<T>
+          : // T extends id only
+            T extends { id: string }
+            ? AutocompleteHasIdOnly<T>
+            : // T has neither
+              AutocompleteNoIdNoLabel<T>;
+
+export function Autocomplete<T>({
     className,
-}: AutocompleteProps) {
+    clearOnSelect = false,
+    items,
+    placeholder = "Type to search...",
+    onSelect,
+    renderItem,
+}: AutocompleteProps<T>) {
     const [inputValue, setInputValue] = React.useState("");
     const [open, setOpen] = React.useState(false);
 
@@ -51,13 +98,17 @@ export function Autocomplete({
             return items;
         }
         const lower = inputValue.toLowerCase();
+
         return items.filter((item) => item.label.toLowerCase().includes(lower));
     }, [items, inputValue]);
 
-    function handleSelect(item: AutocompleteItem) {
-        setInputValue(item.label);
+    function handleSelect(item: T) {
+        // If clearOnSelect is true, empty out the input, otherwise set inputValue to the item's label.
+        if (clearOnSelect) {
+            setInputValue("");
+        }
         setOpen(false);
-        onSelect?.(item.label);
+        onSelect?.(item);
     }
 
     function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -157,12 +208,10 @@ export function Autocomplete({
                                 return (
                                     <li key={item.id}>
                                         <Button
-                                            variant="ghost"
+                                            variant="autoselect"
                                             className={cn(
-                                                "w-full justify-start",
-                                                isHighlighted
-                                                    ? "bg-accent text-accent-foreground"
-                                                    : "hover:bg-accent/10"
+                                                isHighlighted &&
+                                                    "bg-secondary text-secondary-foreground"
                                             )}
                                             onClick={() => handleSelect(item)}
                                             onMouseEnter={() => {
@@ -174,7 +223,7 @@ export function Autocomplete({
                                             ref={(el) => {
                                                 itemRefs.current[i] = el;
                                             }}>
-                                            {item.label}
+                                            {renderItem ? renderItem(item) : item.label}
                                         </Button>
                                     </li>
                                 );
