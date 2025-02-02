@@ -3,7 +3,6 @@ import { getAllPositions } from "~/prisma/events";
 
 export default async function Page() {
     const { data: positions } = await getAllPositions();
-    console.log(positions);
 
     return (
         <div className="flex flex-col gap-6 p-4">
