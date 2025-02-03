@@ -100,11 +100,15 @@ export function EventCalendar({
     }
 
     function CalendarGrid() {
+        const rows = DATES.length / 7;
         return (
-            <div className="flex flex-1 flex-col gap-0 text-center">
+            <div className="flex h-full flex-1 flex-col gap-0 text-center">
                 <WeekdayHeaders />
-                <div className="grid flex-1 grid-cols-7">
-                    {/* Dates */}
+                <div
+                    className={cn(
+                        "grid h-full flex-1 grid-cols-7",
+                        rows === 6 ? "grid-rows-6" : "grid-rows-5"
+                    )}>
                     {DATES.map((date, index) => (
                         <CalendarCell
                             key={index}
@@ -133,29 +137,29 @@ export function EventCalendar({
 
     function EventLine({ event }: { event: Event }) {
         return (
-            <ContextMenu>
-                <ContextMenuTrigger>
-                    <Link
-                        href={`/events/${event.id}`}
-                        className="flex cursor-pointer rounded-sm bg-accent px-1 text-sm transition-colors duration-75 select-none hover:bg-accent-hover active:bg-accent-active/75"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onEventClick?.(e.currentTarget.id);
-                        }}>
-                        {event.name}
-                    </Link>
-                </ContextMenuTrigger>
-                <ContextMenuContent>
-                    <ContextMenuItem>Sign up</ContextMenuItem>
-                    <ContextMenuItem>Share</ContextMenuItem>
-                    <ContextMenuSeparator />
-                    <ContextMenuItem>{/* <BellRing /> */}Request volunteers...</ContextMenuItem>
-                    <ContextMenuItem>Send reminder...</ContextMenuItem>
-                    <ContextMenuSeparator />
-                    <ContextMenuItem>Edit</ContextMenuItem>
-                    <ContextMenuItem>Delete</ContextMenuItem>
-                </ContextMenuContent>
-            </ContextMenu>
+            //<ContextMenu>
+            //  <ContextMenuTrigger>
+            <Link
+                href={`/events/${event.id}`}
+                className="flex cursor-pointer overflow-hidden rounded-sm bg-accent px-1 text-sm text-ellipsis whitespace-nowrap transition-colors duration-75 select-none hover:bg-accent-hover active:bg-accent-active/75"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onEventClick?.(e.currentTarget.id);
+                }}>
+                {event.name}
+            </Link>
+            //     </ContextMenuTrigger>
+            //     <ContextMenuContent>
+            //         <ContextMenuItem>Sign up</ContextMenuItem>
+            //         <ContextMenuItem>Share</ContextMenuItem>
+            //         <ContextMenuSeparator />
+            //         <ContextMenuItem>{/* <BellRing /> */}Request volunteers...</ContextMenuItem>
+            //         <ContextMenuItem>Send reminder...</ContextMenuItem>
+            //         <ContextMenuSeparator />
+            //         <ContextMenuItem>Edit</ContextMenuItem>
+            //         <ContextMenuItem>Delete</ContextMenuItem>
+            //     </ContextMenuContent>
+            // </ContextMenu>
         );
     }
 
@@ -178,7 +182,7 @@ export function EventCalendar({
             >
                 <div
                     className={cn(
-                        "mt-2 self-center rounded-full p-1 text-sm font-semibold select-none",
+                        "mt-3 flex h-7 w-7 items-center justify-center self-center rounded-full p-1 text-sm font-semibold select-none",
                         date.isSame(dayjs(), "date") && "bg-primary text-white",
                         !date.isSame(selectedMonth, "month") && "text-secondary-foreground/60"
                     )}>
