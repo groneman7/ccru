@@ -151,6 +151,30 @@ export async function getPositionById(
     }
 }
 
+export async function getPositionsByIds(
+    positionIds: string[]
+): Promise<QueryResponse<Partial<EventPosition>[]>> {
+    try {
+        const positions = await prisma.eventPosition.findMany({
+            where: {
+                id: {
+                    in: positionIds,
+                },
+            },
+            select: {
+                id: true,
+                name: true,
+                label: true,
+            },
+        });
+        if (!positions) return notFound();
+
+        return ok(positions);
+    } catch (ex) {
+        return internalServerError(ex as string);
+    }
+}
+
 export async function getPositionLabel(
     positionId: string
 ): Promise<QueryResponse<string | null>> {
