@@ -1,6 +1,6 @@
-import { clerkClient, currentUser } from "@clerk/nextjs/server";
-import { getPositionById } from "~/prisma/events";
-import { success } from "~/lib/defaultQueryResponses";
+import { clerkClient } from "@clerk/nextjs/server";
+import { getEventById, getPositionById } from "~/prisma/events";
+import { EventPosition } from "~/prisma/client";
 
 export async function has(userId: string, permission: Permission) {
     const clerk = await clerkClient();
@@ -15,15 +15,26 @@ export async function canModifySignups(userId: string): Promise<boolean> {
     return user.privateMetadata.permissions?.["events:modify_signup"] || false;
 }
 
-export async function canSignUp(userId: string, positionId: string): Promise<boolean> {
+// Is this the best place for this function?
+export async function canSignUp(
+    eventId: string,
+    positionId: string,
+    userId: string
+): Promise<{ value: boolean; message?: string }> {
     const clerk = await clerkClient();
     const user = await clerk.users.getUser(userId);
-    const response = await getPositionById(positionId);
+    const position = (await getPositionById(positionId).then(
+        (res) => res.data
+    )) as EventPosition;
 
-    if (success(response)) {
-        const position = response.data;
-        return position?.["allowed_user_types"]?.includes(user.privateMetadata.typeId) || false;
-    }
+    if (!position) return { value: false, message: "Position not found." }; // This really shouldn't happen. Maybe we can log it somewhere to see if it does.
+    if (!position["allowed_user_types"]?.includes(user.privateMetadata.typeId))
+        return { value: false, message: "User type not allowed." };
 
-    return false;
+    const event = await getEventById(eventId).then((res) => res.data);
+    if (!event) return { value: false, message: "Event not found." }; // This really shouldn't happen. Maybe we can log it somewhere to see if it does.
+    if (event.shifts.find((shift) => shift.user === userId))
+        return { value: false, message: "User already signed up." };
+
+    return { value: true };
 }
