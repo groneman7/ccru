@@ -7,13 +7,10 @@ export type SuccessResponse<T> = {
 export type ErrorResponse = {
     status: 400 | 403 | 404 | 500;
     message: string;
+    data?: never;
 };
 
 export type QueryResponse<T> = SuccessResponse<T> | ErrorResponse;
-
-export function success(response: QueryResponse<any>): response is SuccessResponse<any> {
-    return response.status === 200 || response.status === 201;
-}
 
 export function ok<T>(data: T, message?: string): SuccessResponse<T> {
     return {
