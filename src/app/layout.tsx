@@ -5,6 +5,7 @@ import { CSPostHogProvider } from "~/lib/providers";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import Navbar from "~/components/Navbar";
+import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
     title: "CCRU | Home",
@@ -21,7 +22,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <CSPostHogProvider>
                     <body className="flex h-dvh flex-col">
                         <Navbar />
-                        <div className="flex flex-1">{children}</div>
+                        <div className="flex flex-1 justify-center border-2 border-green-500">
+                            {children}
+                        </div>
+                        <Toaster richColors />
                     </body>
                 </CSPostHogProvider>
             </ClerkProvider>
