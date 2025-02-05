@@ -37,14 +37,18 @@ type ModifyDropdownProps = {
     allUsers: User[];
     canModifySignups?: boolean;
     isMe?: boolean;
+    shiftId: string;
     userAssigned?: string;
+    onAssignAction?: (shiftId: string, userId: string) => void;
 };
 
 export default function ModifyShiftDropdown({
     allUsers,
     canModifySignups,
     isMe,
+    shiftId,
     userAssigned,
+    onAssignAction,
 }: ModifyDropdownProps) {
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const [assignOpen, setAssignOpen] = useState<boolean>(false);
@@ -56,7 +60,7 @@ export default function ModifyShiftDropdown({
             <DropdownMenuTrigger asChild>
                 <Button
                     size="icon"
-                    variant="secondary">
+                    variant="ghost">
                     <Ellipsis className="p-1" />
                 </Button>
             </DropdownMenuTrigger>
@@ -89,9 +93,9 @@ export default function ModifyShiftDropdown({
                                                     key={user.id}
                                                     value={user.id}
                                                     onSelect={(value) => {
-                                                        console.log(value);
                                                         setAssignOpen(false);
                                                         setDropdownOpen(false);
+                                                        onAssignAction?.(shiftId, value);
                                                     }}>
                                                     {user.firstName} {user.lastName}
                                                 </CommandItem>

@@ -21,7 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Autocomplete } from "~/components/Autocomplete";
-import type { Event, EventPosition } from "~/prisma/client";
+import type { Event, EventPosition, EventShift, Prisma } from "~/prisma/client";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -43,7 +43,10 @@ const FormSchema = z.object({
 type EventFormProps = {
     currentUserId: string;
     positionList: EventPosition[];
-    onSubmitAction: (event: Omit<Event, "id" | "created_at" | "created_by">) => void;
+    onSubmitAction: (
+        event: Omit<Prisma.EventCreateInput, "created_by">,
+        positions: string[]
+    ) => Promise<void>;
 };
 
 export default function NewEventForm({
@@ -87,26 +90,24 @@ export default function NewEventForm({
         const endUTC = time_end ? combineDateAndTimeToUTC(event_date!, time_end) : undefined;
 
         // Build the "shifts" array. If quantity > 1, we repeat that item.
-        // user is empty ("") by default.
-        const shifts = selectedPositions.flatMap((pos) => {
+        const positions = selectedPositions.flatMap((pos) => {
             const shiftArray = [];
             for (let i = 0; i < pos.quantity; i++) {
-                shiftArray.push({ position: pos.id, user: "" });
+                shiftArray.push(pos.id);
             }
             return shiftArray;
         });
 
-        const payload: Omit<Event, "id" | "created_at" | "created_by"> = {
+        const payload: Omit<Prisma.EventCreateInput, "created_by"> = {
             name,
             date: dateUTC,
             description: description || null,
             location: location || null,
             time_start: startUTC ?? null,
             time_end: endUTC ?? null,
-            shifts,
         };
 
-        onSubmitAction(payload);
+        onSubmitAction(payload, positions);
     }
 
     // Time input logic

@@ -1,10 +1,9 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { has } from "~/prisma/auth";
-import type { Event } from "~/prisma/client";
+import type { Event, Prisma } from "~/prisma/client";
 import { createEvent, getAllPositions } from "~/prisma/events";
 import NewEventForm from "~/components/NewEventForm";
-import { success } from "~/lib/defaultQueryResponses";
 
 export default async function Page() {
     const user = await currentUser();
@@ -12,24 +11,30 @@ export default async function Page() {
         return <div>You don't have access to create new events.</div>;
     }
 
-    async function createEventAction(payload: Omit<Event, "id" | "created_at" | "created_by">) {
+    async function createEventAction(
+        payload: Omit<Prisma.EventCreateInput, "created_by">,
+        positions: string[]
+    ) {
         "use server";
-        console.log("Form data from EventPage server component =>", payload);
-        const response = await createEvent(payload);
-        if (response) {
-            if (response.status === 201) {
-                redirect(`/events/${response.data!.id}`);
-            }
+
+        const {
+            data: event,
+            status,
+            message,
+        } = await createEvent(payload, positions).then((res) => res);
+        if (status === 201) {
+            redirect(`/events/${event.id}`);
         }
     }
 
-    const response = await getAllPositions();
+    const { data: positionList } = await getAllPositions().then((res) => res);
+
     return (
         <div className="flex flex-col gap-6 p-4">
             <span className="text-2xl font-semibold">Create a new event</span>
             <NewEventForm
                 currentUserId={user.id}
-                positionList={success(response) ? response.data : []}
+                positionList={positionList || []}
                 onSubmitAction={createEventAction}
             />
         </div>
