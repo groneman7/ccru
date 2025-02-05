@@ -134,6 +134,7 @@ export default async function Page({ params }: { params: { eventId: string } }) 
                                             canModifySignups={await canModifySignups(me!.id)}
                                             isMe={isMe}
                                             onAssignAction={assignUserAction}
+                                            shiftId={shift.id}
                                         />
                                     </div>
                                 );
