@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useEffect, useState, startTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import {
     DropdownMenu,
@@ -12,7 +14,6 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuSubContent,
 } from "~/components/ui/dropdown-menu";
-import { CalendarFold, Clock, Ellipsis, MapPin, Text, UserRound } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -31,15 +32,16 @@ import {
     CommandItem,
     CommandList,
 } from "~/components/ui/command";
-import { User } from "@clerk/nextjs/server";
+import DropdownCombobox from "~/components/DropdownCombobox";
+import { CalendarFold, Clock, Ellipsis, MapPin, Text, UserRound } from "lucide-react";
 
 type ModifyDropdownProps = {
-    allUsers: User[];
+    allUsers: { id: string; firstName: string; lastName: string }[];
     canModifySignups?: boolean;
     isMe?: boolean;
     shiftId: string;
-    userAssigned?: string;
-    onAssignAction?: (shiftId: string, userId: string) => void;
+    userAssigned?: { id: string; firstName: string; lastName: string };
+    onAssignAction: (state, payload) => any;
 };
 
 export default function ModifyShiftDropdown({
@@ -50,8 +52,25 @@ export default function ModifyShiftDropdown({
     userAssigned,
     onAssignAction,
 }: ModifyDropdownProps) {
+    const router = useRouter();
+    const [state, action, pending] = useActionState<
+        { status: number | null; message: string | null },
+        { shiftId: string; userId: string }
+    >(onAssignAction, {
+        status: null,
+        message: null,
+    });
+
+    // Maybe want to consider useOptimistic instead.
+    useEffect(() => {
+        if (state.status === 200) {
+            toast.success("Shift modified.");
+            router.refresh();
+        }
+    }, [state]);
+
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-    const [assignOpen, setAssignOpen] = useState<boolean>(false);
+    // const [assignOpen, setAssignOpen] = useState<boolean>(false);
 
     return (
         <DropdownMenu
@@ -72,39 +91,25 @@ export default function ModifyShiftDropdown({
                     </>
                 ) : (
                     canModifySignups && (
-                        <DropdownMenuSub
-                            open={assignOpen}
-                            onOpenChange={setAssignOpen}>
-                            <DropdownMenuSubTrigger>
+                        <>
+                            <DropdownCombobox
+                                filterKeys={["firstName", "lastName"]}
+                                sortKeys={[{ key: "lastName" }, { key: "firstName" }]}
+                                onSelect={(option) => {
+                                    setDropdownOpen(false);
+                                    startTransition(() => {
+                                        action({
+                                            shiftId,
+                                            userId: option.id,
+                                        });
+                                    });
+                                }}
+                                options={allUsers}
+                                render={(option) => `${option.firstName} ${option.lastName}`}>
                                 {userAssigned ? "Reassign" : "Assign"}
-                            </DropdownMenuSubTrigger>
-                            <DropdownMenuSubContent className="p-0">
-                                <Command>
-                                    <CommandInput
-                                        placeholder="Seach users..."
-                                        autoFocus={true}
-                                        className="h-9"
-                                    />
-                                    <CommandList>
-                                        <CommandEmpty>No users found.</CommandEmpty>
-                                        <CommandGroup>
-                                            {allUsers?.map((user) => (
-                                                <CommandItem
-                                                    key={user.id}
-                                                    value={user.id}
-                                                    onSelect={(value) => {
-                                                        setAssignOpen(false);
-                                                        setDropdownOpen(false);
-                                                        onAssignAction?.(shiftId, value);
-                                                    }}>
-                                                    {user.firstName} {user.lastName}
-                                                </CommandItem>
-                                            ))}
-                                        </CommandGroup>
-                                    </CommandList>
-                                </Command>
-                            </DropdownMenuSubContent>
-                        </DropdownMenuSub>
+                            </DropdownCombobox>
+                            <DropdownMenuItem>Remove</DropdownMenuItem>
+                        </>
                     )
                 )}
             </DropdownMenuContent>
