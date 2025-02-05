@@ -24,42 +24,54 @@ export default async function Page({ params }: { params: { eventId: string } }) 
         return <div>Error... event not found.</div>;
     }
 
-    const usersToDisplay = [
+    const usersAssignedToThisEvent = [
         ...new Set(
             event["shifts"]
                 .filter((shift) => shift["user"] !== null && shift["user"] !== "")
                 .map((shift) => shift["user"])
         ),
     ];
-    const { data: userList } = await clerk.users.getUserList({
-        limit: 500,
-        userId: usersToDisplay as string[],
-    });
+    const userList = await clerk.users
+        .getUserList({
+            limit: 500,
+            userId: usersAssignedToThisEvent as string[],
+        })
+        .then((res) =>
+            res.data.map((user) => ({
+                id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+            }))
+        );
 
-    // Still not happy with this.. it's sloppy.
-    const allUsers = me
+    // Still not happy with this.. it's sloppy, and the logic is pretty basic.
+    const availableUsers = me
         ? await clerk.users.getUserList({ limit: 500 }).then((res) =>
-              res.data.map((user) => ({
-                  id: user.id,
-                  firstName: user.firstName,
-                  lastName: user.lastName,
-              }))
+              res.data
+                  .filter((user) => !usersAssignedToThisEvent.includes(user.id))
+                  .map((user) => ({
+                      id: user.id,
+                      firstName: user.firstName,
+                      lastName: user.lastName,
+                  }))
           )
         : [];
 
-    async function assignUserAction(shiftId: string, userId: string) {
+    async function assignUserAction(_: any, payload: { shiftId: string; userId: string }) {
         "use server";
 
-        const { data, message, status } = await assignUserToShift(shiftId, userId).then(
-            (res) => res
-        );
+        const { data, message, status } = await assignUserToShift(
+            payload.shiftId,
+            payload.userId
+        ).then((res) => res);
         console.log(status, message, data);
+        return { status, message };
     }
 
     return (
-        <div className="p-4">
+        <div className="flex w-xl flex-col border-2 border-red-500 p-4">
             {/* Event Header */}
-            <div className="flex flex-col justify-between gap-2">
+            <div className="flex gap-2 self-start">
                 <h3 className="text-2xl font-bold">{event["name"]}</h3>
             </div>
             {/* Event Details */}
@@ -75,6 +87,8 @@ export default async function Page({ params }: { params: { eventId: string } }) 
                 </div>
                 {/* Event Location */}
                 <div className="py-2">{event["location"]}</div>
+                {/* Event Description */}
+                {event["description"] && <div>{event["description"]}</div>}
                 {/* Event Shifts */}
                 <div className="flex flex-col divide-y px-2 py-4">
                     <SignedIn>
@@ -84,14 +98,16 @@ export default async function Page({ params }: { params: { eventId: string } }) 
                                 const user = userList.find((u) => u.id === shift["user"]);
                                 const isMe = me?.id === shift.user;
                                 const meCanSignUp = me
-                                    ? await canSignUp(event.id, position.id, me.id)
+                                    ? await canSignUp(event.id, position.id, me.id).then(
+                                          (res) => res.value
+                                      )
                                     : false;
 
                                 return (
                                     <div
                                         key={`${shift.id}`}
-                                        className="flex items-center gap-4 py-3">
-                                        <span className="w-36">
+                                        className="flex h-16 items-center gap-4 py-3">
+                                        <span className="w-44">
                                             {position.label || position.name}
                                         </span>
                                         <span
@@ -130,11 +146,12 @@ export default async function Page({ params }: { params: { eventId: string } }) 
                                             ) : null}
                                         </span>
                                         <ModifyShiftDropdown
-                                            allUsers={allUsers}
+                                            allUsers={availableUsers}
                                             canModifySignups={await canModifySignups(me!.id)}
                                             isMe={isMe}
                                             onAssignAction={assignUserAction}
                                             shiftId={shift.id}
+                                            userAssigned={user}
                                         />
                                     </div>
                                 );
