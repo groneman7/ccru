@@ -21,8 +21,9 @@ dayjs.extend(timezone);
 // Events
 
 export async function createEvent(
-    event: Prisma.EventCreateInput
-): Promise<QueryResponse<Event>> {
+    payload: Omit<Prisma.EventCreateInput, "created_by">,
+    positions: string[]
+) {
     try {
         const user = await currentUser();
         if (!user) return forbidden("User not logged in.");
@@ -31,22 +32,26 @@ export async function createEvent(
 
         const createdEvent = await prisma.event.create({
             data: {
-                ...event,
+                ...payload,
                 created_by: user.id,
             },
         });
         if (!createdEvent) return internalServerError("Error creating event.");
-
-        return created(createdEvent);
+        const { data, message, status } = await createShift(createdEvent.id, positions).then(
+            (res) => res
+        );
+        if (status === 201 && data === positions.length) {
+            return created(createdEvent);
+        }
+        return internalServerError(
+            "The event was created, but there was an error creating shifts."
+        );
     } catch (ex) {
         return internalServerError(ex as string);
     }
 }
 
-export async function getEvents(
-    startDate?: Dayjs,
-    endDate?: Dayjs
-): Promise<QueryResponse<Event[]>> {
+export async function getEvents(startDate?: Dayjs, endDate?: Dayjs) {
     try {
         if (!startDate) {
             const allEvents = await prisma.event.findMany();
@@ -84,16 +89,18 @@ export async function getEvents(
     }
 }
 
-export async function getEventById(
-    eventId: string
-): Promise<QueryResponse<Event & { shifts: EventShift[] }>> {
+export async function getEventById(eventId: string) {
     try {
         const event = await prisma.event.findUnique({
             where: {
                 id: eventId,
             },
             include: {
-                shifts: true,
+                shifts: {
+                    include: {
+                        position: true,
+                    },
+                },
             },
         });
         if (!event) return notFound();
@@ -158,6 +165,38 @@ export async function assignUserToShift(
         if (!shift) return notFound();
 
         return ok(shift);
+    } catch (ex) {
+        return internalServerError(ex as string);
+    }
+}
+
+export async function createShift(
+    eventId: string,
+    positionId: string | string[],
+    userId?: string
+): Promise<QueryResponse<EventShift | number>> {
+    try {
+        if (typeof positionId === "string") {
+            const shift = await prisma.eventShift.create({
+                data: {
+                    eventId,
+                    positionId,
+                    user: userId,
+                },
+            });
+            if (!shift) return internalServerError("Error creating shift.");
+            return created(shift);
+        } else {
+            const shifts = await prisma.eventShift.createMany({
+                data: positionId.map((posId) => ({
+                    eventId,
+                    positionId: posId,
+                    user: userId,
+                })),
+            });
+            if (!shifts) return internalServerError("Error creating shifts.");
+            return created(shifts.count);
+        }
     } catch (ex) {
         return internalServerError(ex as string);
     }
