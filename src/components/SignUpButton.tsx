@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarFold, Clock, MapPin, Text, UserRound } from "lucide-react";
+import { useActionState, useState, startTransition, ReactNode } from "react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -12,26 +12,41 @@ import {
     AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 
 type SignUpButtonProps = {
-    eventDate: string;
-    eventDescription?: string;
-    eventLocation?: string;
+    children: ReactNode;
     eventName: string;
-    eventTimeEnd?: string;
-    eventTimeStart?: string;
-    positionLabel: string;
+    shiftId: string;
+    userId: string;
+    onSignUpAction: (
+        state: {
+            status: number | null;
+            message: string | null;
+        },
+        payload: { shiftId: string; userId: string | null }
+    ) => any;
 };
 
 export default function SignUpButton({
-    eventDate,
-    eventDescription,
-    eventLocation,
+    children,
     eventName,
-    eventTimeEnd,
-    eventTimeStart,
-    positionLabel,
+    shiftId,
+    userId,
+    onSignUpAction,
 }: SignUpButtonProps) {
+    const router = useRouter();
+    const [state, action, pending] = useActionState<
+        {
+            status: number | null;
+            message: string | null;
+        },
+        { shiftId: string; userId: string | null }
+    >(onSignUpAction, {
+        status: null,
+        message: null,
+    });
+
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -39,53 +54,35 @@ export default function SignUpButton({
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>
-                        You're signing up for <span className="font-bold">{eventName}</span>
-                    </AlertDialogTitle>
-                </AlertDialogHeader>
-                <div className="flex flex-col gap-3">
-                    <div className="flex flex-1 items-center gap-2">
-                        <div>
-                            <UserRound className="h-5 w-5" />
-                        </div>
-                        <div className="text-lg font-bold">{positionLabel}</div>
-                    </div>
-                    {eventDescription && (
-                        <div className="flex flex-1 items-center gap-3">
-                            <div>
-                                <Text className="h-4 w-4" />
-                            </div>
-                            <div>{eventDescription}</div>
-                        </div>
+                    {pending ? (
+                        "Loading..."
+                    ) : state.status === 200 ? (
+                        <AlertDialogTitle>Thank you!</AlertDialogTitle>
+                    ) : (
+                        <AlertDialogTitle>
+                            You're signing up for <span className="font-bold">{eventName}</span>
+                        </AlertDialogTitle>
                     )}
-                    <div className="flex flex-1 items-center gap-3">
-                        <div>
-                            <CalendarFold className="h-4 w-4" />
-                        </div>
-                        <div>{eventDate}</div>
-                    </div>
-                    <div className="flex flex-1 items-center gap-3">
-                        <div>
-                            <Clock className="h-4 w-4" />
-                        </div>
-                        <div>
-                            {eventTimeStart} – {eventTimeEnd}
-                        </div>
-                    </div>
-                    <div className="flex flex-1 items-center gap-3">
-                        <div>
-                            <MapPin className="h-4 w-4" />
-                        </div>
-                        <div>{eventLocation}</div>
-                    </div>
-                </div>
+                </AlertDialogHeader>
+                {state.status === 200 ? <div>Checkmark</div> : children}
                 <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                    // onClick={handleSignUp}
-                    >
-                        Sign up
-                    </AlertDialogAction>
+                    {state.status === 200 ? (
+                        <AlertDialogCancel onClick={() => router.refresh()}>
+                            Close
+                        </AlertDialogCancel>
+                    ) : (
+                        <>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                                disabled={pending}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    startTransition(() => action({ shiftId, userId }));
+                                }}>
+                                Sign up
+                            </AlertDialogAction>
+                        </>
+                    )}
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
