@@ -1,6 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { has } from "~/prisma/auth";
+import { can } from "~/prisma/auth";
 import type { Event, Prisma } from "~/prisma/client";
 import { createEvent, getAllPositions } from "~/prisma/events";
 import NewEventForm from "~/components/NewEventForm";
@@ -19,7 +19,7 @@ export default async function Page() {
                 </span>
             </FullPageMessage>
         );
-    if ((await has(user.id, "events:create_new")) === false) {
+    if ((await can(user.id, "events:create_new")) === false) {
         return (
             <FullPageMessage className="items-center gap-8 pt-24">
                 <span className="text-6xl font-bold">Oops!</span>

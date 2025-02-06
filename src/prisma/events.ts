@@ -10,7 +10,7 @@ import {
     ok,
     type QueryResponse,
 } from "~/lib/queryResponses";
-import { has } from "./auth";
+import { can } from "./auth";
 
 import dayjs, { type Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -27,7 +27,7 @@ export async function createEvent(
     try {
         const user = await currentUser();
         if (!user) return forbidden("User not logged in.");
-        if ((await has(user.id, "events:create_new")) === false)
+        if ((await can(user.id, "events:create_new")) === false)
             return forbidden("User doesn't have permission to create new events.");
 
         const createdEvent = await prisma.event.create({
