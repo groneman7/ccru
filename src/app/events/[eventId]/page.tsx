@@ -127,7 +127,7 @@ export default async function Page({ params }: { params: { eventId: string } }) 
     }
 
     return (
-        <div className="flex w-2xl flex-col border-2 border-red-500 p-4">
+        <div className="page-wrapper">
             <BasicEventDetails />
             {/* Event Shifts */}
             <div className="flex flex-col divide-y px-2 py-4">
