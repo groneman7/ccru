@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, CircleMinus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -352,13 +352,13 @@ export default function NewEventForm({
                 {/* Positions Section */}
                 <div className="flex flex-col">
                     <FormLabel>Positions</FormLabel>
-                    <div className="mt-2 space-y-2">
+                    <div className="space-y-2 px-2">
                         {selectedPositions.map((pos) => (
                             <div
                                 key={pos.id}
                                 className="flex items-center gap-2">
                                 <div className="flex flex-1 items-center justify-between gap-2">
-                                    <span>{pos.label}</span>
+                                    <span className="text-sm">{pos.label}</span>
                                     <span className="text-xs text-placeholder">{pos.name}</span>
                                 </div>
                                 <Input
@@ -374,10 +374,11 @@ export default function NewEventForm({
                                     }
                                 />
                                 <Button
-                                    variant="destructive"
+                                    variant="ghost"
+                                    size="icon"
                                     type="button"
                                     onClick={() => handleRemovePosition(pos.id)}>
-                                    Remove
+                                    <CircleMinus className="h-4 w-4 text-red-600" />
                                 </Button>
                             </div>
                         ))}
