@@ -7,12 +7,11 @@ export async function can(userId: string, permission: Permission) {
     return (await clerk.users.getUser(userId)).privateMetadata.permissions?.[permission];
 }
 
-export async function canCreateEvents(userId: string): Promise<boolean> {
+export async function isAdmin(userId: string) {
     const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
+    const roleId = (await clerk.users.getUser(userId)).privateMetadata.roleId;
 
-    if (!user) return false;
-    return user.privateMetadata.permissions?.["events:create_new"] || false;
+    return ["669c092236951612dac7c52a", ""].includes(roleId) || false;
 }
 
 export async function canModifySignups(userId: string): Promise<boolean> {
