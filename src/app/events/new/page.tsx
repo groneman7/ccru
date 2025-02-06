@@ -44,7 +44,6 @@ export default async function Page() {
             message,
         } = await createEvent(payload, positions).then((res) => res);
         if (status === 201) {
-            // toast.success("Event created!");
             redirect(`/events/${event.id}`);
         }
     }
