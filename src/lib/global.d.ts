@@ -3,6 +3,16 @@ declare global {
     //       [k: string]: unknown;
     //   }
 
+    interface UserToRender {
+        id: string;
+        firstName: string;
+        lastName: string;
+        username: string;
+        email?: string;
+        imageUrl?: string;
+        phoneNumber?: string;
+    }
+
     export type Permission =
         | "events:create_new"
         | "events:modify_signup"
@@ -23,4 +33,4 @@ declare global {
     }
 }
 
-export { type UserPublicMetadata, type UserPrivateMetadata };
+export { type UserPublicMetadata, type UserPrivateMetadata, type UserToRender };
