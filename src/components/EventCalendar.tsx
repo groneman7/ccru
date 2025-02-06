@@ -17,6 +17,7 @@ import {
 } from "./ui/context-menu";
 
 interface CalendarProps {
+    canCreateEvents?: boolean;
     canEdit?: boolean;
     events?: Event[];
     initialDate?: Dayjs;
@@ -26,6 +27,7 @@ interface CalendarProps {
 }
 
 export function EventCalendar({
+    canCreateEvents,
     canEdit,
     events,
     initialDate,
@@ -95,6 +97,13 @@ export function EventCalendar({
                     </Button>
                 </div>
                 <h2 className="text-2xl font-bold">{selectedMonth.format("MMMM YYYY")}</h2>
+                {canCreateEvents && (
+                    <div className="flex flex-1 justify-end">
+                        <Link href="/events/new">
+                            <Button>New Event</Button>
+                        </Link>
+                    </div>
+                )}
             </div>
         );
     }
@@ -123,7 +132,7 @@ export function EventCalendar({
 
     function WeekdayHeaders() {
         return (
-            <div className="grid grid-cols-7">
+            <div className="grid grid-cols-7 border-b border-secondary">
                 {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                     <div
                         key={day}
