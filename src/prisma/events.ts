@@ -153,10 +153,7 @@ export async function getPositionById(
 
 // Shifts
 
-export async function assignUserToShift(
-    shiftId: string,
-    userId: string
-): Promise<QueryResponse<EventShift>> {
+export async function assignUserToShift(shiftId: string, userId: string | null) {
     try {
         const shift = await prisma.eventShift.update({
             where: { id: shiftId },
@@ -197,20 +194,6 @@ export async function createShift(
             if (!shifts) return internalServerError("Error creating shifts.");
             return created(shifts.count);
         }
-    } catch (ex) {
-        return internalServerError(ex as string);
-    }
-}
-
-export async function removeUserFromShift(shiftId: string): Promise<QueryResponse<EventShift>> {
-    try {
-        const shift = await prisma.eventShift.update({
-            where: { id: shiftId },
-            data: { user: null },
-        });
-        if (!shift) return notFound();
-
-        return ok(shift);
     } catch (ex) {
         return internalServerError(ex as string);
     }
