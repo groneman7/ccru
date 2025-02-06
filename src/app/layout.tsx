@@ -22,9 +22,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <CSPostHogProvider>
                     <body className="flex h-dvh flex-col">
                         <Navbar />
-                        <div className="flex flex-1 justify-center border-2 border-green-500">
-                            {children}
-                        </div>
+                        <div className="flex flex-1 justify-center">{children}</div>
                         <Toaster richColors />
                     </body>
                 </CSPostHogProvider>
