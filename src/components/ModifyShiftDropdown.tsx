@@ -41,7 +41,10 @@ type ModifyDropdownProps = {
     isMe?: boolean;
     shiftId: string;
     userAssigned?: { id: string; firstName: string; lastName: string };
-    onAssignAction: (state, payload) => any;
+    onAssignAction: (
+        state: { status: number | null; message: string | null },
+        payload: { shiftId: string; userId: string | null }
+    ) => any;
 };
 
 export default function ModifyShiftDropdown({
@@ -53,9 +56,10 @@ export default function ModifyShiftDropdown({
     onAssignAction,
 }: ModifyDropdownProps) {
     const router = useRouter();
+    const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const [state, action, pending] = useActionState<
         { status: number | null; message: string | null },
-        { shiftId: string; userId: string }
+        { shiftId: string; userId: string | null }
     >(onAssignAction, {
         status: null,
         message: null,
@@ -68,9 +72,6 @@ export default function ModifyShiftDropdown({
             router.refresh();
         }
     }, [state]);
-
-    const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-    // const [assignOpen, setAssignOpen] = useState<boolean>(false);
 
     return (
         <DropdownMenu
@@ -86,8 +87,13 @@ export default function ModifyShiftDropdown({
             <DropdownMenuContent align="end">
                 {isMe ? (
                     <>
-                        <DropdownMenuItem>Cancel</DropdownMenuItem>
-                        <DropdownMenuItem>Swap</DropdownMenuItem>
+                        <DropdownMenuItem disabled>Request swap...</DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() =>
+                                startTransition(() => action({ shiftId, userId: null }))
+                            }>
+                            Remove me
+                        </DropdownMenuItem>
                     </>
                 ) : (
                     canModifySignups && (
@@ -108,7 +114,14 @@ export default function ModifyShiftDropdown({
                                 render={(option) => `${option.firstName} ${option.lastName}`}>
                                 {userAssigned ? "Reassign" : "Assign"}
                             </DropdownCombobox>
-                            <DropdownMenuItem>Remove</DropdownMenuItem>
+                            {userAssigned && (
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        startTransition(() => action({ shiftId, userId: null }))
+                                    }>
+                                    Remove
+                                </DropdownMenuItem>
+                            )}
                         </>
                     )
                 )}
