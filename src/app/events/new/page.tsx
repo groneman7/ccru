@@ -4,11 +4,32 @@ import { has } from "~/prisma/auth";
 import type { Event, Prisma } from "~/prisma/client";
 import { createEvent, getAllPositions } from "~/prisma/events";
 import NewEventForm from "~/components/NewEventForm";
+import ActivityTitle from "~/components/ActivityTitle";
+import FullPageMessage from "~/components/FullPageMessage";
 
 export default async function Page() {
     const user = await currentUser();
-    if (!user || (await has(user.id, "events:create_new")) === false) {
-        return <div>You don't have access to create new events.</div>;
+    if (!user)
+        return (
+            <FullPageMessage className="items-center gap-8 pt-24">
+                <span className="text-6xl font-bold">Oops!</span>
+                <span className="text-center text-xl/8">
+                    It looks like you aren't signed in. Please sign in or contact a{" "}
+                    <span className="font-semibold">Student Scheduler</span> for new events.
+                </span>
+            </FullPageMessage>
+        );
+    if ((await has(user.id, "events:create_new")) === false) {
+        return (
+            <FullPageMessage className="items-center gap-8 pt-24">
+                <span className="text-6xl font-bold">Oops!</span>
+                <span className="text-center text-xl/8">
+                    It looks like you don't have access to create new events. Please sign in or
+                    contact a <span className="font-semibold">Student Scheduler</span> for new
+                    events.
+                </span>
+            </FullPageMessage>
+        );
     }
 
     async function createEventAction(
@@ -23,6 +44,7 @@ export default async function Page() {
             message,
         } = await createEvent(payload, positions).then((res) => res);
         if (status === 201) {
+            // toast.success("Event created!");
             redirect(`/events/${event.id}`);
         }
     }
@@ -30,8 +52,8 @@ export default async function Page() {
     const { data: positionList } = await getAllPositions().then((res) => res);
 
     return (
-        <div className="flex flex-col gap-6 p-4">
-            <span className="text-2xl font-semibold">Create a new event</span>
+        <div className="page-wrapper">
+            <ActivityTitle>Create New Event</ActivityTitle>
             <NewEventForm
                 currentUserId={user.id}
                 positionList={positionList || []}
