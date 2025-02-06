@@ -8,6 +8,12 @@ export type UserList = {
     username: string;
 }[];
 
+export async function getAllUsers() {
+    const clerk = await clerkClient();
+    const users = await clerk.users.getUserList({ limit: 500 });
+    return users.data;
+}
+
 export async function getUserListForAssignments(): Promise<UserList> {
     const clerk = await clerkClient();
     const users = await clerk.users.getUserList({ limit: 500 });
