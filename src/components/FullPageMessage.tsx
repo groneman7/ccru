@@ -8,5 +8,5 @@ export default function FullPageMessage({
     children: ReactNode;
     className?: string;
 }) {
-    return <div className={cn("page-wrapper self-center", className)}>{children}</div>;
+    return <div className={cn("page-wrapper", className)}>{children}</div>;
 }
