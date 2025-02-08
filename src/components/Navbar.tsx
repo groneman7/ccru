@@ -1,19 +1,9 @@
 import Link from "next/link";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { currentUser } from "@clerk/nextjs/server";
-import { Button } from "./ui/button";
-
-function AdminButton() {
-    return (
-        <Link href="/admin">
-            <Button>Administrator Settings</Button>
-        </Link>
-    );
-}
+import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { Button } from "~/components/ui/button";
+import ClientUserButton from "~/components/ClientUserButton";
 
 export default async function Navbar() {
-    const user = await currentUser();
-
     return (
         <nav className="flex items-center gap-4 border-b p-4">
             <Link
@@ -44,10 +34,7 @@ export default async function Navbar() {
                 </SignedOut>
                 <SignedIn>
                     <div className="flex items-center gap-4">
-                        {user?.privateMetadata?.roleId === "669c092236951612dac7c52a" ? (
-                            <AdminButton />
-                        ) : null}
-                        <UserButton />
+                        <ClientUserButton />
                     </div>
                 </SignedIn>
             </div>
