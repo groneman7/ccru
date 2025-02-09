@@ -1,3 +1,5 @@
+import { UserRole } from "~/prisma/client";
+
 declare global {
     // interface UserPublicMetadata {
     //       [k: string]: unknown;
@@ -11,6 +13,9 @@ declare global {
         email?: string;
         imageUrl?: string;
         phoneNumber?: string;
+        role?: UserRole;
+        type?: UserType;
+        officerTypeId?: string;
     }
 
     export type Permission =
