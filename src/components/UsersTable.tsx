@@ -19,7 +19,7 @@ import {
 import { Checkbox } from "~/components/ui/checkbox";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { X } from "lucide-react";
+import { SearchIcon, X } from "lucide-react";
 
 type UsersTableProps = {
     data: UserToRender[];
@@ -123,7 +123,12 @@ export default function UsersTable({
                     <Button variant="secondary">Sort</Button>
                     <Button variant="secondary">Columns</Button>
                 </div>
-                <Input placeholder="Search users" />
+                <Input
+                    className="w-60 transition-[width] duration-150 placeholder-shown:w-36 placeholder-shown:transition-[width] placeholder-shown:duration-150 focus:w-60"
+                    iconLeft={<SearchIcon />}
+                    placeholder="Search users"
+                    variant="ghost"
+                />
             </div>
             <DataTable
                 // data={data}
@@ -131,25 +136,26 @@ export default function UsersTable({
                 table={table}
                 snackbar={
                     <>
-                        <span className="mr-2 ml-1">
+                        <span>
                             <span className="font-semibold">
                                 {table.getSelectedRowModel().rows.length}
                             </span>{" "}
                             selected
                         </span>
-                        <div className="flex gap-2">
+                        <div className="flex flex-1 gap-2">
                             <Select
-                                onValueChange={(value) =>
-                                    startTransition(() =>
-                                        roleAction({
-                                            userId: table
-                                                .getSelectedRowModel()
-                                                .rows.map((row) => row.original.id),
-                                            roleId: value,
-                                        })
-                                    )
-                                }>
-                                <SelectTrigger className="w-auto">
+                            // onValueChange={(value) =>
+                            //     startTransition(() =>
+                            //         roleAction({
+                            //             userId: table
+                            //                 .getSelectedRowModel()
+                            //                 .rows.map((row) => row.original.id),
+                            //             roleId: value,
+                            //         })
+                            //     )
+                            // }
+                            >
+                                <SelectTrigger className="w-36">
                                     <SelectValue placeholder="Change Role" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -163,17 +169,18 @@ export default function UsersTable({
                                 </SelectContent>
                             </Select>
                             <Select
-                                onValueChange={(value) =>
-                                    startTransition(() =>
-                                        typeAction({
-                                            userId: table
-                                                .getSelectedRowModel()
-                                                .rows.map((row) => row.original.id),
-                                            typeId: value,
-                                        })
-                                    )
-                                }>
-                                <SelectTrigger className="w-auto">
+                            // onValueChange={(value) =>
+                            //     startTransition(() =>
+                            //         typeAction({
+                            //             userId: table
+                            //                 .getSelectedRowModel()
+                            //                 .rows.map((row) => row.original.id),
+                            //             typeId: value,
+                            //         })
+                            //     )
+                            // }
+                            >
+                                <SelectTrigger className="w-36">
                                     <SelectValue placeholder="Change Type" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -187,6 +194,8 @@ export default function UsersTable({
                                 </SelectContent>
                             </Select>
                             <Button variant="secondary">Suspend</Button>
+                            <Button variant="secondary">Suspend</Button>
+                            <Button variant="secondary">Suspend</Button>
                         </div>
                         <Button
                             onClick={() => table.setRowSelection({})}
@@ -196,7 +205,7 @@ export default function UsersTable({
                         </Button>
                     </>
                 }
-                snackbarClassName="select-none flex items-center justify-center gap-2 p-2 drop-shadow-2xl w-auto min-w-96"
+                snackbarClassName="select-none flex items-center justify-center gap-4 py-2 px-4 drop-shadow-2xl"
             />
         </div>
     );

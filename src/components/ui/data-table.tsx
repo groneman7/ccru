@@ -26,7 +26,7 @@ function TableSnackbar({ children, className, open }: TableSnackbarProps) {
             open={open}
             modal={false}>
             <DialogContent
-                className={cn("top-[unset] bottom-32", className)}
+                className={cn("bottom-32 top-[unset]", className)}
                 hideClose
                 onEscapeKeyDown={(e) => e.preventDefault()}
                 onInteractOutside={(e) => e.preventDefault()}>
