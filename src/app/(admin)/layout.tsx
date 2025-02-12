@@ -1,6 +1,13 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { Metadata } from "next";
 import FullPageMessage from "~/components/FullPageMessage";
 import { isAdmin } from "~/prisma/auth";
+
+export const metadata: Metadata = {
+    title: "CCRU | Admin",
+    description: "Welcome to CCRU.",
+    icons: [{ rel: "icon", url: "/ccru.svg" }],
+};
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
     const me = await currentUser();
