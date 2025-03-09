@@ -113,9 +113,11 @@ export async function getEventById(eventId: string) {
 
 // Positions
 
-export async function getAllPositions(): Promise<QueryResponse<EventPosition[]>> {
+export async function getAllPositions() {
     try {
-        const positions = await prisma.eventPosition.findMany();
+        const positions = await prisma.eventPosition.findMany({
+            include: { allowed_user_types: true },
+        });
 
         return ok(positions);
     } catch (ex) {
@@ -123,9 +125,7 @@ export async function getAllPositions(): Promise<QueryResponse<EventPosition[]>>
     }
 }
 
-export async function getPositionById(
-    positionId: string | string[]
-): Promise<QueryResponse<EventPosition | EventPosition[]>> {
+export async function getPositionById(positionId: string | string[]) {
     try {
         if (typeof positionId === "string") {
             const position = await prisma.eventPosition.findUnique({
