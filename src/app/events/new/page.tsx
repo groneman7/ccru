@@ -48,7 +48,13 @@ export default async function Page() {
         }
     }
 
-    const { data: positionList } = await getAllPositions().then((res) => res);
+    const positionList = await getAllPositions().then((res) =>
+        res.data?.sort((a, b) => {
+            const aKey = a.label ?? a.name;
+            const bKey = b.label ?? b.name;
+            return aKey.localeCompare(bKey);
+        })
+    );
 
     return (
         <div className="page-wrapper">
