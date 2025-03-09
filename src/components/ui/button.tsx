@@ -18,7 +18,7 @@ const buttonVariants = cva(
                 outline:
                     "border border-input bg-background hover:bg-accent hover:text-accent-foreground hover:border-accent active:bg-accent-hover",
                 secondary:
-                    "bg-secondary text-secondary-foreground hover:bg-secondary-interaction/50 active:bg-secondary-interaction/75",
+                    "bg-secondary text-secondary-foreground hover:bg-secondary-interaction/50 active:bg-secondary-interaction",
                 ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent-hover",
                 link: "text-link underline-offset-2 hover:underline !px-1 !py-0 -ml-1",
                 daypicker:
