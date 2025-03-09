@@ -28,7 +28,7 @@ model EventShift {
 
 // Model for the templates of events hosted by CCRU.
 model EventTemplate {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  id          String                  @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String?
   location    String?
@@ -41,19 +41,20 @@ model EventTemplate {
 }
 
 type PositionsForTemplates {
-    positionId String
-    quantity Int
+  positionId String
+  quantity   Int
 }
 
 // Model for the positions of event shifts (e.g., triage, interviewer, etc.).
 model EventPosition {
-  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
-  name               String
-  label              String?
-  description        String?
-  allowed_user_types String[]
-  officer_only       Boolean?        @default(false)
-  EventShift         EventShift[]
+  id                    String       @id @default(auto()) @map("_id") @db.ObjectId
+  name                  String
+  label                 String?
+  description           String?
+  allowed_user_types    UserType[]   @relation(fields: [allowed_user_types_id], references: [id])
+  allowed_user_types_id String[]     @db.ObjectId
+  officer_only          Boolean?     @default(false)
+  EventShift            EventShift[]
 
   @@map("EVENT_POSITIONS")
 }

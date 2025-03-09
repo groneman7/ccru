@@ -25,9 +25,11 @@ model UserRole {
 
 // Model for the types of users (e.g., medical student, undergraduate, MD/DO, etc.).
 model UserType {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  label       String
-  description String?
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  label             String
+  description       String?
+  event_position    EventPosition[] @relation(fields: [event_position_id], references: [id])
+  event_position_id String[]        @db.ObjectId
 
   @@map("USER_TYPES")
 }
