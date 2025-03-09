@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { cn } from "~/lib/utils";
-import { EventPosition } from "~/prisma/client";
+import { EventPosition, UserType } from "~/prisma/client";
 
 type PositionsSettingsProps = {
-    positions: EventPosition[];
+    positions: (EventPosition & { allowed_user_types: UserType[] })[];
 };
 
 export default function PositionsSettings({ positions }: PositionsSettingsProps) {
-    const [selectedPosition, setSelectedPosition] = useState<EventPosition | null>(null);
+    const [selectedPosition, setSelectedPosition] = useState<
+        (EventPosition & { allowed_user_types: UserType[] }) | null
+    >(null);
 
     return (
         <div className="flex gap-4 px-4">
@@ -34,6 +36,21 @@ export default function PositionsSettings({ positions }: PositionsSettingsProps)
                     {selectedPosition.label && (
                         <span className="text-lg font-semibold">{selectedPosition.label}</span>
                     )}
+                    <div>
+                        <span>Allowed user types</span>
+                        <div className="px-2">
+                            {selectedPosition.allowed_user_types.map((userType) => (
+                                <div
+                                    key={userType.id}
+                                    className="flex items-center gap-2">
+                                    <span>{userType.label}</span>
+                                    <button className="text-red-500 hover:text-red-700">
+                                        Remove
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
