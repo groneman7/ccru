@@ -10,7 +10,7 @@ import {
     ok,
     type QueryResponse,
 } from "~/lib/queryResponses";
-import { can } from "./auth";
+import { can, canSignUp } from "./auth";
 
 import dayjs, { type Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -153,15 +153,49 @@ export async function getPositionById(positionId: string | string[]) {
 
 // Shifts
 
-export async function assignUserToShift(shiftId: string, userId: string | null) {
+export async function assignUserToShift(
+    shiftId: string,
+    userId: string | null,
+    override?: boolean,
+    overrideMessage?: string
+) {
     try {
-        const shift = await prisma.eventShift.update({
+        const shift = await prisma.eventShift.findUnique({
             where: { id: shiftId },
-            data: { user: userId },
         });
         if (!shift) return notFound();
 
-        return ok(shift);
+        // 1. If userId is null, then we're just removing the current assigned user.
+        if (!userId) {
+            const updated = await prisma.eventShift.update({
+                where: { id: shiftId },
+                data: { user: userId },
+            });
+            return ok(updated);
+        }
+
+        // 2. If override is true, then we're overriding whatever reason the user can't sign up.
+        if (override) {
+            // TODO: Add override message.
+            const updated = await prisma.eventShift.update({
+                where: { id: shiftId },
+                data: { user: userId },
+            });
+            return ok(updated);
+        }
+
+        // 3. Check if user can sign up for the shift
+        const allowed = await canSignUp(shift.eventId, shift.positionId, userId).then(
+            (res) => res
+        );
+        if (!allowed.value) return forbidden(allowed.message);
+
+        const updated = await prisma.eventShift.update({
+            where: { id: shiftId },
+            data: { user: userId },
+        });
+
+        return ok(updated);
     } catch (ex) {
         return internalServerError(ex as string);
     }

@@ -1,6 +1,7 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { getEventById, getPositionById } from "~/prisma/events";
 import { EventPosition } from "~/prisma/client";
+import { getUserTypeById } from "./users";
 
 export async function can(userId: string, permission: Permission) {
     const clerk = await clerkClient();
@@ -38,7 +39,10 @@ export async function canSignUp(
 
     if (!position) return { value: false, message: "Position not found." }; // This really shouldn't happen. Maybe we can log it somewhere to see if it does.
     if (!position["allowed_user_types_id"]?.includes(user.privateMetadata.typeId))
-        return { value: false, message: "User type not allowed." };
+        return {
+            value: false,
+            message: `User type not allowed. User is type ${await getUserTypeById(user.privateMetadata.typeId).then((res) => res.data?.label)} but expected type ${await Promise.all(position["allowed_user_types_id"].map((typeId) => getUserTypeById(typeId).then((res) => res.data?.label))).then((res) => res.join(", "))}.`,
+        };
 
     if (position["officer_only"] && user.privateMetadata.roleId !== OFFICER_ROLE_ID)
         return { value: false, message: "User not officer." };
