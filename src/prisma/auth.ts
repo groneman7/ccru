@@ -28,6 +28,8 @@ export async function canSignUp(
     positionId: string,
     userId: string
 ): Promise<{ value: boolean; message?: string }> {
+    const OFFICER_ROLE_ID = "669c092236951612dac7c529";
+
     const clerk = await clerkClient();
     const user = await clerk.users.getUser(userId);
     const position = (await getPositionById(positionId).then(
@@ -35,8 +37,11 @@ export async function canSignUp(
     )) as EventPosition;
 
     if (!position) return { value: false, message: "Position not found." }; // This really shouldn't happen. Maybe we can log it somewhere to see if it does.
-    if (!position["allowed_user_types"]?.includes(user.privateMetadata.typeId))
+    if (!position["allowed_user_types_id"]?.includes(user.privateMetadata.typeId))
         return { value: false, message: "User type not allowed." };
+
+    if (position["officer_only"] && user.privateMetadata.roleId !== OFFICER_ROLE_ID)
+        return { value: false, message: "User not officer." };
 
     const event = await getEventById(eventId).then((res) => res.data);
     if (!event) return { value: false, message: "Event not found." }; // This really shouldn't happen. Maybe we can log it somewhere to see if it does.
