@@ -1,6 +1,6 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { prisma } from "~/lib/prisma";
-import { internalServerError, ok } from "~/lib/queryResponses";
+import { internalServerError, notFound, ok } from "~/lib/queryResponses";
 
 // Roles
 
@@ -54,6 +54,21 @@ export async function getUserNameAndSuffix(userId: string): Promise<string> {
     }
     const suffix = user.privateMetadata.suffix;
     return `${user.firstName} ${user.lastName}${suffix ? `, ${suffix}` : ""}`;
+}
+
+export async function getUserTypeById(typeId: string) {
+    try {
+        const type = await prisma.userType.findUnique({
+            where: {
+                id: typeId,
+            },
+        });
+        if (!type) return notFound();
+
+        return ok(type);
+    } catch (ex) {
+        return internalServerError(ex as string);
+    }
 }
 
 export async function setUserRole(userId: string | string[], roleId: string) {
