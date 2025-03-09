@@ -20,7 +20,6 @@ const buttonVariants = cva(
                 secondary:
                     "bg-secondary text-secondary-foreground hover:bg-secondary-interaction/50 active:bg-secondary-interaction",
                 ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent-hover",
-                link: "text-link underline-offset-2 hover:underline !px-1 !py-0 -ml-1",
                 daypicker:
                     "bg-form-control border border-input focus:border-blue-400 hover:border-blue-400 data-[date-picker=open]:ring-4 data-[date-picker=open]:border-blue-400",
                 autoselect:

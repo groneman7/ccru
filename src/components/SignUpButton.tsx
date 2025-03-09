@@ -50,7 +50,9 @@ export default function SignUpButton({
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="link">Sign up</Button>
+                <div className="text-link -ml-1 cursor-pointer !px-1 !py-0 underline-offset-2 hover:underline">
+                    Sign up
+                </div>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
