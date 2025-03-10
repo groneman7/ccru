@@ -152,13 +152,21 @@ export async function getPositionById(positionId: string | string[]) {
 }
 
 // Shifts
-
-export async function assignUserToShift(
-    shiftId: string,
-    userId: string | null,
-    override?: boolean,
-    overrideMessage?: string
-) {
+export type AssignUserToShiftPayload = {
+    shiftId: string;
+    userId: string | null;
+    override?:
+        | false
+        | {
+              reason: string;
+              comments?: string;
+          };
+};
+export async function assignUserToShift({
+    shiftId,
+    userId,
+    override, // TODO: Add override to db.
+}: AssignUserToShiftPayload) {
     try {
         const shift = await prisma.eventShift.findUnique({
             where: { id: shiftId },

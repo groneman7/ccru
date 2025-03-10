@@ -1,6 +1,6 @@
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { canModifySignups, canSignUp } from "~/prisma/auth";
-import { assignUserToShift, getEventById } from "~/prisma/events";
+import { assignUserToShift, AssignUserToShiftPayload, getEventById } from "~/prisma/events";
 import SignUpButton from "~/components/SignUpButton";
 import ModifyShiftDropdown from "~/components/ModifyShiftDropdown";
 import { cn } from "~/lib/utils";
@@ -65,23 +65,17 @@ export default async function Page({ params }: { params: { eventId: string } }) 
           )
         : [];
 
-    async function assignUserAction(
-        _: any,
-        payload: { shiftId: string; userId: string | null }
-    ) {
+    async function assignUserAction(_: any, payload: AssignUserToShiftPayload) {
         "use server";
 
-        const { data, message, status } = await assignUserToShift(
-            payload.shiftId,
-            payload.userId
-        ).then((res) => res);
-        console.log(status, message, data);
-        return { status, message };
+        const { data, message, status } = await assignUserToShift(payload).then((res) => res);
+        // console.log(status, message, data);
+        return { status, message, userId: payload.userId };
     }
 
     function PageWrapper({ children }: { children: ReactNode }) {
         return (
-            <div className="flex w-2xl flex-col border-2 border-red-500 p-4">{children}</div>
+            <div className="w-2xl flex flex-col border-2 border-red-500 p-4">{children}</div>
         );
     }
 
