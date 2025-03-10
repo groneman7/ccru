@@ -26,7 +26,7 @@ function TableSnackbar({ children, className, open }: TableSnackbarProps) {
             open={open}
             modal={false}>
             <DialogContent
-                className={cn("bottom-32 top-[unset]", className)}
+                className={cn("translate-[unset] sticky bottom-4 left-0 mx-auto", className)}
                 hideClose
                 onEscapeKeyDown={(e) => e.preventDefault()}
                 onInteractOutside={(e) => e.preventDefault()}>
@@ -51,7 +51,7 @@ export default function DataTable<TData extends { id: string }, TValue>({
     table,
 }: DataTableProps<TData, TValue>) {
     return (
-        <>
+        <div className="relative">
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -107,6 +107,6 @@ export default function DataTable<TData extends { id: string }, TValue>({
                     {snackbar}
                 </TableSnackbar>
             )}
-        </>
+        </div>
     );
 }
