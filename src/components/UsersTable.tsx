@@ -5,7 +5,9 @@ import { UserRole, UserType } from "~/prisma/client";
 import {
     ColumnDef,
     getCoreRowModel,
+    getSortedRowModel,
     RowSelectionState,
+    SortingState,
     useReactTable,
 } from "@tanstack/react-table";
 import DataTable from "~/components/ui/data-table";
@@ -63,13 +65,13 @@ export default function UsersTable({
             id: "select",
             header: ({ table }) => (
                 <div className="pl-2">
-                    <Checkbox
+                    {/* <Checkbox
                         checked={
                             table.getIsAllPageRowsSelected() ||
                             (table.getIsSomePageRowsSelected() && "indeterminate")
                         }
                         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                    />
+                    /> */}
                 </div>
             ),
             cell: ({ row }) => (
@@ -83,12 +85,26 @@ export default function UsersTable({
         },
         {
             accessorKey: "firstName",
-            header: () => <div className="font-bold">First Name</div>,
+            header: ({ column }) => (
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    First Name
+                </Button>
+            ),
             enableSorting: true,
         },
         {
             accessorKey: "lastName",
-            header: "Last Name",
+            header: ({ column }) => (
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Last Name
+                </Button>
+            ),
         },
         {
             accessorKey: "role",
@@ -101,6 +117,7 @@ export default function UsersTable({
             cell: ({ row }) => row.original.type?.label,
         },
     ]);
+    const [sorting, setSorting] = useState<SortingState>([{ id: "firstName", desc: false }]);
 
     const table = useReactTable({
         columns,
@@ -108,20 +125,40 @@ export default function UsersTable({
         enableMultiRowSelection: true,
         state: {
             rowSelection,
+            sorting,
         },
         getCoreRowModel: getCoreRowModel(),
         getRowId: (row) => row.id,
+        getSortedRowModel: getSortedRowModel(),
         onRowSelectionChange: setRowSelection,
+        onSortingChange: setSorting,
     });
 
     return (
         <div className="flex flex-col gap-2">
             <div className="flex justify-between gap-4">
-                <div className="flex gap-2">
+                <div className="flex items-center gap-2">
                     <Button>New User</Button>
-                    <Button variant="secondary">Filter</Button>
-                    <Button variant="secondary">Sort</Button>
-                    <Button variant="secondary">Columns</Button>
+                    <Button
+                        size="sm"
+                        variant="secondary">
+                        Filter
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="secondary">
+                        Group
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="secondary">
+                        Sort
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="secondary">
+                        Columns
+                    </Button>
                 </div>
                 <Input
                     className="w-60 transition-[width] duration-150 placeholder-shown:w-36 placeholder-shown:transition-[width] placeholder-shown:duration-150 focus:w-60"
