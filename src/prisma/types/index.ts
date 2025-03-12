@@ -83,8 +83,8 @@ export const EventTemplateSchema = z.object({
   name: z.string(),
   description: z.string().nullable(),
   location: z.string().nullable(),
-  time_start: z.coerce.date().nullable(),
-  time_end: z.coerce.date().nullable(),
+  time_start: z.string().nullable(),
+  time_end: z.string().nullable(),
 })
 
 export type EventTemplate = z.infer<typeof EventTemplateSchema>
@@ -656,8 +656,8 @@ export const EventTemplateWhereInputSchema: z.ZodType<Prisma.EventTemplateWhereI
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  time_start: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  time_end: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_start: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  time_end: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   positions: z.union([ z.lazy(() => PositionsForTemplatesCompositeListFilterSchema),z.lazy(() => PositionsForTemplatesObjectEqualityInputSchema).array() ]).optional(),
 }).strict();
 
@@ -682,8 +682,8 @@ export const EventTemplateWhereUniqueInputSchema: z.ZodType<Prisma.EventTemplate
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  time_start: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  time_end: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_start: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  time_end: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   positions: z.union([ z.lazy(() => PositionsForTemplatesCompositeListFilterSchema),z.lazy(() => PositionsForTemplatesObjectEqualityInputSchema).array() ]).optional(),
 }).strict());
 
@@ -707,8 +707,8 @@ export const EventTemplateScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma
   name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   location: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  time_start: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
-  time_end: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
+  time_start: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  time_end: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const EventPositionWhereInputSchema: z.ZodType<Prisma.EventPositionWhereInput> = z.object({
@@ -1384,8 +1384,8 @@ export const EventTemplateCreateInputSchema: z.ZodType<Prisma.EventTemplateCreat
   name: z.string(),
   description: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  time_start: z.coerce.date().optional().nullable(),
-  time_end: z.coerce.date().optional().nullable(),
+  time_start: z.string().optional().nullable(),
+  time_end: z.string().optional().nullable(),
   positions: z.union([ z.lazy(() => PositionsForTemplatesListCreateEnvelopeInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema).array() ]).optional(),
 }).strict();
 
@@ -1394,8 +1394,8 @@ export const EventTemplateUncheckedCreateInputSchema: z.ZodType<Prisma.EventTemp
   name: z.string(),
   description: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  time_start: z.coerce.date().optional().nullable(),
-  time_end: z.coerce.date().optional().nullable(),
+  time_start: z.string().optional().nullable(),
+  time_end: z.string().optional().nullable(),
   positions: z.union([ z.lazy(() => PositionsForTemplatesListCreateEnvelopeInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema).array() ]).optional(),
 }).strict();
 
@@ -1403,8 +1403,8 @@ export const EventTemplateUpdateInputSchema: z.ZodType<Prisma.EventTemplateUpdat
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_start: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   positions: z.union([ z.lazy(() => PositionsForTemplatesListUpdateEnvelopeInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema).array() ]).optional(),
 }).strict();
 
@@ -1412,8 +1412,8 @@ export const EventTemplateUncheckedUpdateInputSchema: z.ZodType<Prisma.EventTemp
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_start: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   positions: z.union([ z.lazy(() => PositionsForTemplatesListUpdateEnvelopeInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema).array() ]).optional(),
 }).strict();
 
@@ -1422,8 +1422,8 @@ export const EventTemplateCreateManyInputSchema: z.ZodType<Prisma.EventTemplateC
   name: z.string(),
   description: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  time_start: z.coerce.date().optional().nullable(),
-  time_end: z.coerce.date().optional().nullable(),
+  time_start: z.string().optional().nullable(),
+  time_end: z.string().optional().nullable(),
   positions: z.union([ z.lazy(() => PositionsForTemplatesListCreateEnvelopeInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema).array() ]).optional(),
 }).strict();
 
@@ -1431,8 +1431,8 @@ export const EventTemplateUpdateManyMutationInputSchema: z.ZodType<Prisma.EventT
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_start: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   positions: z.union([ z.lazy(() => PositionsForTemplatesListUpdateEnvelopeInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema).array() ]).optional(),
 }).strict();
 
@@ -1440,8 +1440,8 @@ export const EventTemplateUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Event
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  time_start: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  time_end: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_start: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  time_end: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   positions: z.union([ z.lazy(() => PositionsForTemplatesListUpdateEnvelopeInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema),z.lazy(() => PositionsForTemplatesCreateInputSchema).array() ]).optional(),
 }).strict();
 

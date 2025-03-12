@@ -32,8 +32,8 @@ model EventTemplate {
   name        String
   description String?
   location    String?
-  time_start  DateTime?
-  time_end    DateTime?
+  time_start  String?
+  time_end    String?
   positions   PositionsForTemplates[]
 
   @@index([name])
