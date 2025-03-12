@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, CircleMinus } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -21,40 +21,40 @@ import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Autocomplete } from "~/components/ui/autocomplete";
-import type { Event, EventPosition, EventShift, Prisma } from "~/prisma/client";
+import type { EventPosition, EventShift, Prisma } from "~/prisma/client";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { createEventTemplate } from "~/prisma/events";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const FormSchema = z.object({
-    name: z.string().nonempty({ message: "Event name is required." }),
-    event_date: z.date({
-        required_error: "Event date is required.",
-    }),
+    name: z.string().nonempty({ message: "Template name is required." }),
     time_start: z.string().optional(),
     time_end: z.string().optional(),
     description: z.string().optional(),
     location: z.string().optional(),
 });
 
-type EventFormProps = {
-    currentUserId: string;
+type EventTemplateFormProps = {
     positionList: EventPosition[];
-    onSubmitAction: (
-        event: Omit<Prisma.EventCreateInput, "created_by">,
-        positions: string[]
-    ) => Promise<void>;
+    onSuccess?: () => void;
 };
 
-export default function NewEventForm({
-    currentUserId,
+export default function NewEventTemplateForm({
     positionList,
-    onSubmitAction,
-}: EventFormProps) {
-    const [datePickerOpen, setDatePickerOpen] = useState<boolean>(false);
+    onSuccess,
+}: EventTemplateFormProps) {
+    const [state, action, pending] = useActionState(createEventTemplate, null);
+
+    useEffect(() => {
+        if (state?.status === 201) {
+            onSuccess && onSuccess();
+        }
+    }, [state]);
+
     const [selectedPositions, setSelectedPositions] = useState<
         {
             id: string;
@@ -69,7 +69,6 @@ export default function NewEventForm({
         resolver: zodResolver(FormSchema),
         defaultValues: {
             name: "",
-            event_date: undefined,
             time_start: "",
             time_end: "",
             description: "",
@@ -77,37 +76,22 @@ export default function NewEventForm({
         },
     });
 
-    // onSubmit: convert local times to UTC + post.
     function onSubmit(data: z.infer<typeof FormSchema>) {
-        const { name, event_date, time_start, time_end, description, location } = data;
+        const { name, time_start, time_end, description, location } = data;
 
-        // interpret event_date in local TZ => store as UTC date
-        const dateUTC = dayjs(event_date).tz("America/New_York", true).utc().toDate();
-
-        const startUTC = time_start
-            ? combineDateAndTimeToUTC(event_date!, time_start)
-            : undefined;
-        const endUTC = time_end ? combineDateAndTimeToUTC(event_date!, time_end) : undefined;
-
-        // Build the "shifts" array. If quantity > 1, we repeat that item.
-        const positions = selectedPositions.flatMap((pos) => {
-            const shiftArray = [];
-            for (let i = 0; i < pos.quantity; i++) {
-                shiftArray.push(pos.id);
-            }
-            return shiftArray;
-        });
-
-        const payload: Omit<Prisma.EventCreateInput, "created_by"> = {
+        const payload: Prisma.EventTemplateCreateInput = {
             name,
-            date: dateUTC,
             description: description || null,
             location: location || null,
-            time_start: startUTC ?? null,
-            time_end: endUTC ?? null,
+            time_start,
+            time_end,
+            positions: selectedPositions.map((pos) => ({
+                positionId: pos.id,
+                quantity: pos.quantity,
+            })),
         };
 
-        onSubmitAction(payload, positions);
+        startTransition(() => action(payload));
     }
 
     // Time input logic
@@ -177,72 +161,21 @@ export default function NewEventForm({
     return (
         <Form {...form}>
             <form
-                // action={onSubmit}
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col gap-4">
-                {/* Event Name */}
+                {/* Template Name */}
                 <FormField
                     control={form.control}
                     name="name"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Event Name</FormLabel>
+                            <FormLabel>Template Name</FormLabel>
                             <FormControl>
                                 <Input
                                     {...field}
-                                    placeholder="Enter event name"
+                                    placeholder="Enter template name"
                                 />
                             </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                {/* Event Date */}
-                <FormField
-                    control={form.control}
-                    name="event_date"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Event Date</FormLabel>
-                            <Popover
-                                open={datePickerOpen}
-                                onOpenChange={setDatePickerOpen}>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            data-date-picker={
-                                                datePickerOpen ? "open" : "closed"
-                                            }
-                                            variant="daypicker"
-                                            className={cn(
-                                                "text-left font-normal",
-                                                !field.value && "text-slate-400"
-                                            )}>
-                                            {field.value ? (
-                                                dayjs(field.value).format("dddd, MMMM D, YYYY")
-                                            ) : (
-                                                <span>Pick a date</span>
-                                            )}
-                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    className="w-auto p-0"
-                                    align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={(e) => {
-                                            field.onChange(e);
-                                            setDatePickerOpen(false);
-                                        }}
-                                        disabled={(date) => date < new Date()}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -323,7 +256,7 @@ export default function NewEventForm({
                             <FormControl>
                                 <Textarea
                                     {...field}
-                                    placeholder="Enter event description"
+                                    placeholder="Enter template description"
                                 />
                             </FormControl>
                             <FormMessage />
@@ -398,12 +331,19 @@ export default function NewEventForm({
                         onSelect={handleSelectPosition}
                     />
                 </div>
-
-                <Button
-                    className="mt-6"
-                    type="submit">
-                    Submit
-                </Button>
+                <div className="flex flex-1 gap-2 border border-red-500">
+                    <Button
+                        className="flex-1"
+                        variant="outline"
+                        type="button">
+                        Cancel
+                    </Button>
+                    <Button
+                        className="flex-1"
+                        type="submit">
+                        Save
+                    </Button>
+                </div>
             </form>
         </Form>
     );
