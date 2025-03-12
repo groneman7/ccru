@@ -1,3 +1,5 @@
+"use server";
+
 import { currentUser } from "@clerk/nextjs/server";
 import type { Event, EventPosition, EventShift, Prisma } from "~/prisma/client";
 import { prisma } from "~/lib/prisma";
@@ -152,6 +154,7 @@ export async function getPositionById(positionId: string | string[]) {
 }
 
 // Shifts
+
 export type AssignUserToShiftPayload = {
     shiftId: string;
     userId: string | null;
@@ -236,6 +239,20 @@ export async function createShift(
             if (!shifts) return internalServerError("Error creating shifts.");
             return created(shifts.count);
         }
+    } catch (ex) {
+        return internalServerError(ex as string);
+    }
+}
+
+// Templates
+
+export async function createEventTemplate(_: any, payload: Prisma.EventTemplateCreateInput) {
+    try {
+        const template = await prisma.eventTemplate.create({
+            data: payload,
+        });
+        if (!template) return internalServerError("Error creating template.");
+        return created(template);
     } catch (ex) {
         return internalServerError(ex as string);
     }
