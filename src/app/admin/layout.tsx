@@ -9,7 +9,12 @@ export const metadata: Metadata = {
     icons: [{ rel: "icon", url: "/ccru.svg" }],
 };
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({
+    children,
+}: {
+    children: React.ReactNode;
+    events: React.ReactNode;
+}) {
     const me = await currentUser();
     if (!me)
         return (
