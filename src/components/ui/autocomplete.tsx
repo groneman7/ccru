@@ -169,7 +169,8 @@ export function Autocomplete<T>({
         <div className={cn("inline-block", className)}>
             <Popover
                 open={open}
-                onOpenChange={setOpen}
+                // Not sure why sometimes this immediately closes the popover after opening it.
+                // onOpenChange={setOpen}
                 modal={false}>
                 <PopoverAnchor asChild>
                     <div
@@ -177,11 +178,13 @@ export function Autocomplete<T>({
                         className="w-full">
                         <Input
                             ref={inputRef}
+                            className="w-full"
                             placeholder={placeholder}
                             value={inputValue}
                             onFocus={() => {
                                 setOpen(true);
                             }}
+                            onBlur={() => setOpen(false)}
                             onChange={(e) => {
                                 setInputValue(e.target.value);
                                 setOpen(true);
@@ -230,7 +233,7 @@ export function Autocomplete<T>({
                             })}
                         </ul>
                     ) : (
-                        <div className="px-3 py-2 text-sm text-muted-foreground">
+                        <div className="text-muted-foreground px-3 py-2 text-sm">
                             No results
                         </div>
                     )}
