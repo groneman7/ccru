@@ -26,6 +26,7 @@ import type { Event, EventPosition, EventShift, Prisma } from "~/prisma/client";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import Link from "next/link";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -238,7 +239,7 @@ export default function NewEventForm({
                                             field.onChange(e);
                                             setDatePickerOpen(false);
                                         }}
-                                        disabled={(date) => date < new Date()}
+                                        // disabled={(date) => date < new Date()}
                                         initialFocus
                                     />
                                 </PopoverContent>
@@ -399,11 +400,21 @@ export default function NewEventForm({
                     />
                 </div>
 
-                <Button
-                    className="mt-6"
-                    type="submit">
-                    Submit
-                </Button>
+                <div className="align-center flex flex-1 justify-end gap-4">
+                    <Link href="/events">
+                        <Button
+                            className="w-36"
+                            type="button"
+                            variant="outline">
+                            Cancel
+                        </Button>
+                    </Link>
+                    <Button
+                        className="w-56"
+                        type="submit">
+                        Submit
+                    </Button>
+                </div>
             </form>
         </Form>
     );
