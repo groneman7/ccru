@@ -1,6 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { Metadata } from "next";
-import FullPageMessage from "~/components/FullPageMessage";
+import FullPageMessage from "~/components/full-page-message";
 import { isAdmin } from "~/prisma/auth";
 
 export const metadata: Metadata = {

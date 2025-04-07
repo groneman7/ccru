@@ -1,5 +1,5 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { EventCalendar } from "~/components/EventCalendar";
+import { EventCalendar } from "~/components/event-calendar";
 import { can } from "~/prisma/auth";
 import { getEvents } from "~/prisma/events";
 

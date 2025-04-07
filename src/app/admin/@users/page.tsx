@@ -1,5 +1,5 @@
-import ActivityTitle from "~/components/ActivityTitle";
-import UsersTable from "~/components/UsersTable";
+import ActivityTitle from "~/components/activity-title";
+import UsersTable from "~/components/users-table";
 import {
     getAllRoles,
     getAllTypes,

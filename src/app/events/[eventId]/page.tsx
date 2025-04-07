@@ -1,8 +1,8 @@
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { canModifySignups, canSignUp } from "~/prisma/auth";
 import { assignUserToShift, AssignUserToShiftPayload, getEventById } from "~/prisma/events";
-import SignUpButton from "~/components/SignUpButton";
-import ModifyShiftDropdown from "~/components/ModifyShiftDropdown";
+import SignUpButton from "~/components/sign-up-button";
+import ModifyShiftDropdown from "~/components/modify-shift-dropdown";
 import { cn } from "~/lib/utils";
 import { CalendarFold, Clock, MapPin, Text, UserRound } from "lucide-react";
 

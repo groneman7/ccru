@@ -1,8 +1,8 @@
 import { currentUser } from "@clerk/nextjs/server";
-import ActivityTitle from "~/components/ActivityTitle";
-import FullPageMessage from "~/components/FullPageMessage";
-import PositionsSettings from "~/components/PositionsSettings";
-import TemplateSettings from "~/components/TemplateSettings";
+import ActivityTitle from "~/components/activity-title";
+import FullPageMessage from "~/components/full-page-message";
+import PositionsSettings from "~/components/positions-settings";
+import TemplateSettings from "~/components/template-settings";
 import { isAdmin } from "~/prisma/auth";
 import { createEventTemplate, getAllPositions } from "~/prisma/events";
 

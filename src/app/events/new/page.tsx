@@ -3,9 +3,9 @@ import { redirect } from "next/navigation";
 import { can } from "~/prisma/auth";
 import type { Event, Prisma } from "~/prisma/client";
 import { createEvent, getAllPositions } from "~/prisma/events";
-import NewEventForm from "~/components/NewEventForm";
-import ActivityTitle from "~/components/ActivityTitle";
-import FullPageMessage from "~/components/FullPageMessage";
+import NewEventForm from "~/components/new-event-form";
+import ActivityTitle from "~/components/activity-title";
+import FullPageMessage from "~/components/full-page-message";
 
 export default async function Page() {
     const user = await currentUser();

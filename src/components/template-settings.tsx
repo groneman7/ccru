@@ -11,7 +11,7 @@ import {
     Button,
     DialogDescription,
 } from "~/components/ui";
-import NewEventTemplateForm from "./NewEventTemplateForm";
+import NewEventTemplateForm from "./new-event-template-form";
 import VisuallyHidden from "~/components/ui/visually-hidden";
 
 type TemplateSettingsProps = {

@@ -4,7 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { CSPostHogProvider } from "~/lib/providers";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import Navbar from "~/components/Navbar";
+import Navbar from "~/components/navbar";
 import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
