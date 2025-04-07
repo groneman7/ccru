@@ -124,12 +124,18 @@ export async function setUserType(userId: string | string[], typeId: string) {
             .then((res) => res.data);
 
         users.forEach(async (user) => {
-            await clerk.users.updateUserMetadata(user.id, {
-                privateMetadata: {
-                    ...user.privateMetadata,
-                    typeId,
-                },
-            });
+            await clerk.users
+                .updateUserMetadata(user.id, {
+                    privateMetadata: {
+                        ...user.privateMetadata,
+                        typeId,
+                    },
+                })
+                .then(
+                    (success) => success,
+                    // Deal with rate limits (HTTP 429) somehow. For this function, I believe the limit is 10 requests per second or 100ms per request.
+                    (error) => error
+                );
         });
         return ok(typeId);
     } catch {
