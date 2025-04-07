@@ -11,7 +11,7 @@ export default async function Page() {
     return (
         <div className="flex flex-1">
             <EventCalendar
-                canCreateEvents={me ? await can(me.id, "events:create_new") : false}
+                canCreateEvents={me ? await can(me.id, "events:create") : false}
                 events={events}
             />
         </div>

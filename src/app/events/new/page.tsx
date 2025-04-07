@@ -19,7 +19,7 @@ export default async function Page() {
                 </span>
             </FullPageMessage>
         );
-    if ((await can(user.id, "events:create_new")) === false) {
+    if ((await can(user.id, "events:create")) === false) {
         return (
             <FullPageMessage className="items-center gap-8 pt-24">
                 <span className="text-6xl font-bold">Oops!</span>

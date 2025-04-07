@@ -19,7 +19,7 @@ declare global {
     }
 
     export type Permission =
-        | "events:create_new"
+        | "events:create"
         | "events:modify_signup"
         | "events:assign_user"
         | "events:edit_calendar";

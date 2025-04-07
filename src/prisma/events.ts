@@ -29,7 +29,7 @@ export async function createEvent(
     try {
         const user = await currentUser();
         if (!user) return forbidden("User not logged in.");
-        if ((await can(user.id, "events:create_new")) === false)
+        if ((await can(user.id, "events:create")) === false)
             return forbidden("User doesn't have permission to create new events.");
 
         const createdEvent = await prisma.event.create({
@@ -57,7 +57,7 @@ export async function getEvents(startDate?: Dayjs, endDate?: Dayjs) {
     try {
         if (!startDate) {
             const allEvents = await prisma.event.findMany();
-
+            
             return ok(allEvents);
         } else if (startDate && !endDate) {
             const eventsOnDate = await prisma.event.findMany({
