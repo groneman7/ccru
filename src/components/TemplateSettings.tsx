@@ -1,18 +1,18 @@
 "use client";
 
+import { useState } from "react";
+import { EventPosition, Prisma } from "~/prisma/client";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogFooter,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogTitle,
+    DialogTrigger,
     Button,
+    DialogDescription,
 } from "~/components/ui";
 import NewEventTemplateForm from "./NewEventTemplateForm";
-import { EventPosition, Prisma } from "~/prisma/client";
-import { useState } from "react";
+import VisuallyHidden from "~/components/ui/visually-hidden";
 
 type TemplateSettingsProps = {
     positionList: EventPosition[];
@@ -27,22 +27,27 @@ export default function TemplateSettings({
 
     return (
         <div>
-            <AlertDialog
+            <Dialog
                 open={open}
                 onOpenChange={setOpen}>
-                <AlertDialogTrigger asChild>
+                <DialogTrigger asChild>
                     <Button>New Template</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                    <AlertDialogTitle>New Event Template</AlertDialogTitle>
+                </DialogTrigger>
+                <DialogContent aria-describedby="">
+                    <DialogTitle>New Event Template</DialogTitle>
+                    <VisuallyHidden>
+                        <DialogDescription>
+                            Create a new event template to use for your events.
+                        </DialogDescription>
+                    </VisuallyHidden>
                     <div>
                         <NewEventTemplateForm
                             positionList={positionList}
                             onSuccess={() => setOpen(false)}
                         />
                     </div>
-                </AlertDialogContent>
-            </AlertDialog>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
