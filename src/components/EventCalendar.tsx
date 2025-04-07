@@ -97,13 +97,11 @@ export function EventCalendar({
                     </Button>
                 </div>
                 <h2 className="text-2xl font-bold">{selectedMonth.format("MMMM YYYY")}</h2>
-                {canCreateEvents && (
-                    <div className="flex flex-1 justify-end">
-                        <Link href="/events/new">
-                            <Button>New Event</Button>
-                        </Link>
-                    </div>
-                )}
+                <div className="flex flex-1 justify-end">
+                    <Link href="/events/new">
+                        <Button>New Event</Button>
+                    </Link>
+                </div>
             </div>
         );
     }
@@ -132,7 +130,7 @@ export function EventCalendar({
 
     function WeekdayHeaders() {
         return (
-            <div className="grid grid-cols-7 border-b border-secondary">
+            <div className="border-secondary grid grid-cols-7 border-b">
                 {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                     <div
                         key={day}
@@ -150,7 +148,7 @@ export function EventCalendar({
             //  <ContextMenuTrigger>
             <Link
                 href={`/events/${event.id}`}
-                className="flex cursor-pointer overflow-hidden rounded-sm bg-accent px-1 text-sm text-ellipsis whitespace-nowrap transition-colors duration-75 select-none hover:bg-accent-hover active:bg-accent-active/75"
+                className="bg-accent hover:bg-accent-hover active:bg-accent-active/75 flex cursor-pointer select-none overflow-hidden text-ellipsis whitespace-nowrap rounded-sm px-1 text-sm transition-colors duration-75"
                 onClick={(e) => {
                     e.stopPropagation();
                     onEventClick?.(e.currentTarget.id);
@@ -182,7 +180,7 @@ export function EventCalendar({
             <div
                 className={cn(
                     "flex flex-col items-stretch justify-start transition-colors duration-75",
-                    canEdit && "cursor-pointer hover:bg-accent/25",
+                    canEdit && "hover:bg-accent/25 cursor-pointer",
                     date.isSame(selectedMonth, "month") ? "bg-white" : "bg-secondary/20",
                     index % 7 < 6 && "border-r",
                     date.isBefore(endOfCalendar.subtract(1, "week")) && "border-b-1"
@@ -191,7 +189,7 @@ export function EventCalendar({
             >
                 <div
                     className={cn(
-                        "mt-3 flex h-7 w-7 items-center justify-center self-center rounded-full p-1 text-sm font-semibold select-none",
+                        "mt-3 flex h-7 w-7 select-none items-center justify-center self-center rounded-full p-1 text-sm font-semibold",
                         date.isSame(dayjs(), "date") && "bg-primary text-white",
                         !date.isSame(selectedMonth, "month") && "text-secondary-foreground/60"
                     )}>

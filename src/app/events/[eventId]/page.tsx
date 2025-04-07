@@ -68,15 +68,12 @@ export default async function Page({ params }: { params: { eventId: string } }) 
     async function assignUserAction(_: any, payload: AssignUserToShiftPayload) {
         "use server";
 
-        const { data, message, status } = await assignUserToShift(payload).then((res) => res);
-        // console.log(status, message, data);
+        const { data, message, status } = await assignUserToShift(payload).then((res) => res); 
         return { status, message, userId: payload.userId };
     }
 
     function PageWrapper({ children }: { children: ReactNode }) {
-        return (
-            <div className="w-2xl flex flex-col border-2 border-red-500 p-4">{children}</div>
-        );
+        return <div className="w-2xl flex flex-col p-4">{children}</div>;
     }
 
     function BasicEventDetails() {
