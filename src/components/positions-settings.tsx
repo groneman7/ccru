@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "~/lib/utils";
-import { EventPosition, UserType } from "~/prisma/client";
+import { EventPosition, UserType } from "~/data/client";
 
 type PositionsSettingsProps = {
     positions: (EventPosition & { allowed_user_types: UserType[] })[];

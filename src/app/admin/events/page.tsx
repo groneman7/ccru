@@ -3,7 +3,7 @@ import ActivityTitle from "~/components/activity-title";
 import FullPageMessage from "~/components/full-page-message";
 import PositionsSettings from "~/components/positions-settings";
 import TemplateSettings from "~/components/template-settings";
-import { isAdmin } from "~/prisma/auth";
+import { isAdmin } from "~/data/auth";
 import { createEventTemplate, getAllPositions } from "~/data/events";
 
 export default async function AdminEventsPage() {

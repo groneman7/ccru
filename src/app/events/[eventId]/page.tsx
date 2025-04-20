@@ -1,5 +1,5 @@
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
-import { canModifySignups, canSignUp } from "~/prisma/auth";
+import { canModifySignups, canSignUp } from "~/data/auth";
 import { assignUserToShift, AssignUserToShiftPayload, getEventById } from "~/data/events";
 import SignUpButton from "~/components/sign-up-button";
 import ModifyShiftDropdown from "~/components/modify-shift-dropdown";

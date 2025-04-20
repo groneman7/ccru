@@ -1,6 +1,6 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { getEventById, getPositionById } from "~/data/events";
-import { EventPosition } from "~/prisma/client";
+import { EventPosition } from "~/data/client";
 import { getUserTypeById } from "./users";
 
 export async function can(userId: string, permission: Permission) {

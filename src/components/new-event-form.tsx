@@ -21,7 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Autocomplete } from "~/components/ui/autocomplete";
-import type { Event, EventPosition, EventShift, Prisma } from "~/prisma/client";
+import type { Event, EventPosition, EventShift, Prisma } from "~/data/client";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";

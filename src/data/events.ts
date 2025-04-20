@@ -1,7 +1,7 @@
 "use server";
 
 import { currentUser } from "@clerk/nextjs/server";
-import type { Event, EventPosition, EventShift, Prisma } from "~/prisma/client";
+import type { Event, EventPosition, EventShift, Prisma } from "~/data/client";
 import { prisma } from "~/lib/prisma";
 import {
     badRequest,
@@ -57,7 +57,7 @@ export async function getEvents(startDate?: Dayjs, endDate?: Dayjs) {
     try {
         if (!startDate) {
             const allEvents = await prisma.event.findMany();
-            
+
             return ok(allEvents);
         } else if (startDate && !endDate) {
             const eventsOnDate = await prisma.event.findMany({

@@ -1,7 +1,7 @@
 "use client";
 import { startTransition, useActionState, useState } from "react";
 import { useRouter } from "next/navigation";
-import { UserRole, UserType } from "~/prisma/client";
+import { UserRole, UserType } from "~/data/client";
 import {
     ColumnDef,
     getCoreRowModel,

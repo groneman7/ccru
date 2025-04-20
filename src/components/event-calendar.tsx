@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import type { Event } from "~/prisma/client";
+import type { Event } from "~/data/client";
 import dayjs, { type Dayjs } from "dayjs";
 import { cn } from "~/lib/utils";
 import { Button } from "./ui/button";

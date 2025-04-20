@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { EventPosition, Prisma } from "~/prisma/client";
+import { EventPosition, Prisma } from "~/data/client";
 import {
     Dialog,
     DialogContent,

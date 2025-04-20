@@ -1,4 +1,4 @@
-import { UserRole } from "~/prisma/client";
+import { UserRole } from "~/data/client";
 
 declare global {
     // interface UserPublicMetadata {

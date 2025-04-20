@@ -1,7 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import FullPageMessage from "~/components/full-page-message";
-import { isAdmin } from "~/prisma/auth";
+import { isAdmin } from "~/data/auth";
 
 export const metadata: Metadata = {
     title: "CCRU | Admin",
