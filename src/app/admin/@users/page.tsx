@@ -6,7 +6,7 @@ import {
     getAllUsers,
     setUserRole,
     setUserType,
-} from "~/prisma/users";
+} from "~/data/users";
 
 export default async function Page() {
     const userRoles = await getAllRoles().then((res) => res.data);

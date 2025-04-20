@@ -1,5 +1,5 @@
 import { clerkClient } from "@clerk/nextjs/server";
-import { getEventById, getPositionById } from "~/prisma/events";
+import { getEventById, getPositionById } from "~/data/events";
 import { EventPosition } from "~/prisma/client";
 import { getUserTypeById } from "./users";
 

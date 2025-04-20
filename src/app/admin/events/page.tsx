@@ -4,7 +4,7 @@ import FullPageMessage from "~/components/full-page-message";
 import PositionsSettings from "~/components/positions-settings";
 import TemplateSettings from "~/components/template-settings";
 import { isAdmin } from "~/prisma/auth";
-import { createEventTemplate, getAllPositions } from "~/prisma/events";
+import { createEventTemplate, getAllPositions } from "~/data/events";
 
 export default async function AdminEventsPage() {
     const me = await currentUser();

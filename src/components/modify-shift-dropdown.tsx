@@ -35,7 +35,7 @@ import {
 } from "~/components/ui/command";
 import DropdownCombobox from "~/components/dropdown-combobox";
 import { CalendarFold, Clock, Ellipsis, MapPin, Text, UserRound } from "lucide-react";
-import { AssignUserToShiftPayload } from "~/prisma/events";
+import { AssignUserToShiftPayload } from "~/data/events";
 import {
     Form,
     FormControl,

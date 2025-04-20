@@ -2,7 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { can } from "~/prisma/auth";
 import type { Event, Prisma } from "~/prisma/client";
-import { createEvent, getAllPositions } from "~/prisma/events";
+import { createEvent, getAllPositions } from "~/data/events";
 import NewEventForm from "~/components/new-event-form";
 import ActivityTitle from "~/components/activity-title";
 import FullPageMessage from "~/components/full-page-message";

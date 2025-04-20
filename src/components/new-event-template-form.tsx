@@ -26,7 +26,7 @@ import type { EventPosition, EventShift, Prisma } from "~/prisma/client";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { createEventTemplate } from "~/prisma/events";
+import { createEventTemplate } from "~/data/events";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 

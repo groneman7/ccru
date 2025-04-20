@@ -1,7 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { EventCalendar } from "~/components/event-calendar";
 import { can } from "~/prisma/auth";
-import { getEvents } from "~/prisma/events";
+import { getEvents } from "~/data/events";
 
 // Events Page
 export default async function Page() {
