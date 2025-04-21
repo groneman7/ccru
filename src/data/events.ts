@@ -2,7 +2,7 @@
 
 import { currentUser } from "@clerk/nextjs/server";
 import type { Event, EventPosition, EventShift, Prisma } from "~/data/client";
-import { prisma } from "~/lib/prisma";
+import { prisma } from "~/server/prisma";
 import {
     badRequest,
     created,
